@@ -579,27 +579,34 @@
 
         .table-container {
             overflow-x: auto;
+            max-height: 600px;
+            overflow-y: auto;
         }
 
         .table {
             width: 100%;
             border-collapse: collapse;
+            min-width: 1800px;
         }
 
         .table th,
         .table td {
-            padding: 14px 16px;
+            padding: 12px 8px;
             text-align: left;
             border-bottom: 1px solid var(--gray-100);
+            font-size: 12px;
         }
 
         .table th {
-            background: var(--gray-50);
-            font-size: 12px;
+            background: var(--primary);
+            color: var(--white);
+            font-size: 11px;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            color: var(--gray-600);
+            position: sticky;
+            top: 0;
+            z-index: 10;
         }
 
         .table tbody tr {
@@ -614,13 +621,25 @@
             border-bottom: none;
         }
 
+        .table .total-row {
+            background: var(--primary-light);
+            color: var(--white);
+            font-weight: 700;
+        }
+
+        .table .total-row td {
+            background: var(--primary-light);
+            color: var(--white);
+            border-top: 2px solid var(--accent);
+        }
+
         .status-badge {
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            padding: 6px 12px;
+            padding: 4px 8px;
             border-radius: 20px;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 600;
         }
 
@@ -1173,6 +1192,50 @@
             flex-wrap: wrap;
         }
 
+        .summary-card {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: var(--white);
+            padding: 20px;
+            border-radius: var(--radius-lg);
+            margin-bottom: 24px;
+        }
+
+        .summary-title {
+            font-size: 14px;
+            opacity: 0.8;
+            margin-bottom: 8px;
+        }
+
+        .summary-value {
+            font-size: 32px;
+            font-weight: 800;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .summary-item {
+            text-align: center;
+            padding: 12px;
+            background: rgba(255,255,255,0.1);
+            border-radius: var(--radius-md);
+        }
+
+        .summary-item-label {
+            font-size: 11px;
+            opacity: 0.7;
+            margin-bottom: 4px;
+        }
+
+        .summary-item-value {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
         @media (max-width: 1024px) {
             .sidebar {
                 transform: translateX(-100%);
@@ -1434,6 +1497,46 @@
             color: var(--danger);
             cursor: pointer;
         }
+
+        .conceptos-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin: 24px 0;
+            padding: 20px;
+            background: var(--gray-50);
+            border-radius: var(--radius-lg);
+        }
+
+        .concepto-item {
+            text-align: center;
+            padding: 12px;
+            background: var(--white);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .concepto-titulo {
+            font-size: 11px;
+            color: var(--gray-500);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .concepto-valor {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .concepto-valor.ingreso {
+            color: var(--success);
+        }
+
+        .concepto-valor.descuento {
+            color: var(--danger);
+        }
     </style>
 </head>
 <body>
@@ -1465,6 +1568,10 @@
                     <a class="nav-item" data-section="payroll">
                         <i class="fas fa-file-invoice-dollar"></i>
                         Rol de Pagos
+                    </a>
+                    <a class="nav-item" data-section="payrollList">
+                        <i class="fas fa-list"></i>
+                        Lista de Nómina
                     </a>
                 </div>
                 <div class="nav-section">
@@ -1523,7 +1630,7 @@
                             </div>
                             <div class="stat-content">
                                 <div class="stat-label">Total Empleados</div>
-                                <div class="stat-value" id="totalEmployees">0</div>
+                                <div class="stat-value" id="totalEmployees">90</div>
                                 <div class="stat-change positive">
                                     <i class="fas fa-arrow-up"></i>
                                     Activos
@@ -1536,7 +1643,7 @@
                             </div>
                             <div class="stat-content">
                                 <div class="stat-label">Nomina Mensual</div>
-                                <div class="stat-value" id="totalPayroll">$0.00</div>
+                                <div class="stat-value" id="totalPayroll">$50,960.56</div>
                                 <div class="stat-change positive">
                                     <i class="fas fa-arrow-up"></i>
                                     Total bruto
@@ -1549,7 +1656,7 @@
                             </div>
                             <div class="stat-content">
                                 <div class="stat-label">Total Descuentos</div>
-                                <div class="stat-value" id="totalDeductions">$0.00</div>
+                                <div class="stat-value" id="totalDeductions">$9,711.03</div>
                                 <div class="stat-change negative">
                                     <i class="fas fa-arrow-down"></i>
                                     IESS + otros
@@ -1562,7 +1669,7 @@
                             </div>
                             <div class="stat-content">
                                 <div class="stat-label">Neto a Pagar</div>
-                                <div class="stat-value" id="totalNet">$0.00</div>
+                                <div class="stat-value" id="totalNet">$47,985.96</div>
                                 <div class="stat-change positive">
                                     <i class="fas fa-arrow-up"></i>
                                     Disponible
@@ -1572,11 +1679,11 @@
                     </div>
 
                     <div class="quick-actions">
-                        <button class="btn btn-primary" onclick="showSection('payroll')">
+                        <button class="btn btn-primary" onclick="showSection('payrollList')">
                             <i class="fas fa-file-invoice-dollar"></i>
-                            Generar Rol de Pago
+                            Ver Nómina Completa
                         </button>
-                        <button class="btn btn-secondary" onclick="exportEmployeesExcel()">
+                        <button class="btn btn-secondary" onclick="exportPayrollExcel()">
                             <i class="fas fa-file-excel"></i>
                             Exportar a Excel
                         </button>
@@ -1604,19 +1711,65 @@
                             <div class="card-body">
                                 <div style="margin-bottom: 16px;">
                                     <div class="stat-label">Empresa</div>
-                                    <div class="stat-value" style="font-size: 18px;" id="companyNameDisplay">Ensign Partner</div>
+                                    <div class="stat-value" style="font-size: 18px;" id="companyNameDisplay">JASAFOOD S.A.</div>
                                 </div>
                                 <div style="margin-bottom: 16px;">
-                                    <div class="stat-label">RUC</div>
-                                    <div class="stat-value" style="font-size: 18px;" id="companyRucDisplay">Sin configurar</div>
+                                    <div class="stat-label">Periodo</div>
+                                    <div class="stat-value" style="font-size: 18px;" id="currentPeriod">Enero 2025</div>
                                 </div>
                                 <div style="margin-bottom: 16px;">
                                     <div class="stat-label">Fecha de Sistema</div>
                                     <div class="stat-value" style="font-size: 18px;" id="currentDate"></div>
                                 </div>
                                 <div style="margin-bottom: 16px;">
-                                    <div class="stat-label">Ultima Nomina</div>
-                                    <div class="stat-value" style="font-size: 18px;" id="lastPayrollDate">Sin generar</div>
+                                    <div class="stat-label">Total Empleados</div>
+                                    <div class="stat-value" style="font-size: 18px;" id="totalEmployeesDisplay">90</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card" style="margin-top: 24px;">
+                        <div class="card-header">
+                            <h3 class="card-title">Resumen de Conceptos</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="conceptos-grid">
+                                <div class="concepto-item">
+                                    <div class="concepto-titulo">Sueldo Basico</div>
+                                    <div class="concepto-valor ingreso">$48,169.10</div>
+                                </div>
+                                <div class="concepto-item">
+                                    <div class="concepto-titulo">Horas Nocturnas</div>
+                                    <div class="concepto-valor ingreso">$615.53</div>
+                                </div>
+                                <div class="concepto-item">
+                                    <div class="concepto-titulo">Horas Suplementarias</div>
+                                    <div class="concepto-valor ingreso">$169.16</div>
+                                </div>
+                                <div class="concepto-item">
+                                    <div class="concepto-titulo">Horas Extraordinarias</div>
+                                    <div class="concepto-valor ingreso">$4,396.55</div>
+                                </div>
+                                <div class="concepto-item">
+                                    <div class="concepto-titulo">Fondo de Reserva</div>
+                                    <div class="concepto-valor ingreso">$2,913.74</div>
+                                </div>
+                                <div class="concepto-item">
+                                    <div class="concepto-titulo">Bonificaciones</div>
+                                    <div class="concepto-valor ingreso">$1,071.57</div>
+                                </div>
+                                <div class="concepto-item">
+                                    <div class="concepto-titulo">IESS Personal</div>
+                                    <div class="concepto-valor descuento">-$5,152.98</div>
+                                </div>
+                                <div class="concepto-item">
+                                    <div class="concepto-titulo">Prestamos</div>
+                                    <div class="concepto-valor descuento">-$2,144.13</div>
+                                </div>
+                                <div class="concepto-item">
+                                    <div class="concepto-titulo">Otros Descuentos</div>
+                                    <div class="concepto-valor descuento">-$2,413.92</div>
                                 </div>
                             </div>
                         </div>
@@ -1641,6 +1794,9 @@
                                 </div>
                                 <select class="form-control filter-select" id="departmentFilter" onchange="filterEmployees()">
                                     <option value="">Todos los departamentos</option>
+                                    <option value="CCI">CCI</option>
+                                    <option value="CONDADO">CONDADO</option>
+                                    <option value="BOSQUE">BOSQUE</option>
                                     <option value="Gerencia">Gerencia</option>
                                     <option value="Contabilidad">Contabilidad</option>
                                     <option value="Recursos Humanos">Recursos Humanos</option>
@@ -1648,7 +1804,6 @@
                                     <option value="Marketing">Marketing</option>
                                     <option value="Tecnologia">Tecnologia</option>
                                     <option value="Operaciones">Operaciones</option>
-                                    <option value="Atencion al Cliente">Atencion al Cliente</option>
                                 </select>
                             </div>
                             <div class="table-container">
@@ -1683,127 +1838,145 @@
                     </div>
                 </section>
 
-                <!-- Payroll Section -->
+                <!-- Payroll List Section (Nómina Completa) -->
+                <section class="section" id="payrollList">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Nómina de Enero 2025</h3>
+                            <div>
+                                <button class="btn btn-primary btn-sm" onclick="exportPayrollExcel()">
+                                    <i class="fas fa-file-excel"></i>
+                                    Exportar Excel
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="summary-card">
+                                <div class="summary-title">RESUMEN GENERAL</div>
+                                <div class="summary-grid">
+                                    <div class="summary-item">
+                                        <div class="summary-item-label">Total Empleados</div>
+                                        <div class="summary-item-value">90</div>
+                                    </div>
+                                    <div class="summary-item">
+                                        <div class="summary-item-label">Total Ingresos</div>
+                                        <div class="summary-item-value">$57,696.99</div>
+                                    </div>
+                                    <div class="summary-item">
+                                        <div class="summary-item-label">Total Descuentos</div>
+                                        <div class="summary-item-value">$9,711.03</div>
+                                    </div>
+                                    <div class="summary-item">
+                                        <div class="summary-item-label">Neto a Pagar</div>
+                                        <div class="summary-item-value">$47,985.96</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="table-container">
+                                <table class="table" id="payrollTable">
+                                    <thead>
+                                        <tr>
+                                            <th>No.</th>
+                                            <th>NOMBRE</th>
+                                            <th>CEDULA</th>
+                                            <th>FEC.ING</th>
+                                            <th>CARGO</th>
+                                            <th>DEPART.</th>
+                                            <th>SUELDO</th>
+                                            <th>H.NOCT</th>
+                                            <th>H.SUP</th>
+                                            <th>H.EXT</th>
+                                            <th>F.RES</th>
+                                            <th>BONOS</th>
+                                            <th>INGRESOS</th>
+                                            <th>IESS</th>
+                                            <th>PREST</th>
+                                            <th>OTROS</th>
+                                            <th>DESC</th>
+                                            <th>NETO</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="payrollTableBody">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Payroll Section (Individual) -->
                 <section class="section" id="payroll">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title">Generador de Rol de Pagos</h3>
+                            <h3 class="card-title">Generador de Rol de Pagos Individual</h3>
                         </div>
                         <div class="card-body">
                             <div class="form-row" style="margin-bottom: 24px;">
                                 <div class="form-group">
                                     <label class="form-label">Seleccionar Empleado</label>
-                                    <select class="form-control" id="payrollEmployee" onchange="calculatePayroll()">
+                                    <select class="form-control" id="payrollEmployee" onchange="loadEmployeePayroll()">
                                         <option value="">-- Seleccionar --</option>
                                     </select>
                                 </div>
                                 <div class="form-group">
                                     <label class="form-label">Periodo</label>
-                                    <input type="month" class="form-control" id="payrollPeriod" onchange="calculatePayroll()">
+                                    <input type="month" class="form-control" id="payrollPeriod" value="2025-01" readonly>
                                 </div>
                             </div>
 
                             <div id="payrollCalculation" style="display: none;">
-                                <div class="form-row">
-                                    <div class="form-group">
-                                        <label class="form-label">Sueldo Base</label>
-                                        <input type="number" class="form-control" id="payrollBaseSalary" readonly>
+                                <div class="payroll-preview" style="max-width: 100%;">
+                                    <div class="payroll-header">
+                                        <img src="https://res.cloudinary.com/dtmqftcsr/image/upload/v1772584409/ENSIGN_PARTENER_utlfoc.png" alt="Logo" class="payroll-logo">
+                                        <div class="payroll-company-name" id="previewCompanyName">JASAFOOD S.A.</div>
+                                        <div class="payroll-company-info" id="previewCompanyInfo">Del: 01/Ene/2025 Al: 31/Ene/2025</div>
                                     </div>
-                                    <div class="form-group">
-                                        <label class="form-label">Horas Extras</label>
-                                        <input type="number" class="form-control" id="payrollOvertime" value="0" onchange="calculatePayroll()">
+                                    
+                                    <div class="payroll-employee" id="previewEmployee">
                                     </div>
-                                    <div class="form-group">
-                                        <label class="form-label">Bonificaciones</label>
-                                        <input type="number" class="form-control" id="payrollBonus" value="0" onchange="calculatePayroll()">
-                                    </div>
-                                </div>
 
-                                <div class="form-row">
-                                    <div class="form-group">
-                                        <label class="form-label">Otros Ingresos</label>
-                                        <input type="number" class="form-control" id="payrollOtherIncome" value="0" onchange="calculatePayroll()">
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="form-label">Otros Descuentos</label>
-                                        <input type="number" class="form-control" id="payrollOtherDeductions" value="0" onchange="calculatePayroll()">
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="form-label">Anticipos</label>
-                                        <input type="number" class="form-control" id="payrollAdvance" value="0" onchange="calculatePayroll()">
-                                    </div>
-                                </div>
-
-                                <div class="card" style="margin-top: 24px; background: var(--gray-50);">
-                                    <div class="card-body">
-                                        <div class="form-row">
-                                            <div class="form-group">
-                                                <label class="form-label">Aporte IESS (9.45%)</label>
-                                                <input type="text" class="form-control" id="iessContribution" readonly style="background: var(--white);">
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="form-label">Decimo Tercero (1/12)</label>
-                                                <input type="text" class="form-control" id="decimoTercero" readonly style="background: var(--white);">
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="form-label">Decimo Cuarto (1/12)</label>
-                                                <input type="text" class="form-control" id="decimoCuarto" readonly style="background: var(--white);">
-                                            </div>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label class="form-label">Horas Extras Adicionales</label>
+                                            <input type="number" class="form-control" id="payrollExtraHours" value="0" onchange="calculateIndividualPayroll()">
                                         </div>
-                                        <div class="form-row">
-                                            <div class="form-group">
-                                                <label class="form-label">Fondos de Reserva (1/12)</label>
-                                                <input type="text" class="form-control" id="fondosReserva" readonly style="background: var(--white);">
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="form-label">Total Ingresos</label>
-                                                <input type="text" class="form-control" id="totalIncome" readonly style="background: var(--white); color: var(--success); font-weight: 700;">
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="form-label">Total Descuentos</label>
-                                                <input type="text" class="form-control" id="totalDeductionsPayroll" readonly style="background: var(--white); color: var(--danger); font-weight: 700;">
-                                            </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Bonificaciones Adicionales</label>
+                                            <input type="number" class="form-control" id="payrollExtraBonus" value="0" onchange="calculateIndividualPayroll()">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Descuentos Adicionales</label>
+                                            <input type="number" class="form-control" id="payrollExtraDeductions" value="0" onchange="calculateIndividualPayroll()">
                                         </div>
                                     </div>
-                                </div>
 
-                                <div class="card" style="margin-top: 24px; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%); color: var(--white);">
-                                    <div class="card-body" style="text-align: center; padding: 32px;">
-                                        <div style="font-size: 14px; opacity: 0.8; margin-bottom: 8px;">NETO A PAGAR</div>
-                                        <div style="font-size: 42px; font-weight: 800;" id="netPayroll">$0.00</div>
-                                    </div>
-                                </div>
+                                    <table class="payroll-table" id="previewIncomeTable">
+                                        <thead><tr><th>INGRESOS</th><th>VALOR</th></tr></thead>
+                                        <tbody id="previewIncomeBody"></tbody>
+                                    </table>
 
-                                <!-- Email Section -->
-                                <div class="email-section" id="emailSection">
-                                    <h4 style="margin-bottom: 16px; color: var(--primary);">
-                                        <i class="fas fa-envelope"></i> Enviar por Correo
-                                    </h4>
-                                    <p style="margin-bottom: 16px; color: var(--gray-500); font-size: 14px;">
-                                        El correo se enviara automaticamente al empleado con el rol de pago adjunto en PDF.
-                                    </p>
-                                    <div class="form-group">
-                                        <label class="form-label">Correo del Empleado</label>
-                                        <input type="email" class="form-control" id="employeeEmail" placeholder="correo@empresa.com">
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="form-label">Mensaje Personalizado (Opcional)</label>
-                                        <textarea class="form-control" id="emailMessage" rows="3" placeholder="Estimado/a, Adjuntamos su rol de pagos correspondiente al periodo..."></textarea>
+                                    <table class="payroll-table" id="previewDeductionsTable">
+                                        <thead><tr><th>DESCUENTOS</th><th>VALOR</th></tr></thead>
+                                        <tbody id="previewDeductionsBody"></tbody>
+                                    </table>
+
+                                    <div class="payroll-totals" id="previewTotals"></div>
+
+                                    <div class="payroll-footer">
+                                        <div class="signature-box"><div class="signature-line"></div><div class="signature-label">Firma del Empleado</div></div>
+                                        <div class="signature-box"><div class="signature-line"></div><div class="signature-label">Firma de Recursos Humanos</div></div>
                                     </div>
                                 </div>
 
                                 <div style="display: flex; gap: 12px; margin-top: 24px; flex-wrap: wrap;">
-                                    <button class="btn btn-primary" onclick="generatePayrollPDF()">
+                                    <button class="btn btn-primary" onclick="generateIndividualPDF()">
                                         <i class="fas fa-file-pdf"></i>
                                         Generar PDF
                                     </button>
                                     <button class="btn btn-success" onclick="sendPayrollEmail()">
                                         <i class="fas fa-paper-plane"></i>
                                         Enviar por Correo
-                                    </button>
-                                    <button class="btn btn-secondary" onclick="previewPayroll()">
-                                        <i class="fas fa-eye"></i>
-                                        Vista Previa
                                     </button>
                                 </div>
                             </div>
@@ -1813,34 +1986,7 @@
                                     <i class="fas fa-file-invoice-dollar"></i>
                                 </div>
                                 <h3 class="empty-state-title">Selecciona un empleado</h3>
-                                <p class="empty-state-text">Elige un empleado para calcular su rol de pago</p>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Payroll Preview Modal -->
-                <section class="section" id="payrollPreview">
-                    <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title">Vista Previa del Rol de Pago</h3>
-                            <button class="btn btn-secondary btn-sm" onclick="showSection('payroll')">
-                                <i class="fas fa-arrow-left"></i>
-                                Volver
-                            </button>
-                        </div>
-                        <div class="card-body">
-                            <div id="payrollPreviewContent">
-                            </div>
-                            <div style="display: flex; gap: 12px; margin-top: 24px;">
-                                <button class="btn btn-primary" onclick="generatePayrollPDF()">
-                                    <i class="fas fa-file-pdf"></i>
-                                    Descargar PDF
-                                </button>
-                                <button class="btn btn-success" onclick="sendPayrollEmail()">
-                                    <i class="fas fa-paper-plane"></i>
-                                    Enviar por Correo
-                                </button>
+                                <p class="empty-state-text">Elige un empleado para ver su rol de pago</p>
                             </div>
                         </div>
                     </div>
@@ -1997,7 +2143,7 @@
                                     </h4>
                                     <div class="form-group">
                                         <label class="form-label">Nombre de la Empresa</label>
-                                        <input type="text" class="form-control" id="configCompanyName" value="Ensign Partner">
+                                        <input type="text" class="form-control" id="configCompanyName" value="JASAFOOD S.A.">
                                     </div>
                                     <div class="form-group">
                                         <label class="form-label">RUC</label>
@@ -2111,7 +2257,7 @@
                         </div>
                         <div class="form-group">
                             <label class="form-label">Correo Electronico</label>
-                            <input type="email" class="form-control" id="employeeEmailForm" placeholder="juan.perez@empresa.com">
+                            <input type="email" class="form-control" id="employeeEmailForm" placeholder="correo@empresa.com">
                         </div>
                     </div>
                     <div class="form-row">
@@ -2119,6 +2265,9 @@
                             <label class="form-label">Departamento *</label>
                             <select class="form-control" id="employeeDepartment" required>
                                 <option value="">Seleccionar</option>
+                                <option value="CCI">CCI</option>
+                                <option value="CONDADO">CONDADO</option>
+                                <option value="BOSQUE">BOSQUE</option>
                                 <option value="Gerencia">Gerencia</option>
                                 <option value="Contabilidad">Contabilidad</option>
                                 <option value="Recursos Humanos">Recursos Humanos</option>
@@ -2126,7 +2275,6 @@
                                 <option value="Marketing">Marketing</option>
                                 <option value="Tecnologia">Tecnologia</option>
                                 <option value="Operaciones">Operaciones</option>
-                                <option value="Atencion al Cliente">Atencion al Cliente</option>
                             </select>
                         </div>
                         <div class="form-group">
@@ -2220,10 +2368,104 @@
     </div>
 
     <script>
+        // ==================== DATOS DEL EXCEL ====================
+        var payrollData = [
+            {no:1, nombre:"ACEVEDO CHAVEZ GABRIELA NICOLE", cedula:"1726636655", fechaIng:"2024/Sep/03", cargo:"MESERO", depto:"CCI", sueldo:474.14, hNoct:7.86, hSup:0, hExt:15.81, fRes:0, otrosIng:0, bonos:0, ingresos:497.81, iess:47.04, prestamos:0, otrosDesc:0, descuentos:47.04, neto:450.77},
+            {no:2, nombre:"ALAVA MUENTES MARIA LISSETH", cedula:"1313351692", fechaIng:"2020/Oct/05", cargo:"MESERAS", depto:"CONDADO", sueldo:474.14, hNoct:12.16, hSup:0, hExt:29.63, fRes:51.31, otrosIng:150, bonos:0, ingresos:717.24, iess:58.21, prestamos:71.42, otrosDesc:59.07, descuentos:188.70, neto:528.54},
+            {no:3, nombre:"ALVAREZ CEDENO FERNANDO DANIEL", cedula:"1721041737", fechaIng:"2023/May/11", cargo:"AYUDANTE DE", depto:"BOSQUE", sueldo:473.2, hNoct:6.65, hSup:0, hExt:67.04, fRes:45.56, otrosIng:0, bonos:0, ingresos:592.45, iess:51.68, prestamos:0, otrosDesc:0, descuentos:51.68, neto:540.77},
+            {no:4, nombre:"ALVAREZ CISNEROS VICTOR HUGO", cedula:"1752367290", fechaIng:"2024/Aug/17", cargo:"AYUDANTE DE", depto:"CCI", sueldo:236.6, hNoct:1.53, hSup:0, hExt:17.75, fRes:0, otrosIng:0, bonos:0, ingresos:255.88, iess:24.18, prestamos:4.69, otrosDesc:0, descuentos:28.87, neto:227.01},
+            {no:5, nombre:"ALVAREZ HERNANDEZ BRENDA NATHALY", cedula:"1722074810", fechaIng:"2016/Aug/09", cargo:"MESERAS", depto:"CONDADO", sueldo:474.61, hNoct:11.74, hSup:0, hExt:27.69, fRes:42.82, otrosIng:0, bonos:0, ingresos:556.86, iess:48.58, prestamos:40.74, otrosDesc:0, descuentos:89.32, neto:467.54},
+            {no:6, nombre:"ARBOLEDA PALACIOS AURA ISABEL", cedula:"1717981631", fechaIng:"2017/Jul/03", cargo:"ADMINISTRADO", depto:"BOSQUE", sueldo:950, hNoct:0, hSup:0, hExt:184.3, fRes:94.49, otrosIng:0, bonos:0, ingresos:1228.79, iess:107.19, prestamos:97.06, otrosDesc:20, descuentos:224.25, neto:1004.54},
+            {no:7, nombre:"ARREAGA ESPINOZA LEONEL ALEXANDER", cedula:"0804566198", fechaIng:"2021/Sep/01", cargo:"AYUDANTE DE", depto:"CCI", sueldo:473.2, hNoct:5.9, hSup:0, hExt:43.38, fRes:43.52, otrosIng:0, bonos:0, ingresos:566, iess:49.38, prestamos:0, otrosDesc:0, descuentos:49.38, neto:516.62},
+            {no:8, nombre:"ATIENCE VERA ERIKA LILIBETH", cedula:"1718509324", fechaIng:"2024/Mar/13", cargo:"MESERO", depto:"CONDADO", sueldo:474.14, hNoct:9.21, hSup:0, hExt:55.32, fRes:0, otrosIng:0, bonos:0, ingresos:538.67, iess:50.91, prestamos:0, otrosDesc:0, descuentos:50.91, neto:487.76},
+            {no:9, nombre:"AUQUI ANGUISACA PAMELA ALEXANDRA", cedula:"1720490851", fechaIng:"2024/Jan/01", cargo:"MESERO", depto:"BOSQUE", sueldo:474.14, hNoct:7.03, hSup:0, hExt:61.24, fRes:43.68, otrosIng:0, bonos:0, ingresos:586.09, iess:51.26, prestamos:0, otrosDesc:0, descuentos:51.26, neto:534.83},
+            {no:10, nombre:"BONIFAZ QUILUMBA JORGE ARMANDO", cedula:"1718658188", fechaIng:"2023/Sep/15", cargo:"AYUDANTE DE", depto:"CCI", sueldo:473.2, hNoct:10.34, hSup:0, hExt:33.52, fRes:0, otrosIng:0, bonos:0, ingresos:517.06, iess:48.86, prestamos:251.27, otrosDesc:0, descuentos:300.13, neto:216.93},
+            {no:11, nombre:"BRAVO SUAREZ MARIA AMPARO", cedula:"1726468299", fechaIng:"2010/Sep/01", cargo:"ADMINISTRADO", depto:"CONDADO", sueldo:1000, hNoct:0, hSup:0, hExt:193.17, fRes:0, otrosIng:0, bonos:0, ingresos:1193.17, iess:112.76, prestamos:114.19, otrosDesc:20, descuentos:246.95, neto:946.22},
+            {no:12, nombre:"CACHIPUENDO TITUANA JOSE LUIS", cedula:"1717053035", fechaIng:"2022/Feb/09", cargo:"AYUDANTE DE", depto:"BOSQUE", sueldo:475.55, hNoct:14.5, hSup:0, hExt:95.11, fRes:0, otrosIng:0, bonos:0, ingresos:585.16, iess:55.3, prestamos:0, otrosDesc:0, descuentos:55.3, neto:529.86},
+            {no:13, nombre:"CADENA SILVA CARMEN ESTHER", cedula:"1720546421", fechaIng:"2023/Dec/01", cargo:"MESERAS", depto:"CCI", sueldo:474.14, hNoct:4.31, hSup:0, hExt:0, fRes:39.86, otrosIng:0, bonos:0, ingresos:518.31, iess:45.21, prestamos:0, otrosDesc:0, descuentos:45.21, neto:473.1},
+            {no:14, nombre:"CAISATOA SUMANGUILLA JORGE GUSTAVO", cedula:"1720186053", fechaIng:"2015/Oct/15", cargo:"PLANCHERO", depto:"CONDADO", sueldo:475.55, hNoct:10.53, hSup:0, hExt:95.11, fRes:48.41, otrosIng:0, bonos:0, ingresos:629.6, iess:54.92, prestamos:40.83, otrosDesc:0, descuentos:95.75, neto:533.85},
+            {no:15, nombre:"CAIZAGUANO VEGA JUANA ALEXANDRA", cedula:"1724063704", fechaIng:"2020/Jun/01", cargo:"LIMPIEZA", depto:"BOSQUE", sueldo:237.59, hNoct:0, hSup:0, hExt:0, fRes:19.79, otrosIng:0, bonos:0, ingresos:257.38, iess:22.45, prestamos:0, otrosDesc:0, descuentos:22.45, neto:234.93},
+            {no:16, nombre:"CARRION GUERRERO CYNTHIA LORENA", cedula:"1726792227", fechaIng:"2022/Feb/23", cargo:"MESERAS", depto:"CCI", sueldo:474.14, hNoct:11.3, hSup:0, hExt:84.95, fRes:0, otrosIng:0, bonos:0, ingresos:570.39, iess:53.9, prestamos:53.68, otrosDesc:0, descuentos:107.58, neto:462.81},
+            {no:17, nombre:"CARVAJAL PACHACAMA ESTEBAN JOEL", cedula:"1724689938", fechaIng:"2024/Jul/06", cargo:"AYUDANTE DE", depto:"CONDADO", sueldo:236.6, hNoct:3.55, hSup:0, hExt:9.86, fRes:0, otrosIng:0, bonos:0, ingresos:250.01, iess:23.63, prestamos:0, otrosDesc:0, descuentos:23.63, neto:226.38},
+            {no:18, nombre:"CASTANEDA PARRAGA LUIS ANDRESS", cedula:"1317975173", fechaIng:"2020/Sep/10", cargo:"POSILLERO", depto:"BOSQUE", sueldo:78.87, hNoct:0.72, hSup:0, hExt:0, fRes:6.63, otrosIng:0, bonos:0, ingresos:86.22, iess:7.52, prestamos:0, otrosDesc:0, descuentos:7.52, neto:78.7},
+            {no:19, nombre:"CEDENO ZAMBRANO GEOSTYN JESUS", cedula:"1725256794", fechaIng:"2024/Sep/10", cargo:"MESERO", depto:"CCI", sueldo:474.14, hNoct:9.53, hSup:0, hExt:82.98, fRes:0, otrosIng:0, bonos:0, ingresos:566.65, iess:53.55, prestamos:0, otrosDesc:0, descuentos:53.55, neto:513.1},
+            {no:20, nombre:"CELLERI IBARRA IVONNE STEFANIA", cedula:"1206746768", fechaIng:"2022/Mar/01", cargo:"MESERO", depto:"CONDADO", sueldo:474.14, hNoct:0, hSup:0, hExt:0, fRes:0, otrosIng:0, bonos:0, ingresos:474.14, iess:44.81, prestamos:355.61, otrosDesc:0, descuentos:400.42, neto:73.72},
+            {no:21, nombre:"CEVALLOS VILLAGOMEZ ZHAMMY POLETH", cedula:"1729188605", fechaIng:"2024/Jun/01", cargo:"MESERO", depto:"BOSQUE", sueldo:474.14, hNoct:9.38, hSup:0, hExt:59.27, fRes:0, otrosIng:0, bonos:0, ingresos:542.79, iess:51.29, prestamos:0, otrosDesc:0, descuentos:51.29, neto:491.5},
+            {no:22, nombre:"CHAVEZ QUISHPE MARIA JOSE", cedula:"1723720627", fechaIng:"2024/Oct/14", cargo:"MARKETING", depto:"CCI", sueldo:500, hNoct:0, hSup:0, hExt:0, fRes:0, otrosIng:0, bonos:0, ingresos:500, iess:47.25, prestamos:20, otrosDesc:0, descuentos:67.25, neto:432.75},
+            {no:23, nombre:"CHICA VERA JAHAIRA BEATRIZ", cedula:"1728183979", fechaIng:"2024/Jan/01", cargo:"MESERO", depto:"CONDADO", sueldo:474.14, hNoct:10.13, hSup:0, hExt:41.49, fRes:42.34, otrosIng:0, bonos:0, ingresos:568.1, iess:49.68, prestamos:0, otrosDesc:0, descuentos:49.68, neto:518.42},
+            {no:24, nombre:"CHILUISA CORDOBA ALEJANDRO XAVIER", cedula:"0503795114", fechaIng:"2024/Nov/11", cargo:"SISTEMAS", depto:"BOSQUE", sueldo:550, hNoct:0, hSup:0, hExt:0, fRes:0, otrosIng:0, bonos:0, ingresos:550, iess:51.97, prestamos:20, otrosDesc:0, descuentos:71.97, neto:478.03},
+            {no:25, nombre:"CONFORME PARRA JAVIER ALEJANDRO", cedula:"1350902464", fechaIng:"2024/Nov/20", cargo:"MESERO", depto:"CCI", sueldo:94.83, hNoct:0.25, hSup:0, hExt:0, fRes:0, otrosIng:0, bonos:0, ingresos:95.08, iess:8.98, prestamos:0, otrosDesc:0, descuentos:8.98, neto:86.1},
+            {no:26, nombre:"CORELLA LOGACHO MARIA JOSE", cedula:"1722160536", fechaIng:"2018/Jan/22", cargo:"CAJERO", depto:"CONDADO", sueldo:474.61, hNoct:9.89, hSup:0, hExt:67.24, fRes:45.96, otrosIng:0, bonos:0, ingresos:597.7, iess:52.14, prestamos:0, otrosDesc:0, descuentos:52.14, neto:545.56},
+            {no:27, nombre:"DELGADO BUITRAGO JUAN PABLO", cedula:"1760876993", fechaIng:"2024/Mar/20", cargo:"AYUDANTE DE", depto:"BOSQUE", sueldo:473.2, hNoct:6.17, hSup:0, hExt:61.12, fRes:0, otrosIng:0, bonos:0, ingresos:540.49, iess:51.08, prestamos:0, otrosDesc:0, descuentos:51.08, neto:489.41},
+            {no:28, nombre:"DELGADO SAQUICELA JONNATHAN ANDRES", cedula:"0106601420", fechaIng:"2024/Jul/01", cargo:"AYUDANTE DE", depto:"CCI", sueldo:473.2, hNoct:11.71, hSup:0, hExt:110.41, fRes:0, otrosIng:0, bonos:0, ingresos:595.32, iess:56.26, prestamos:0, otrosDesc:0, descuentos:56.26, neto:539.06},
+            {no:29, nombre:"DELGADO SOLORZANO JENIFFER ANDREA", cedula:"1316606456", fechaIng:"2022/Sep/30", cargo:"MESERAS", depto:"CONDADO", sueldo:474.14, hNoct:9.32, hSup:0, hExt:51.37, fRes:0, otrosIng:0, bonos:0, ingresos:534.83, iess:50.54, prestamos:21.5, otrosDesc:0, descuentos:72.04, neto:462.79},
+            {no:30, nombre:"FAZ BARAHONA ANA GABRIELA", cedula:"1721141883", fechaIng:"2022/Jul/09", cargo:"AYUDANTE DE", depto:"BOSQUE", sueldo:473.2, hNoct:11.34, hSup:0, hExt:88.73, fRes:47.75, otrosIng:0, bonos:0, ingresos:621.02, iess:54.17, prestamos:20, otrosDesc:0, descuentos:74.17, neto:546.85},
+            {no:31, nombre:"FEIJOO SANCHEZ SILVIA FERNANDA", cedula:"0704594175", fechaIng:"2012/Feb/03", cargo:"ASISTENTE CO", depto:"CCI", sueldo:1580, hNoct:0, hSup:0, hExt:0, fRes:164.93, otrosIng:604.17, bonos:0, ingresos:2349.1, iess:187.11, prestamos:0, otrosDesc:0, descuentos:187.11, neto:2161.99},
+            {no:32, nombre:"FLORES CAIZA OSCAR BENIGNO", cedula:"1718233024", fechaIng:"2018/Apr/04", cargo:"AYUDANTE DE", depto:"CONDADO", sueldo:473.2, hNoct:10.87, hSup:0, hExt:45.35, fRes:44.1, otrosIng:0, bonos:0, ingresos:573.52, iess:50.03, prestamos:63.56, otrosDesc:0, descuentos:113.59, neto:459.93},
+            {no:33, nombre:"FLORES FLORES LEIDY LISSETTE", cedula:"1728361518", fechaIng:"2023/Nov/08", cargo:"BARISTA", depto:"BOSQUE", sueldo:473.2, hNoct:6.82, hSup:0, hExt:45.35, fRes:43.76, otrosIng:0, bonos:0, ingresos:569.13, iess:49.65, prestamos:26.98, otrosDesc:0, descuentos:76.63, neto:492.5},
+            {no:34, nombre:"GARCIA VERA SANTA ISABEL", cedula:"1725583411", fechaIng:"2024/Jan/01", cargo:"AYUDANTE DE", depto:"CCI", sueldo:473.2, hNoct:8.13, hSup:0, hExt:92.67, fRes:0, otrosIng:0, bonos:0, ingresos:574, iess:54.24, prestamos:46.22, otrosDesc:0, descuentos:100.46, neto:473.54},
+            {no:35, nombre:"GUALLIMBA GUAMBA ESTEBAN ALEXANDER", cedula:"1756122451", fechaIng:"2023/Nov/18", cargo:"AYUDANTE DE", depto:"CONDADO", sueldo:473.2, hNoct:11.55, hSup:0, hExt:100.56, fRes:48.76, otrosIng:0, bonos:0, ingresos:634.07, iess:55.31, prestamos:28.98, otrosDesc:7.89, descuentos:92.18, neto:541.89},
+            {no:36, nombre:"GUAMAN QUIJIJE MARIA FERNANDA", cedula:"1315871366", fechaIng:"2020/Sep/04", cargo:"MESERAS", depto:"BOSQUE", sueldo:474.14, hNoct:7.47, hSup:0, hExt:65.19, fRes:45.55, otrosIng:0, bonos:0, ingresos:592.35, iess:51.67, prestamos:51.12, otrosDesc:0, descuentos:102.79, neto:489.56},
+            {no:37, nombre:"GUAMBA RIVERA DIANA FERNANDA", cedula:"1721676839", fechaIng:"2024/Jun/12", cargo:"AYUDANTE DE", depto:"CCI", sueldo:473.2, hNoct:11.62, hSup:0, hExt:92.67, fRes:48.11, otrosIng:0, bonos:0, ingresos:625.6, iess:54.57, prestamos:0, otrosDesc:0, descuentos:54.57, neto:571.03},
+            {no:38, nombre:"IBUJES NIETO ALEXANDER DANIEL", cedula:"1725121931", fechaIng:"2022/Sep/06", cargo:"ASISTENTE CO", depto:"CONDADO", sueldo:650, hNoct:0, hSup:0, hExt:0, fRes:54.15, otrosIng:0, bonos:0, ingresos:704.15, iess:61.42, prestamos:20, otrosDesc:0, descuentos:81.42, neto:622.73},
+            {no:39, nombre:"INTRIAGO ROSERO GENESIS ANNAHI", cedula:"1726978677", fechaIng:"2024/Mar/20", cargo:"MESERO", depto:"BOSQUE", sueldo:474.14, hNoct:10.63, hSup:0, hExt:47.41, fRes:44.33, otrosIng:0, bonos:0, ingresos:576.51, iess:50.29, prestamos:0, otrosDesc:0, descuentos:50.29, neto:526.22},
+            {no:40, nombre:"JARA CENTENO EVELYN PATRICIA", cedula:"1721706453", fechaIng:"2024/Jan/01", cargo:"MESERO", depto:"CCI", sueldo:268.68, hNoct:6.93, hSup:0, hExt:0, fRes:22.19, otrosIng:0, bonos:0, ingresos:297.8, iess:26.04, prestamos:0, otrosDesc:0, descuentos:26.04, neto:271.76},
+            {no:41, nombre:"JARAMILLO BARRAGAN ALEJANDRO SEGUNDO", cedula:"1715998694", fechaIng:"2020/Jun/01", cargo:"LIMPIEZA", depto:"CONDADO", sueldo:239.56, hNoct:0, hSup:0, hExt:0, fRes:19.96, otrosIng:0, bonos:0, ingresos:259.52, iess:22.64, prestamos:0, otrosDesc:0, descuentos:22.64, neto:236.88},
+            {no:42, nombre:"JURADO NARVAEZ EDWIN VLADIMIR", cedula:"1721295671", fechaIng:"2015/Dec/23", cargo:"ADMINISTRADO", depto:"BOSQUE", sueldo:900, hNoct:0, hSup:0, hExt:125.4, fRes:85.42, otrosIng:0, bonos:0, ingresos:1110.82, iess:96.9, prestamos:145.13, otrosDesc:20, descuentos:262.03, neto:848.79},
+            {no:43, nombre:"LEMA ZAPATA VIVIANA JACQUELINE", cedula:"1720043304", fechaIng:"2024/Dec/01", cargo:"MESERO", depto:"CCI", sueldo:474.14, hNoct:5.62, hSup:0, hExt:57.29, fRes:0, otrosIng:80, bonos:0, ingresos:617.05, iess:58.31, prestamos:10, otrosDesc:0, descuentos:68.31, neto:548.74},
+            {no:44, nombre:"LEMACHE PAREDES JHONATAN ISMAEL", cedula:"1600665911", fechaIng:"2024/Sep/01", cargo:"AYUDANTE DE", depto:"CONDADO", sueldo:473.2, hNoct:9.99, hSup:0, hExt:37.46, fRes:0, otrosIng:0, bonos:0, ingresos:520.65, iess:49.2, prestamos:0, otrosDesc:0, descuentos:49.2, neto:471.45},
+            {no:45, nombre:"LEON CAGUA ARIANA YASMIN", cedula:"1728390210", fechaIng:"2023/Dec/02", cargo:"MESERO", depto:"BOSQUE", sueldo:474.14, hNoct:9.63, hSup:0, hExt:41.49, fRes:43.75, otrosIng:0, bonos:0, ingresos:569.01, iess:49.64, prestamos:46.23, otrosDesc:0, descuentos:95.87, neto:473.14},
+            {no:46, nombre:"LOPEZ VELEZ MARLON GUILLERMO", cedula:"1722627534", fechaIng:"2023/Apr/05", cargo:"AYUDANTE DE", depto:"CCI", sueldo:473.2, hNoct:8.69, hSup:0, hExt:90.7, fRes:47.7, otrosIng:0, bonos:0, ingresos:620.29, iess:54.11, prestamos:200.6, otrosDesc:23.66, descuentos:278.37, neto:341.92},
+            {no:47, nombre:"LUCAS FARIAS CRISTHIAN BLADIMIR", cedula:"1316387347", fechaIng:"2024/Oct/25", cargo:"MESERO", depto:"CONDADO", sueldo:474.14, hNoct:7.41, hSup:0, hExt:57.29, fRes:0, otrosIng:0, bonos:0, ingresos:538.84, iess:50.92, prestamos:13.54, otrosDesc:0, descuentos:64.46, neto:474.38},
+            {no:48, nombre:"MATAILO CASTILLO MARIA ISABEL", cedula:"1750150466", fechaIng:"2023/Aug/23", cargo:"MESERO", depto:"BOSQUE", sueldo:474.14, hNoct:6.79, hSup:0, hExt:59.27, fRes:45, otrosIng:0, bonos:0, ingresos:585.2, iess:51.05, prestamos:0, otrosDesc:0, descuentos:51.05, neto:534.15},
+            {no:49, nombre:"MEDIAVILLA IZA ERIKA PAOLA", cedula:"1725800955", fechaIng:"2021/Oct/11", cargo:"MESERO", depto:"CCI", sueldo:474.14, hNoct:8.89, hSup:0, hExt:27.66, fRes:42.54, otrosIng:0, bonos:0, ingresos:553.23, iess:48.26, prestamos:0, otrosDesc:0, descuentos:48.26, neto:504.97},
+            {no:50, nombre:"MERIZALDE CANAS JORGE VINICIO", cedula:"1716062961", fechaIng:"2024/Dec/25", cargo:"AYUDANTE DE", depto:"CONDADO", sueldo:473.2, hNoct:10.84, hSup:0, hExt:76.9, fRes:0, otrosIng:0, bonos:0, ingresos:560.94, iess:53.01, prestamos:64.84, otrosDesc:0, descuentos:117.85, neto:443.09},
+            {no:51, nombre:"MOREIRA BERMUDEZ PEDRO MANUEL", cedula:"1312850801", fechaIng:"2014/Aug/12", cargo:"MARISQUERO", depto:"BOSQUE", sueldo:473.2, hNoct:12.36, hSup:23.66, hExt:41.41, fRes:0, otrosIng:0, bonos:0, ingresos:550.63, iess:52.04, prestamos:101.15, otrosDesc:0, descuentos:153.19, neto:397.44},
+            {no:52, nombre:"MOREIRA ZAMBRANO MARIA FERNANDA", cedula:"2300658420", fechaIng:"2024/Aug/20", cargo:"PARVULARIA", depto:"CCI", sueldo:352.5, hNoct:0, hSup:0, hExt:22.03, fRes:0, otrosIng:0, bonos:0, ingresos:374.53, iess:35.39, prestamos:0, otrosDesc:0, descuentos:35.39, neto:339.14},
+            {no:53, nombre:"MOROCHO CHIMBOLEMA NELSON GEOVANNY", cedula:"0603416306", fechaIng:"2020/Oct/01", cargo:"PLANCHERO", depto:"CONDADO", sueldo:475.55, hNoct:14.04, hSup:93.62, hExt:25.76, fRes:50.73, otrosIng:0, bonos:0, ingresos:659.7, iess:57.55, prestamos:52.74, otrosDesc:0, descuentos:110.29, neto:549.41},
+            {no:54, nombre:"MOROCHO LEMA JUAN CARLOS", cedula:"0605820422", fechaIng:"2022/Jun/18", cargo:"AYUDANTE DE", depto:"BOSQUE", sueldo:473.2, hNoct:7.65, hSup:0, hExt:25.63, fRes:42.19, otrosIng:0, bonos:0, ingresos:548.67, iess:47.86, prestamos:0, otrosDesc:0, descuentos:47.86, neto:500.81},
+            {no:55, nombre:"MUNOZ JIMENEZ KENNETH ARIEL", cedula:"1725127169", fechaIng:"2024/May/18", cargo:"AYUDANTE DE", depto:"CCI", sueldo:473.2, hNoct:9.37, hSup:26.62, hExt:74.92, fRes:0, otrosIng:0, bonos:0, ingresos:584.11, iess:55.2, prestamos:0, otrosDesc:0, descuentos:55.2, neto:528.91},
+            {no:56, nombre:"NARANJO ZURITA MARCELO DAVID", cedula:"1715841209", fechaIng:"2018/Feb/01", cargo:"GERENTE Y AF", depto:"CONDADO", sueldo:2500, hNoct:0, hSup:0, hExt:0, fRes:208.25, otrosIng:0, bonos:0, ingresos:2708.25, iess:236.25, prestamos:1399.81, otrosDesc:0, descuentos:1636.06, neto:1072.19},
+            {no:57, nombre:"NOBOA PERUGACHI NESTOR EUGENIO", cedula:"1728910686", fechaIng:"2024/Nov/22", cargo:"MESERO", depto:"BOSQUE", sueldo:474.14, hNoct:7.23, hSup:0, hExt:51.37, fRes:0, otrosIng:0, bonos:0, ingresos:532.74, iess:50.34, prestamos:0, otrosDesc:0, descuentos:50.34, neto:482.4},
+            {no:58, nombre:"NUNEZ EUGENIO CRISTINA ZULEMA", cedula:"1723469753", fechaIng:"2015/May/09", cargo:"CAJERO", depto:"CCI", sueldo:474.61, hNoct:8.51, hSup:0, hExt:25.71, fRes:42.39, otrosIng:0, bonos:0, ingresos:551.22, iess:48.08, prestamos:116.72, otrosDesc:0, descuentos:164.8, neto:386.42},
+            {no:59, nombre:"ORQUERA GUAMAN OSCAR ROBERTO", cedula:"1716602493", fechaIng:"2020/Jun/01", cargo:"ASISTENTE AD", depto:"CONDADO", sueldo:239.56, hNoct:0, hSup:0, hExt:0, fRes:19.96, otrosIng:0, bonos:0, ingresos:259.52, iess:22.64, prestamos:0, otrosDesc:0, descuentos:22.64, neto:236.88},
+            {no:60, nombre:"PALACIOS PAREDES MATIAS GABRIEL", cedula:"1725242901", fechaIng:"2024/Dec/13", cargo:"AYUDANTE DE", depto:"BOSQUE", sueldo:473.2, hNoct:5.36, hSup:0, hExt:76.9, fRes:0, otrosIng:0, bonos:0, ingresos:555.46, iess:52.49, prestamos:0, otrosDesc:0, descuentos:52.49, neto:502.97},
+            {no:61, nombre:"PALLASCO CUNIN ALESSANDRO NICOLAS", cedula:"1751928068", fechaIng:"2024/Sep/11", cargo:"MESERO", depto:"CCI", sueldo:474.14, hNoct:9.42, hSup:0, hExt:63.22, fRes:0, otrosIng:0, bonos:0, ingresos:546.78, iess:51.67, prestamos:0, otrosDesc:0, descuentos:51.67, neto:495.11},
+            {no:62, nombre:"PALMA BONE ROBER YONNY", cedula:"1712442043", fechaIng:"2008/Jun/01", cargo:"PLANCHERO", depto:"CONDADO", sueldo:475.55, hNoct:7.52, hSup:0, hExt:55.48, fRes:44.86, otrosIng:0, bonos:0, ingresos:583.41, iess:50.89, prestamos:0, otrosDesc:0, descuentos:50.89, neto:532.52},
+            {no:63, nombre:"PARCO PAGUAY ANTONELA LISETH", cedula:"1727386060", fechaIng:"2023/May/26", cargo:"MESERO", depto:"BOSQUE", sueldo:363.51, hNoct:6.58, hSup:0, hExt:0, fRes:30.83, otrosIng:0, bonos:0, ingresos:400.92, iess:34.97, prestamos:23.71, otrosDesc:0, descuentos:58.68, neto:342.24},
+            {no:64, nombre:"PICHUCHO CHUQUITARCO MAYRA ELIZABETH", cedula:"1721847042", fechaIng:"2012/Jul/01", cargo:"ADMINISTRADO", depto:"CCI", sueldo:1000, hNoct:0, hSup:0, hExt:0, fRes:103.29, otrosIng:240, bonos:0, ingresos:1343.29, iess:117.18, prestamos:0, otrosDesc:0, descuentos:117.18, neto:1226.11},
+            {no:65, nombre:"PINAN LIMAICO NANCY MARGOT", cedula:"1002614335", fechaIng:"2020/Sep/04", cargo:"BARISTA", depto:"CONDADO", sueldo:473.2, hNoct:4.82, hSup:0, hExt:41.41, fRes:43.27, otrosIng:0, bonos:0, ingresos:562.7, iess:49.09, prestamos:0, otrosDesc:0, descuentos:49.09, neto:513.61},
+            {no:66, nombre:"PINCAY ESPINOZA MARIA JOSE", cedula:"1726714429", fechaIng:"2023/Nov/24", cargo:"MESERO", depto:"BOSQUE", sueldo:474.14, hNoct:9.38, hSup:0, hExt:73.1, fRes:46.37, otrosIng:0, bonos:0, ingresos:602.99, iess:52.6, prestamos:7.9, otrosDesc:0, descuentos:60.5, neto:542.49},
+            {no:67, nombre:"PINTA QUITO BYRON DAVID", cedula:"1726745399", fechaIng:"2023/Jul/15", cargo:"AYUDANTE DE", depto:"CCI", sueldo:473.2, hNoct:10.45, hSup:0, hExt:67.04, fRes:45.87, otrosIng:0, bonos:0, ingresos:596.56, iess:52.04, prestamos:0, otrosDesc:0, descuentos:52.04, neto:544.52},
+            {no:68, nombre:"POZO CHULDE STEVEN JOEL", cedula:"1754386140", fechaIng:"2024/Jan/01", cargo:"ASISTENTE CO", depto:"CONDADO", sueldo:650, hNoct:0, hSup:0, hExt:0, fRes:60.39, otrosIng:100, bonos:0, ingresos:810.39, iess:70.87, prestamos:20, otrosDesc:0, descuentos:90.87, neto:719.52},
+            {no:69, nombre:"PULLOPAXI PAUCAR STHEVEN ALEJANDRO", cedula:"1722524152", fechaIng:"2024/Jun/07", cargo:"AYUDANTE DE", depto:"BOSQUE", sueldo:473.2, hNoct:9.61, hSup:0, hExt:67.04, fRes:0, otrosIng:0, bonos:0, ingresos:549.85, iess:51.96, prestamos:32.83, otrosDesc:0, descuentos:84.79, neto:465.06},
+            {no:70, nombre:"QUISAGUANO TIPAN IRMA PATRICIA", cedula:"1751599240", fechaIng:"2023/Dec/01", cargo:"BARISTA", depto:"CCI", sueldo:473.2, hNoct:10.02, hSup:0, hExt:25.63, fRes:42.39, otrosIng:0, bonos:0, ingresos:551.24, iess:48.09, prestamos:0, otrosDesc:0, descuentos:48.09, neto:503.15},
+            {no:71, nombre:"QUISHPE CESME JEAN CARLO", cedula:"2100688692", fechaIng:"2024/May/01", cargo:"MESERO", depto:"CONDADO", sueldo:474.14, hNoct:4.77, hSup:0, hExt:81, fRes:0, otrosIng:0, bonos:0, ingresos:559.91, iess:52.91, prestamos:0, otrosDesc:0, descuentos:52.91, neto:507},
+            {no:72, nombre:"REINA VACA CELIA VICTORIA", cedula:"0804077501", fechaIng:"2024/Sep/27", cargo:"AYUDANTE DE", depto:"BOSQUE", sueldo:78.87, hNoct:0.49, hSup:0, hExt:0, fRes:0, otrosIng:0, bonos:0, ingresos:79.36, iess:7.5, prestamos:0, otrosDesc:0, descuentos:7.5, neto:71.86},
+            {no:73, nombre:"RIVADENEIRA AGUINDA ELIZABETH ALEXANDRA", cedula:"0502463896", fechaIng:"2019/May/22", cargo:"MESERAS", depto:"CCI", sueldo:474.14, hNoct:7.33, hSup:0, hExt:82.98, fRes:47.02, otrosIng:0, bonos:0, ingresos:611.47, iess:53.34, prestamos:82.27, otrosDesc:0, descuentos:135.61, neto:475.86},
+            {no:74, nombre:"SALAZAR MACIAS PAOLA VANESSA", cedula:"1727139758", fechaIng:"2024/Dec/01", cargo:"MESERO", depto:"CONDADO", sueldo:474.14, hNoct:10.05, hSup:0, hExt:57.29, fRes:0, otrosIng:0, bonos:0, ingresos:541.48, iess:51.17, prestamos:0, otrosDesc:0, descuentos:51.17, neto:490.31},
+            {no:75, nombre:"SALCEDO RUIZ DAYANNA ELIZABETH", cedula:"1722465398", fechaIng:"2023/Apr/19", cargo:"CALIDAD", depto:"BOSQUE", sueldo:486.57, hNoct:0, hSup:0, hExt:0, fRes:40.53, otrosIng:0, bonos:0, ingresos:527.1, iess:45.98, prestamos:364.93, otrosDesc:0, descuentos:410.91, neto:116.19},
+            {no:76, nombre:"SALDARRIAGA BRIONES MARIA ISABEL", cedula:"1316702420", fechaIng:"2024/Feb/17", cargo:"AYUDANTE DE", depto:"CCI", sueldo:473.2, hNoct:9.6, hSup:0, hExt:31.55, fRes:0, otrosIng:0, bonos:0, ingresos:514.35, iess:48.61, prestamos:4.99, otrosDesc:0, descuentos:53.6, neto:460.75},
+            {no:77, nombre:"SANCHEZ ORDONEZ ALEXANDER GABRIEL", cedula:"0750698771", fechaIng:"2023/Apr/01", cargo:"MESERO", depto:"CONDADO", sueldo:474.14, hNoct:5.19, hSup:0, hExt:71.12, fRes:45.85, otrosIng:0, bonos:0, ingresos:596.3, iess:52.02, prestamos:18.76, otrosDesc:0, descuentos:70.78, neto:525.52},
+            {no:78, nombre:"SANDOVAL PAREDES MARIANA CECILIA", cedula:"1717845091", fechaIng:"2022/Sep/09", cargo:"MESERO", depto:"BOSQUE", sueldo:474.14, hNoct:10.37, hSup:0, hExt:67.17, fRes:45.96, otrosIng:0, bonos:0, ingresos:597.64, iess:52.13, prestamos:0, otrosDesc:0, descuentos:52.13, neto:545.51},
+            {no:79, nombre:"SINGH LOAIZA PARAMJITCOR SHABNAM", cedula:"1750485631", fechaIng:"2023/Feb/08", cargo:"MESERAS", depto:"CCI", sueldo:474.14, hNoct:12.13, hSup:0, hExt:75.07, fRes:46.76, otrosIng:0, bonos:0, ingresos:608.1, iess:53.05, prestamos:7.9, otrosDesc:0, descuentos:60.95, neto:547.15},
+            {no:80, nombre:"TOAPANTA LLANO GRECIA PILAR", cedula:"1713987921", fechaIng:"2022/Apr/06", cargo:"AYUDANTE DE", depto:"CONDADO", sueldo:473.2, hNoct:10.77, hSup:0, hExt:86.75, fRes:0, otrosIng:0, bonos:0, ingresos:570.72, iess:53.93, prestamos:47.54, otrosDesc:0, descuentos:101.47, neto:469.25},
+            {no:81, nombre:"TOLEDO SALTO DAYANA ESTEFANIA", cedula:"1720441011", fechaIng:"2014/Oct/01", cargo:"ADMINISTRADO", depto:"BOSQUE", sueldo:700, hNoct:0, hSup:0, hExt:41.42, fRes:61.76, otrosIng:0, bonos:0, ingresos:803.18, iess:70.06, prestamos:20, otrosDesc:0, descuentos:90.06, neto:713.12},
+            {no:82, nombre:"VALVERDE ALMACHE ISAURA ALEXANDRA", cedula:"1724466493", fechaIng:"2024/Jan/01", cargo:"AYUDANTE DE", depto:"CCI", sueldo:473.2, hNoct:7.29, hSup:0, hExt:84.78, fRes:45.52, otrosIng:0, bonos:0, ingresos:610.79, iess:53.42, prestamos:0, otrosDesc:0, descuentos:53.42, neto:557.37},
+            {no:83, nombre:"VALVERDE ALULEMA LENIN ALEXANDER", cedula:"1725140956", fechaIng:"2024/Sep/06", cargo:"AYUDANTE DE", depto:"CONDADO", sueldo:473.2, hNoct:11.8, hSup:0, hExt:65.07, fRes:0, otrosIng:0, bonos:0, ingresos:550.07, iess:51.98, prestamos:0, otrosDesc:0, descuentos:51.98, neto:498.09},
+            {no:84, nombre:"VASQUEZ VASQUEZ FANNY JANETH", cedula:"1724021074", fechaIng:"2020/Oct/14", cargo:"MESERAS", depto:"BOSQUE", sueldo:474.61, hNoct:13.45, hSup:0, hExt:27.69, fRes:42.96, otrosIng:0, bonos:0, ingresos:558.71, iess:48.74, prestamos:0, otrosDesc:0, descuentos:48.74, neto:509.97},
+            {no:85, nombre:"VEINTIMILLA BARROS VALERIA ALEXANDRA", cedula:"1717556946", fechaIng:"2020/Dec/01", cargo:"BARISTA", depto:"CCI", sueldo:473.2, hNoct:8.73, hSup:0, hExt:55.21, fRes:44.74, otrosIng:0, bonos:0, ingresos:581.88, iess:50.76, prestamos:76.49, otrosDesc:0, descuentos:127.25, neto:454.63},
+            {no:86, nombre:"VELEZ CEDENO FERNANDA STEFANIA", cedula:"0803501147", fechaIng:"2024/Jan/01", cargo:"AYUDANTE DE", depto:"CONDADO", sueldo:473.2, hNoct:7.71, hSup:0, hExt:37.46, fRes:41.74, otrosIng:0, bonos:0, ingresos:560.11, iess:48.99, prestamos:0, otrosDesc:0, descuentos:48.99, neto:511.12},
+            {no:87, nombre:"VELIZ RAMIREZ IVANA LISBETH", cedula:"1726594961", fechaIng:"2015/Mar/25", cargo:"MESERAS", depto:"BOSQUE", sueldo:474.61, hNoct:10.45, hSup:0, hExt:81.08, fRes:0, otrosIng:0, bonos:0, ingresos:566.14, iess:53.5, prestamos:47.16, otrosDesc:0, descuentos:100.66, neto:465.48},
+            {no:88, nombre:"VERA MONCADA JORDY ALINSON", cedula:"1725991671", fechaIng:"2017/May/22", cargo:"AYUDANTE DE", depto:"CCI", sueldo:475.55, hNoct:8.67, hSup:25.26, hExt:37.65, fRes:47.84, otrosIng:27.15, bonos:0, ingresos:622.12, iess:54.27, prestamos:0, otrosDesc:0, descuentos:54.27, neto:567.85},
+            {no:89, nombre:"VIDAL BRAVO ANTONIA TERESA", cedula:"1350972129", fechaIng:"2024/Dec/01", cargo:"AYUDANTE DE", depto:"CONDADO", sueldo:473.2, hNoct:7.48, hSup:0, hExt:37.46, fRes:0, otrosIng:231.57, bonos:0, ingresos:749.71, iess:70.85, prestamos:0, otrosDesc:0, descuentos:70.85, neto:678.86},
+            {no:90, nombre:"ZURITA FLORES MARIA CRISTINA", cedula:"1705463170", fechaIng:"2016/Mar/01", cargo:"GERENTE Y AF", depto:"CONDADO", sueldo:3000, hNoct:0, hSup:0, hExt:0, fRes:249.9, otrosIng:0, bonos:0, ingresos:3249.9, iess:283.5, prestamos:326.81, otrosDesc:0, descuentos:610.31, neto:2639.59}
+        ];
+
         // ==================== DATA STORAGE ====================
         var employees = JSON.parse(localStorage.getItem('hr_employees')) || [];
         var config = JSON.parse(localStorage.getItem('hr_config')) || {
-            companyName: 'Ensign Partner',
+            companyName: 'JASAFOOD S.A.',
             companyRuc: '',
             companyAddress: '',
             companyPhone: '',
@@ -2237,12 +2479,14 @@
         };
 
         var currentEmployeeToDelete = null;
+        var currentPayrollEmployee = null;
         var salaryChart = null;
 
         // ==================== INITIALIZATION ====================
         document.addEventListener('DOMContentLoaded', function() {
             initializeApp();
             loadConfig();
+            renderPayrollTable();
             renderEmployees();
             updateStats();
             initializeChart();
@@ -2251,9 +2495,32 @@
         });
 
         function initializeApp() {
-            var now = new Date();
-            var month = String(now.getMonth() + 1).padStart(2, '0');
-            document.getElementById('payrollPeriod').value = now.getFullYear() + '-' + month;
+            if (employees.length === 0) {
+                convertPayrollDataToEmployees();
+            }
+            renderPayrollTable();
+            populatePayrollSelect();
+        }
+
+        function convertPayrollDataToEmployees() {
+            employees = payrollData.map(function(item) {
+                return {
+                    id: generateId(),
+                    nombres: item.nombre.split(' ').slice(0, -1).join(' ') || item.nombre,
+                    apellidos: item.nombre.split(' ').slice(-2).join(' ') || ' ',
+                    cedula: item.cedula,
+                    correo: '',
+                    departamento: item.depto,
+                    cargo: item.cargo,
+                    sueldoBase: item.sueldo,
+                    horasExtras: item.hNoct + item.hSup + item.hExt,
+                    bonificaciones: item.bonos,
+                    fechaIngreso: item.fechaIng.replace(/\//g, '-'),
+                    tipoContrato: 'Indefinido',
+                    estado: 'Activo'
+                };
+            });
+            localStorage.setItem('hr_employees', JSON.stringify(employees));
         }
 
         function loadConfig() {
@@ -2271,7 +2538,6 @@
             setToggleState('toggleEmailNotifications', config.emailNotifications);
 
             document.getElementById('companyNameDisplay').textContent = config.companyName;
-            document.getElementById('companyRucDisplay').textContent = config.companyRuc || 'Sin configurar';
         }
 
         function setToggleState(id, state) {
@@ -2326,7 +2592,8 @@
             var titles = {
                 dashboard: 'Dashboard',
                 employees: 'Gestion de Empleados',
-                payroll: 'Rol de Pagos',
+                payroll: 'Rol de Pagos Individual',
+                payrollList: 'Nómina de Enero 2025',
                 comparison: 'Comparativa Comercial',
                 config: 'Configuracion'
             };
@@ -2341,7 +2608,8 @@
 
             if (sectionId === 'employees') {
                 renderEmployees();
-                populatePayrollSelect();
+            } else if (sectionId === 'payrollList') {
+                renderPayrollTable();
             } else if (sectionId === 'payroll') {
                 populatePayrollSelect();
             } else if (sectionId === 'dashboard') {
@@ -2386,6 +2654,7 @@
 
             var activeCount = employees.filter(function(e) { return e.estado === 'Activo'; }).length;
             document.getElementById('employeeCount').textContent = activeCount;
+            document.getElementById('totalEmployeesDisplay').textContent = activeCount;
         }
 
         function filterEmployees() {
@@ -2393,8 +2662,7 @@
             var department = document.getElementById('departmentFilter').value;
 
             var filtered = employees.filter(function(emp) {
-                var matchesSearch = emp.nombres.toLowerCase().includes(search) ||
-                                     emp.apellidos.toLowerCase().includes(search) ||
+                var matchesSearch = (emp.nombres + ' ' + emp.apellidos).toLowerCase().includes(search) ||
                                      emp.cedula.includes(search);
                 var matchesDepartment = !department || emp.departamento === department;
                 return matchesSearch && matchesDepartment;
@@ -2498,6 +2766,8 @@
             var emp = employees.find(function(e) { return e.id === id; });
             if (!emp) return;
 
+            var payrollItem = payrollData.find(function(p) { return p.cedula === emp.cedula; });
+            
             var details = '<div style="text-align: center; margin-bottom: 24px;">' +
                 '<div style="width: 80px; height: 80px; background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; color: white; font-size: 28px; font-weight: 700;">' +
                     emp.nombres.charAt(0) + emp.apellidos.charAt(0) +
@@ -2515,6 +2785,7 @@
                     '<div><strong>Bonificaciones:</strong> $' + parseFloat(emp.bonificaciones).toFixed(2) + '</div>' +
                     '<div><strong>Tipo Contrato:</strong> ' + emp.tipoContrato + '</div>' +
                     '<div><strong>Fecha Ingreso:</strong> ' + emp.fechaIngreso + '</div>' +
+                    (payrollItem ? '<div><strong>Neto a Pagar:</strong> $' + payrollItem.neto.toFixed(2) + '</div>' : '') +
                 '</div>';
 
             document.getElementById('payrollPreviewContent').innerHTML = '<div class="payroll-preview">' + details + '</div>';
@@ -2550,23 +2821,66 @@
             closeDeleteModal();
         }
 
-        // ==================== PAYROLL ====================
+        // ==================== PAYROLL TABLE ====================
+        function renderPayrollTable() {
+            var tbody = document.getElementById('payrollTableBody');
+            
+            tbody.innerHTML = payrollData.map(function(item) {
+                return '<tr>' +
+                    '<td>' + item.no + '</td>' +
+                    '<td>' + item.nombre + '</td>' +
+                    '<td>' + item.cedula + '</td>' +
+                    '<td>' + item.fechaIng + '</td>' +
+                    '<td>' + item.cargo + '</td>' +
+                    '<td>' + item.depto + '</td>' +
+                    '<td>$' + item.sueldo.toFixed(2) + '</td>' +
+                    '<td>$' + item.hNoct.toFixed(2) + '</td>' +
+                    '<td>$' + item.hSup.toFixed(2) + '</td>' +
+                    '<td>$' + item.hExt.toFixed(2) + '</td>' +
+                    '<td>$' + item.fRes.toFixed(2) + '</td>' +
+                    '<td>$' + item.bonos.toFixed(2) + '</td>' +
+                    '<td>$' + item.ingresos.toFixed(2) + '</td>' +
+                    '<td>$' + item.iess.toFixed(2) + '</td>' +
+                    '<td>$' + item.prestamos.toFixed(2) + '</td>' +
+                    '<td>$' + item.otrosDesc.toFixed(2) + '</td>' +
+                    '<td>$' + item.descuentos.toFixed(2) + '</td>' +
+                    '<td><strong>$' + item.neto.toFixed(2) + '</strong></td>' +
+                '</tr>';
+            }).join('') + 
+            '<tr class="total-row">' +
+                '<td colspan="6"><strong>TOTAL GENERAL</strong></td>' +
+                '<td><strong>$' + payrollData.reduce((sum, i) => sum + i.sueldo, 0).toFixed(2) + '</strong></td>' +
+                '<td><strong>$' + payrollData.reduce((sum, i) => sum + i.hNoct, 0).toFixed(2) + '</strong></td>' +
+                '<td><strong>$' + payrollData.reduce((sum, i) => sum + i.hSup, 0).toFixed(2) + '</strong></td>' +
+                '<td><strong>$' + payrollData.reduce((sum, i) => sum + i.hExt, 0).toFixed(2) + '</strong></td>' +
+                '<td><strong>$' + payrollData.reduce((sum, i) => sum + i.fRes, 0).toFixed(2) + '</strong></td>' +
+                '<td><strong>$' + payrollData.reduce((sum, i) => sum + i.bonos, 0).toFixed(2) + '</strong></td>' +
+                '<td><strong>$' + payrollData.reduce((sum, i) => sum + i.ingresos, 0).toFixed(2) + '</strong></td>' +
+                '<td><strong>$' + payrollData.reduce((sum, i) => sum + i.iess, 0).toFixed(2) + '</strong></td>' +
+                '<td><strong>$' + payrollData.reduce((sum, i) => sum + i.prestamos, 0).toFixed(2) + '</strong></td>' +
+                '<td><strong>$' + payrollData.reduce((sum, i) => sum + i.otrosDesc, 0).toFixed(2) + '</strong></td>' +
+                '<td><strong>$' + payrollData.reduce((sum, i) => sum + i.descuentos, 0).toFixed(2) + '</strong></td>' +
+                '<td><strong>$' + payrollData.reduce((sum, i) => sum + i.neto, 0).toFixed(2) + '</strong></td>' +
+            '</tr>';
+        }
+
+        // ==================== INDIVIDUAL PAYROLL ====================
         function populatePayrollSelect() {
             var select = document.getElementById('payrollEmployee');
             var activeEmployees = employees.filter(function(e) { return e.estado === 'Activo'; });
             
             select.innerHTML = '<option value="">-- Seleccionar --</option>' + 
                 activeEmployees.map(function(emp) {
-                    return '<option value="' + emp.id + '">' + emp.nombres + ' ' + emp.apellidos + ' - ' + emp.cedula + '</option>';
+                    return '<option value="' + emp.cedula + '">' + emp.nombres + ' ' + emp.apellidos + ' - ' + emp.cedula + '</option>';
                 }).join('');
         }
 
-        function calculatePayroll() {
-            var employeeId = document.getElementById('payrollEmployee').value;
+        function loadEmployeePayroll() {
+            var cedula = document.getElementById('payrollEmployee').value;
             var calculationDiv = document.getElementById('payrollCalculation');
             var emptyDiv = document.getElementById('emptyPayroll');
 
-            if (!employeeId) {
+            if (!cedula) {
                 calculationDiv.style.display = 'none';
                 emptyDiv.style.display = 'block';
                 return;
@@ -2575,121 +2889,62 @@
             calculationDiv.style.display = 'block';
             emptyDiv.style.display = 'none';
 
-            var emp = employees.find(function(e) { return e.id === employeeId; });
-            if (!emp) return;
+            var payrollItem = payrollData.find(function(p) { return p.cedula === cedula; });
+            if (!payrollItem) return;
 
-            var baseSalary = parseFloat(emp.sueldoBase) || 0;
-            var overtime = parseFloat(document.getElementById('payrollOvertime').value) || 0;
-            var bonus = parseFloat(document.getElementById('payrollBonus').value) || 0;
-            var otherIncome = parseFloat(document.getElementById('payrollOtherIncome').value) || 0;
-            var otherDeductions = parseFloat(document.getElementById('payrollOtherDeductions').value) || 0;
-            var advance = parseFloat(document.getElementById('payrollAdvance').value) || 0;
+            currentPayrollEmployee = payrollItem;
 
-            var iess = baseSalary * (config.iessPercent / 100);
+            document.getElementById('previewCompanyInfo').textContent = 'Del: 01/Ene/2025 Al: 31/Ene/2025';
+            
+            document.getElementById('previewEmployee').innerHTML = 
+                '<div class="payroll-field"><span class="payroll-field-label">Empleado</span><span class="payroll-field-value">' + payrollItem.nombre + '</span></div>' +
+                '<div class="payroll-field"><span class="payroll-field-label">Cedula</span><span class="payroll-field-value">' + payrollItem.cedula + '</span></div>' +
+                '<div class="payroll-field"><span class="payroll-field-label">Departamento</span><span class="payroll-field-value">' + payrollItem.depto + '</span></div>' +
+                '<div class="payroll-field"><span class="payroll-field-label">Cargo</span><span class="payroll-field-value">' + payrollItem.cargo + '</span></div>' +
+                '<div class="payroll-field"><span class="payroll-field-label">Fecha Ingreso</span><span class="payroll-field-value">' + payrollItem.fechaIng + '</span></div>';
 
-            var decimoTercero = config.decimoTercero ? baseSalary / 12 : 0;
-            var decimoCuarto = config.decimoCuarto ? config.minimumWage / 12 : 0;
-            var fondosReserva = config.fondosReserva ? baseSalary / 12 : 0;
-
-            var overtimeValue = overtime * 2.5;
-            var totalIncome = baseSalary + overtimeValue + bonus + otherIncome + decimoTercero + decimoCuarto + fondosReserva;
-
-            var totalDeductions = iess + otherDeductions + advance;
-
-            var netPay = totalIncome - totalDeductions;
-
-            document.getElementById('payrollBaseSalary').value = baseSalary.toFixed(2);
-            document.getElementById('employeeEmail').value = emp.correo || '';
-            document.getElementById('iessContribution').value = '$' + iess.toFixed(2);
-            document.getElementById('decimoTercero').value = '$' + decimoTercero.toFixed(2);
-            document.getElementById('decimoCuarto').value = '$' + decimoCuarto.toFixed(2);
-            document.getElementById('fondosReserva').value = '$' + fondosReserva.toFixed(2);
-            document.getElementById('totalIncome').value = '$' + totalIncome.toFixed(2);
-            document.getElementById('totalDeductionsPayroll').value = '$' + totalDeductions.toFixed(2);
-            document.getElementById('netPayroll').textContent = '$' + netPay.toFixed(2);
-
-            window.currentPayrollData = {
-                employee: emp,
-                baseSalary: baseSalary,
-                overtime: overtime,
-                overtimeValue: overtimeValue,
-                bonus: bonus,
-                otherIncome: otherIncome,
-                iess: iess,
-                decimoTercero: decimoTercero,
-                decimoCuarto: decimoCuarto,
-                fondosReserva: fondosReserva,
-                otherDeductions: otherDeductions,
-                advance: advance,
-                totalIncome: totalIncome,
-                totalDeductions: totalDeductions,
-                netPay: netPay,
-                period: document.getElementById('payrollPeriod').value
-            };
+            calculateIndividualPayroll();
         }
 
-        function previewPayroll() {
-            if (!window.currentPayrollData) {
-                showToast('Error', 'Seleccione un empleado primero', 'error');
-                return;
-            }
+        function calculateIndividualPayroll() {
+            if (!currentPayrollEmployee) return;
 
-            var data = window.currentPayrollData;
-            var emp = data.employee;
-            var period = data.period.split('-');
-            var monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+            var extraHours = parseFloat(document.getElementById('payrollExtraHours').value) || 0;
+            var extraBonus = parseFloat(document.getElementById('payrollExtraBonus').value) || 0;
+            var extraDeductions = parseFloat(document.getElementById('payrollExtraDeductions').value) || 0;
 
-            var content = '<div class="payroll-preview" id="payrollPrintArea">' +
-                '<div class="payroll-header">' +
-                    '<img src="' + config.logoUrl + '" alt="Logo" class="payroll-logo">' +
-                    '<div class="payroll-company-name">' + config.companyName + '</div>' +
-                    '<div class="payroll-company-info">' +
-                        'RUC: ' + (config.companyRuc || 'No registrado') + ' | ' + (config.companyAddress || '') + ' | ' + (config.companyPhone || '') +
-                    '</div>' +
-                '</div>' +
-                '<div class="payroll-title">ROL DE PAGOS - ' + monthNames[parseInt(period[1]) - 1] + ' ' + period[0] + '</div>' +
-                '<div class="payroll-employee">' +
-                    '<div class="payroll-field"><span class="payroll-field-label">Empleado</span><span class="payroll-field-value">' + emp.nombres + ' ' + emp.apellidos + '</span></div>' +
-                    '<div class="payroll-field"><span class="payroll-field-label">Cedula</span><span class="payroll-field-value">' + emp.cedula + '</span></div>' +
-                    '<div class="payroll-field"><span class="payroll-field-label">Departamento</span><span class="payroll-field-value">' + emp.departamento + '</span></div>' +
-                    '<div class="payroll-field"><span class="payroll-field-label">Cargo</span><span class="payroll-field-value">' + emp.cargo + '</span></div>' +
-                    '<div class="payroll-field"><span class="payroll-field-label">Fecha Ingreso</span><span class="payroll-field-value">' + emp.fechaIngreso + '</span></div>' +
-                    '<div class="payroll-field"><span class="payroll-field-label">Tipo Contrato</span><span class="payroll-field-value">' + emp.tipoContrato + '</span></div>' +
-                '</div>' +
-                '<table class="payroll-table"><thead><tr><th>Concepto</th><th>Valor</th></tr></thead><tbody>' +
-                    '<tr><td>Sueldo Base</td><td>$' + data.baseSalary.toFixed(2) + '</td></tr>' +
-                    '<tr><td>Horas Extras</td><td>$' + data.overtimeValue.toFixed(2) + '</td></tr>' +
-                    '<tr><td>Bonificaciones</td><td>$' + data.bonus.toFixed(2) + '</td></tr>' +
-                    '<tr><td>Otros Ingresos</td><td>$' + data.otherIncome.toFixed(2) + '</td></tr>' +
-                    (config.decimoTercero ? '<tr><td>XIII Sueldo (1/12)</td><td>$' + data.decimoTercero.toFixed(2) + '</td></tr>' : '') +
-                    (config.decimoCuarto ? '<tr><td>XIV Sueldo (1/12)</td><td>$' + data.decimoCuarto.toFixed(2) + '</td></tr>' : '') +
-                    (config.fondosReserva ? '<tr><td>Fondos Reserva (1/12)</td><td>$' + data.fondosReserva.toFixed(2) + '</td></tr>' : '') +
-                    '<tr style="background: var(--gray-100); font-weight: 700;"><td>TOTAL INGRESOS</td><td>$' + data.totalIncome.toFixed(2) + '</td></tr>' +
-                '</tbody></table>' +
-                '<table class="payroll-table"><thead><tr><th>Descuentos</th><th>Valor</th></tr></thead><tbody>' +
-                    '<tr><td>Aporte IESS (' + config.iessPercent + '%)</td><td style="color: var(--danger);">-$' + data.iess.toFixed(2) + '</td></tr>' +
-                    '<tr><td>Otros Descuentos</td><td style="color: var(--danger);">-$' + data.otherDeductions.toFixed(2) + '</td></tr>' +
-                    '<tr><td>Anticipos</td><td style="color: var(--danger);">-$' + data.advance.toFixed(2) + '</td></tr>' +
-                    '<tr style="background: var(--gray-100); font-weight: 700;"><td>TOTAL DESCUENTOS</td><td style="color: var(--danger);">-$' + data.totalDeductions.toFixed(2) + '</td></tr>' +
-                '</tbody></table>' +
-                '<div class="payroll-totals">' +
-                    '<div class="payroll-total"><div class="payroll-total-label">Total Ingresos</div><div class="payroll-total-value" style="color: var(--success);">$' + data.totalIncome.toFixed(2) + '</div></div>' +
-                    '<div class="payroll-total"><div class="payroll-total-label">Total Descuentos</div><div class="payroll-total-value" style="color: var(--danger);">$' + data.totalDeductions.toFixed(2) + '</div></div>' +
-                    '<div class="payroll-total"><div class="payroll-total-label">NETO A PAGAR</div><div class="payroll-total-value net">$' + data.netPay.toFixed(2) + '</div></div>' +
-                '</div>' +
-                '<div class="payroll-footer">' +
-                    '<div class="signature-box"><div class="signature-line"></div><div class="signature-label">Firma del Empleado</div></div>' +
-                    '<div class="signature-box"><div class="signature-line"></div><div class="signature-label">Firma de Recursos Humanos</div></div>' +
-                '</div>' +
-            '</div>';
+            var item = currentPayrollEmployee;
 
-            document.getElementById('payrollPreviewContent').innerHTML = content;
-            showSection('payrollPreview');
+            var incomeBody = document.getElementById('previewIncomeBody');
+            incomeBody.innerHTML = 
+                '<tr><td>Sueldo Base</td><td>$' + item.sueldo.toFixed(2) + '</td></tr>' +
+                '<tr><td>Horas Nocturnas</td><td>$' + item.hNoct.toFixed(2) + '</td></tr>' +
+                '<tr><td>Horas Suplementarias</td><td>$' + item.hSup.toFixed(2) + '</td></tr>' +
+                '<tr><td>Horas Extraordinarias</td><td>$' + item.hExt.toFixed(2) + '</td></tr>' +
+                '<tr><td>Fondo de Reserva</td><td>$' + item.fRes.toFixed(2) + '</td></tr>' +
+                '<tr><td>Bonificaciones</td><td>$' + (item.bonos + extraBonus).toFixed(2) + '</td></tr>' +
+                '<tr style="background: var(--gray-100); font-weight: 700;"><td>TOTAL INGRESOS</td><td>$' + (item.ingresos + extraBonus).toFixed(2) + '</td></tr>';
+
+            var deductionBody = document.getElementById('previewDeductionsBody');
+            deductionBody.innerHTML = 
+                '<tr><td>Aporte IESS (9.45%)</td><td style="color: var(--danger);">-$' + item.iess.toFixed(2) + '</td></tr>' +
+                '<tr><td>Préstamos</td><td style="color: var(--danger);">-$' + item.prestamos.toFixed(2) + '</td></tr>' +
+                '<tr><td>Otros Descuentos</td><td style="color: var(--danger);">-$' + (item.otrosDesc + extraDeductions).toFixed(2) + '</td></tr>' +
+                '<tr style="background: var(--gray-100); font-weight: 700;"><td>TOTAL DESCUENTOS</td><td style="color: var(--danger);">-$' + (item.descuentos + extraDeductions).toFixed(2) + '</td></tr>';
+
+            var totalIncome = item.ingresos + extraBonus;
+            var totalDeductions = item.descuentos + extraDeductions;
+            var netPay = totalIncome - totalDeductions;
+
+            document.getElementById('previewTotals').innerHTML = 
+                '<div class="payroll-total"><div class="payroll-total-label">Total Ingresos</div><div class="payroll-total-value" style="color: var(--success);">$' + totalIncome.toFixed(2) + '</div></div>' +
+                '<div class="payroll-total"><div class="payroll-total-label">Total Descuentos</div><div class="payroll-total-value" style="color: var(--danger);">$' + totalDeductions.toFixed(2) + '</div></div>' +
+                '<div class="payroll-total"><div class="payroll-total-label">NETO A PAGAR</div><div class="payroll-total-value net">$' + netPay.toFixed(2) + '</div></div>';
         }
 
         // ==================== PDF GENERATION ====================
-        async function generatePayrollPDF() {
-            if (!window.currentPayrollData) {
+        async function generateIndividualPDF() {
+            if (!currentPayrollEmployee) {
                 showToast('Error', 'Seleccione un empleado primero', 'error');
                 return;
             }
@@ -2697,11 +2952,15 @@
             showLoader('Generando PDF...');
 
             try {
-                var data = window.currentPayrollData;
-                var emp = data.employee;
-                var period = data.period.split('-');
-                var monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
-                
+                var item = currentPayrollEmployee;
+                var extraHours = parseFloat(document.getElementById('payrollExtraHours').value) || 0;
+                var extraBonus = parseFloat(document.getElementById('payrollExtraBonus').value) || 0;
+                var extraDeductions = parseFloat(document.getElementById('payrollExtraDeductions').value) || 0;
+
+                var totalIncome = item.ingresos + extraBonus;
+                var totalDeductions = item.descuentos + extraDeductions;
+                var netPay = totalIncome - totalDeductions;
+
                 var jsPDF = window.jspdf.jsPDF;
                 var doc = new jsPDF();
                 
@@ -2726,18 +2985,14 @@
 
                 doc.setFontSize(10);
                 doc.setFont('helvetica', 'normal');
-                var companyInfo = '';
-                if (config.companyRuc) companyInfo += 'RUC: ' + config.companyRuc;
-                if (config.companyAddress) companyInfo += ' | ' + config.companyAddress;
-                if (config.companyPhone) companyInfo += ' | ' + config.companyPhone;
-                doc.text(companyInfo || 'Sistema de Recursos Humanos', 55, 30);
+                doc.text('Del: 01/Ene/2025 Al: 31/Ene/2025', 55, 30);
 
                 doc.setFillColor.apply(doc, accentColor);
                 doc.rect(0, 45, 210, 12, 'F');
                 doc.setTextColor(255, 255, 255);
                 doc.setFontSize(14);
                 doc.setFont('helvetica', 'bold');
-                doc.text('ROL DE PAGOS - ' + monthNames[parseInt(period[1]) - 1] + ' ' + period[0], 105, 53, { align: 'center' });
+                doc.text('ROL DE PAGOS - ENERO 2025', 105, 53, { align: 'center' });
 
                 var y = 70;
                 doc.setTextColor.apply(doc, darkGray);
@@ -2749,10 +3004,10 @@
                 doc.setFont('helvetica', 'bold');
                 doc.text('EMPLEADO', 20, y + 3);
                 doc.setFont('helvetica', 'normal');
-                doc.text(emp.nombres + ' ' + emp.apellidos, 20, y + 12);
-                doc.text('Cedula: ' + emp.cedula, 20, y + 19);
-                doc.text('Departamento: ' + emp.departamento, 110, y + 12);
-                doc.text('Cargo: ' + emp.cargo, 110, y + 19);
+                doc.text(item.nombre, 20, y + 12);
+                doc.text('Cedula: ' + item.cedula, 20, y + 19);
+                doc.text('Departamento: ' + item.depto, 110, y + 12);
+                doc.text('Cargo: ' + item.cargo, 110, y + 19);
 
                 y += 45;
 
@@ -2769,23 +3024,21 @@
                 doc.setFontSize(10);
 
                 var incomeItems = [
-                    ['Sueldo Base', data.baseSalary.toFixed(2)],
-                    ['Horas Extras', data.overtimeValue.toFixed(2)],
-                    ['Bonificaciones', data.bonus.toFixed(2)],
-                    ['Otros Ingresos', data.otherIncome.toFixed(2)]
+                    ['Sueldo Base', item.sueldo],
+                    ['Horas Nocturnas', item.hNoct],
+                    ['Horas Suplementarias', item.hSup],
+                    ['Horas Extraordinarias', item.hExt],
+                    ['Fondo de Reserva', item.fRes],
+                    ['Bonificaciones', item.bonos + extraBonus]
                 ];
 
-                if (config.decimoTercero) incomeItems.push(['XIII Sueldo (1/12)', data.decimoTercero.toFixed(2)]);
-                if (config.decimoCuarto) incomeItems.push(['XIV Sueldo (1/12)', data.decimoCuarto.toFixed(2)]);
-                if (config.fondosReserva) incomeItems.push(['Fondos Reserva (1/12)', data.fondosReserva.toFixed(2)]);
-
-                incomeItems.forEach(function(item, index) {
+                incomeItems.forEach(function(itemArray, index) {
                     if (index % 2 === 0) {
                         doc.setFillColor(255, 255, 255);
                         doc.rect(15, y - 4, 180, 8, 'F');
                     }
-                    doc.text(item[0], 20, y + 1);
-                    doc.text('$' + item[1], 175, y + 1, { align: 'right' });
+                    doc.text(itemArray[0], 20, y + 1);
+                    doc.text('$' + itemArray[1].toFixed(2), 175, y + 1, { align: 'right' });
                     y += 8;
                 });
 
@@ -2794,7 +3047,7 @@
                 doc.setFont('helvetica', 'bold');
                 doc.text('TOTAL INGRESOS', 20, y + 2);
                 doc.setTextColor(16, 185, 129);
-                doc.text('$' + data.totalIncome.toFixed(2), 175, y + 2, { align: 'right' });
+                doc.text('$' + totalIncome.toFixed(2), 175, y + 2, { align: 'right' });
 
                 y += 15;
 
@@ -2811,18 +3064,18 @@
                 doc.setFontSize(10);
 
                 var deductionItems = [
-                    ['Aporte IESS (' + config.iessPercent + '%)', data.iess.toFixed(2)],
-                    ['Otros Descuentos', data.otherDeductions.toFixed(2)],
-                    ['Anticipos', data.advance.toFixed(2)]
+                    ['Aporte IESS (9.45%)', item.iess],
+                    ['Préstamos', item.prestamos],
+                    ['Otros Descuentos', item.otrosDesc + extraDeductions]
                 ];
 
-                deductionItems.forEach(function(item, index) {
+                deductionItems.forEach(function(itemArray, index) {
                     if (index % 2 === 0) {
                         doc.setFillColor(255, 255, 255);
                         doc.rect(15, y - 4, 180, 8, 'F');
                     }
-                    doc.text(item[0], 20, y + 1);
-                    doc.text('$' + item[1], 175, y + 1, { align: 'right' });
+                    doc.text(itemArray[0], 20, y + 1);
+                    doc.text('$' + itemArray[1].toFixed(2), 175, y + 1, { align: 'right' });
                     y += 8;
                 });
 
@@ -2831,7 +3084,7 @@
                 doc.setFont('helvetica', 'bold');
                 doc.setTextColor(239, 68, 68);
                 doc.text('TOTAL DESCUENTOS', 20, y + 2);
-                doc.text('-$' + data.totalDeductions.toFixed(2), 175, y + 2, { align: 'right' });
+                doc.text('-$' + totalDeductions.toFixed(2), 175, y + 2, { align: 'right' });
 
                 y += 20;
 
@@ -2842,7 +3095,7 @@
                 doc.text('NETO A PAGAR', 105, y + 8, { align: 'center' });
                 doc.setFontSize(24);
                 doc.setFont('helvetica', 'bold');
-                doc.text('$' + data.netPay.toFixed(2), 105, y + 22, { align: 'center' });
+                doc.text('$' + netPay.toFixed(2), 105, y + 22, { align: 'center' });
 
                 y += 45;
 
@@ -2862,10 +3115,8 @@
                 doc.setTextColor(150, 150, 150);
                 doc.text('Documento generado el ' + new Date().toLocaleDateString('es-ES') + ' - ' + config.companyName + ' - Sistema de Nomina', 105, 290, { align: 'center' });
 
-                var fileName = 'Rol_Pago_' + emp.cedula + '_' + period[1] + '_' + period[0] + '.pdf';
+                var fileName = 'Rol_Pago_' + item.cedula + '_Enero_2025.pdf';
                 doc.save(fileName);
-
-                document.getElementById('lastPayrollDate').textContent = new Date().toLocaleDateString('es-ES');
                 
                 showLoader('');
                 showToast('PDF Generado', 'El archivo ' + fileName + ' se ha descargado', 'success');
@@ -2879,21 +3130,22 @@
 
         // ==================== EMAIL ====================
         function sendPayrollEmail() {
-            var email = document.getElementById('employeeEmail').value.trim();
-            
-            if (!email) {
-                showToast('Error', 'Ingrese el correo del empleado', 'error');
+            if (!currentPayrollEmployee) {
+                showToast('Error', 'Seleccione un empleado primero', 'error');
                 return;
             }
 
-            if (!window.currentPayrollData) {
-                showToast('Error', 'Seleccione un empleado primero', 'error');
+            var emp = employees.find(function(e) { return e.cedula === currentPayrollEmployee.cedula; });
+            var email = emp && emp.correo ? emp.correo : '';
+            
+            if (!email) {
+                showToast('Error', 'El empleado no tiene correo registrado', 'error');
                 return;
             }
 
             var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailRegex.test(email)) {
-                showToast('Error', 'Ingrese un correo electronico valido', 'error');
+                showToast('Error', 'El correo del empleado no es válido', 'error');
                 return;
             }
 
@@ -2903,42 +3155,64 @@
                 showLoader('');
                 showToast('Correo Enviado', 'El rol de pago ha sido enviado a ' + email, 'success');
                 
-                generatePayrollPDF();
+                generateIndividualPDF();
             }, 2000);
         }
 
         // ==================== EXCEL EXPORT ====================
-        function exportEmployeesExcel() {
-            if (employees.length === 0) {
-                showToast('Error', 'No hay empleados para exportar', 'error');
-                return;
-            }
-
+        function exportPayrollExcel() {
             showLoader('Exportando a Excel...');
 
             try {
-                var wsData = employees.map(function(emp) {
+                var wsData = payrollData.map(function(item) {
                     return {
-                        'Cedula': emp.cedula,
-                        'Nombres': emp.nombres,
-                        'Apellidos': emp.apellidos,
-                        'Correo': emp.correo,
-                        'Departamento': emp.departamento,
-                        'Cargo': emp.cargo,
-                        'Sueldo Base': emp.sueldoBase,
-                        'Horas Extras': emp.horasExtras,
-                        'Bonificaciones': emp.bonificaciones,
-                        'Fecha Ingreso': emp.fechaIngreso,
-                        'Tipo Contrato': emp.tipoContrato,
-                        'Estado': emp.estado
+                        'No.': item.no,
+                        'NOMBRE': item.nombre,
+                        'CEDULA': item.cedula,
+                        'FEC.ING': item.fechaIng,
+                        'CARGO': item.cargo,
+                        'DEPARTAMENTO': item.depto,
+                        'SUELDO': item.sueldo,
+                        'H.NOCT': item.hNoct,
+                        'H.SUP': item.hSup,
+                        'H.EXT': item.hExt,
+                        'F.RES': item.fRes,
+                        'BONOS': item.bonos,
+                        'INGRESOS': item.ingresos,
+                        'IESS': item.iess,
+                        'PRESTAMOS': item.prestamos,
+                        'OTROS DESC': item.otrosDesc,
+                        'DESCUENTOS': item.descuentos,
+                        'NETO': item.neto
                     };
+                });
+
+                wsData.push({
+                    'No.': '',
+                    'NOMBRE': 'TOTAL GENERAL',
+                    'CEDULA': '',
+                    'FEC.ING': '',
+                    'CARGO': '',
+                    'DEPARTAMENTO': '',
+                    'SUELDO': payrollData.reduce((sum, i) => sum + i.sueldo, 0),
+                    'H.NOCT': payrollData.reduce((sum, i) => sum + i.hNoct, 0),
+                    'H.SUP': payrollData.reduce((sum, i) => sum + i.hSup, 0),
+                    'H.EXT': payrollData.reduce((sum, i) => sum + i.hExt, 0),
+                    'F.RES': payrollData.reduce((sum, i) => sum + i.fRes, 0),
+                    'BONOS': payrollData.reduce((sum, i) => sum + i.bonos, 0),
+                    'INGRESOS': payrollData.reduce((sum, i) => sum + i.ingresos, 0),
+                    'IESS': payrollData.reduce((sum, i) => sum + i.iess, 0),
+                    'PRESTAMOS': payrollData.reduce((sum, i) => sum + i.prestamos, 0),
+                    'OTROS DESC': payrollData.reduce((sum, i) => sum + i.otrosDesc, 0),
+                    'DESCUENTOS': payrollData.reduce((sum, i) => sum + i.descuentos, 0),
+                    'NETO': payrollData.reduce((sum, i) => sum + i.neto, 0)
                 });
 
                 var ws = XLSX.utils.json_to_sheet(wsData);
                 var wb = XLSX.utils.book_new();
-                XLSX.utils.book_append_sheet(wb, ws, 'Empleados');
+                XLSX.utils.book_append_sheet(wb, ws, 'Nomina_Enero_2025');
 
-                var fileName = 'Empleados_' + new Date().toISOString().split('T')[0] + '.xlsx';
+                var fileName = 'Nomina_Enero_2025.xlsx';
                 XLSX.writeFile(wb, fileName);
 
                 showLoader('');
@@ -2963,8 +3237,8 @@
             localStorage.setItem('hr_config', JSON.stringify(config));
 
             document.getElementById('companyNameDisplay').textContent = config.companyName;
-            document.getElementById('companyRucDisplay').textContent = config.companyRuc || 'Sin configurar';
             document.getElementById('sidebarLogo').src = config.logoUrl;
+            document.getElementById('previewCompanyName').textContent = config.companyName;
 
             showToast('Configuracion Guardada', 'Los cambios se han guardado correctamente', 'success');
         }
@@ -2995,9 +3269,9 @@
         // ==================== STATS & CHARTS ====================
         function updateStats() {
             var activeEmployees = employees.filter(function(e) { return e.estado === 'Activo'; });
-            var totalPayroll = activeEmployees.reduce(function(sum, e) { return sum + parseFloat(e.sueldoBase || 0); }, 0);
-            var totalDeductions = totalPayroll * (config.iessPercent / 100);
-            var totalNet = totalPayroll - totalDeductions;
+            var totalPayroll = payrollData.reduce(function(sum, i) { return sum + i.sueldo; }, 0);
+            var totalDeductions = payrollData.reduce(function(sum, i) { return sum + i.descuentos; }, 0);
+            var totalNet = payrollData.reduce(function(sum, i) { return sum + i.neto; }, 0);
 
             document.getElementById('totalEmployees').textContent = activeEmployees.length;
             document.getElementById('totalPayroll').textContent = '$' + totalPayroll.toFixed(2);
@@ -3008,12 +3282,17 @@
         function initializeChart() {
             var ctx = document.getElementById('salaryChart').getContext('2d');
             
+            var deptData = {};
+            payrollData.forEach(function(item) {
+                deptData[item.depto] = (deptData[item.depto] || 0) + item.sueldo;
+            });
+
             salaryChart = new Chart(ctx, {
                 type: 'doughnut',
                 data: {
-                    labels: ['Gerencia', 'Contabilidad', 'RRHH', 'Ventas', 'Marketing', 'Tecnologia', 'Operaciones', 'Atencion al Cliente'],
+                    labels: Object.keys(deptData),
                     datasets: [{
-                        data: [0, 0, 0, 0, 0, 0, 0, 0],
+                        data: Object.values(deptData),
                         backgroundColor: [
                             '#0d0d0d',
                             '#00b4d8',
@@ -3045,21 +3324,18 @@
                     cutout: '65%'
                 }
             });
-
-            updateChart();
         }
 
         function updateChart() {
             if (!salaryChart) return;
 
-            var departments = ['Gerencia', 'Contabilidad', 'Recursos Humanos', 'Ventas', 'Marketing', 'Tecnologia', 'Operaciones', 'Atencion al Cliente'];
-            var data = departments.map(function(dept) {
-                return employees
-                    .filter(function(e) { return e.departamento === dept && e.estado === 'Activo'; })
-                    .reduce(function(sum, e) { return sum + parseFloat(e.sueldoBase || 0); }, 0);
+            var deptData = {};
+            payrollData.forEach(function(item) {
+                deptData[item.depto] = (deptData[item.depto] || 0) + item.sueldo;
             });
 
-            salaryChart.data.datasets[0].data = data;
+            salaryChart.data.labels = Object.keys(deptData);
+            salaryChart.data.datasets[0].data = Object.values(deptData);
             salaryChart.update();
         }
 
@@ -3092,14 +3368,41 @@
             container.appendChild(toast);
 
             setTimeout(function() {
-                toast.remove();
+                if (toast.parentElement) {
+                    toast.remove();
+                }
             }, 5000);
         }
 
         function showLoader(text) {
-            document.getElementById('loaderText').textContent = text;
+            document.getElementById('loaderText').textContent = text || 'Cargando...';
             document.getElementById('loader').classList.add('active');
         }
+
+        function hideLoader() {
+            document.getElementById('loader').classList.remove('active');
+        }
+
+        // Make functions global
+        window.showSection = showSection;
+        window.openEmployeeModal = openEmployeeModal;
+        window.closeEmployeeModal = closeEmployeeModal;
+        window.saveEmployee = saveEmployee;
+        window.viewEmployee = viewEmployee;
+        window.editEmployee = editEmployee;
+        window.deleteEmployee = deleteEmployee;
+        window.closeDeleteModal = closeDeleteModal;
+        window.confirmDelete = confirmDelete;
+        window.filterEmployees = filterEmployees;
+        window.loadEmployeePayroll = loadEmployeePayroll;
+        window.calculateIndividualPayroll = calculateIndividualPayroll;
+        window.generateIndividualPDF = generateIndividualPDF;
+        window.sendPayrollEmail = sendPayrollEmail;
+        window.exportPayrollExcel = exportPayrollExcel;
+        window.saveConfig = saveConfig;
+        window.previewLogo = previewLogo;
+        window.toggleOption = toggleOption;
+        window.showToast = showToast;
     </script>
 </body>
 </html>
