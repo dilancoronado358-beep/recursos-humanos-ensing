@@ -3,1073 +3,3103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Extractor SRI con OCR - Para mi Amor Contadora 💖</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Ensign Partner - Sistema de Recursos Humanos y Nómina</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    
+    <!-- jsPDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    
+    <!-- html2canvas -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    
+    <!-- SheetJS for Excel -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
+
     <style>
+        :root {
+            --primary: #0d0d0d;
+            --primary-light: #1a1a1a;
+            --primary-dark: #000000;
+            --accent: #00b4d8;
+            --accent-light: #0096c7;
+            --accent-glow: rgba(0, 180, 216, 0.3);
+            --white: #ffffff;
+            --gray-50: #f8f9fa;
+            --gray-100: #f1f3f4;
+            --gray-200: #e3e6e8;
+            --gray-300: #cfd4da;
+            --gray-400: #868e96;
+            --gray-500: #6c757d;
+            --gray-600: #495057;
+            --gray-700: #343a40;
+            --gray-800: #212529;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --info: #3b82f6;
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+            --shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Arial Rounded MT Bold', 'Arial', sans-serif;
         }
-        
+
         body {
-            background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 100%);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--gray-50);
+            color: var(--gray-800);
             min-height: 100vh;
-            padding: 20px;
-            color: #333;
+            overflow-x: hidden;
         }
-        
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            background-color: white;
-            border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-            overflow: hidden;
-            padding: 40px;
-            position: relative;
-            border: 5px solid #ff6b6b;
-        }
-        
-        .heart-decoration {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            font-size: 40px;
-            color: #ff6b6b;
-            animation: heartbeat 1.5s infinite;
-        }
-        
-        @keyframes heartbeat {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-        }
-        
-        header {
-            text-align: center;
-            margin-bottom: 40px;
-            padding-bottom: 25px;
-            border-bottom: 3px dashed #ff6b6b;
-            position: relative;
-        }
-        
-        h1 {
-            color: #ff6b6b;
-            font-size: 2.8rem;
-            margin-bottom: 15px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+
+        .app-container {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 20px;
+            min-height: 100vh;
         }
-        
-        .love-message {
-            background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
-            border: 3px solid #ff6b6b;
-            border-radius: 15px;
-            padding: 25px;
-            margin: 25px 0;
+
+        .sidebar {
+            width: 280px;
+            background: linear-gradient(180deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: var(--white);
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            transition: var(--transition);
+            box-shadow: 4px 0 20px rgba(0,0,0,0.15);
+        }
+
+        .sidebar-header {
+            padding: 24px;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
             text-align: center;
-            position: relative;
-            overflow: hidden;
         }
-        
-        .love-message::before {
-            content: "💕";
-            position: absolute;
-            font-size: 100px;
-            opacity: 0.1;
-            top: -30px;
-            left: -30px;
-            transform: rotate(-15deg);
-        }
-        
-        .love-message h3 {
-            color: #d32f2f;
-            font-size: 1.8rem;
-            margin-bottom: 15px;
-        }
-        
-        .love-message p {
-            color: #555;
-            font-size: 1.2rem;
-            line-height: 1.6;
-        }
-        
-        .upload-area {
-            border: 4px dashed #ff8e8e;
-            border-radius: 15px;
-            padding: 40px 30px;
-            text-align: center;
-            margin-bottom: 30px;
-            background-color: #fff5f5;
-            transition: all 0.3s;
-            position: relative;
-        }
-        
-        .upload-area:hover {
-            border-color: #ff6b6b;
-            background-color: #ffebee;
-            transform: translateY(-5px);
-        }
-        
-        .upload-icon {
-            font-size: 80px;
-            color: #ff6b6b;
-            margin-bottom: 20px;
-            animation: bounce 2s infinite;
-        }
-        
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-        
-        .btn {
-            padding: 16px 35px;
-            background: linear-gradient(135deg, #ff6b6b 0%, #ff5252 100%);
-            color: white;
-            border: none;
-            border-radius: 50px;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: inline-flex;
+
+        .logo-container {
+            display: flex;
             align-items: center;
             justify-content: center;
             gap: 12px;
-            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.3);
-            margin: 10px;
+            margin-bottom: 8px;
         }
-        
-        .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
-            background: linear-gradient(135deg, #ff5252 0%, #ff6b6b 100%);
-        }
-        
-        .btn-success {
-            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
-            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.3);
-        }
-        
-        .btn-success:hover {
-            background: linear-gradient(135deg, #45a049 0%, #4CAF50 100%);
-            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.4);
-        }
-        
-        .btn-danger {
-            background: linear-gradient(135deg, #ff5252 0%, #d32f2f 100%);
-            box-shadow: 0 6px 20px rgba(255, 82, 82, 0.3);
-        }
-        
-        .file-item {
-            background: white;
-            border-radius: 10px;
-            padding: 15px;
-            margin: 10px 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-left: 5px solid #ff6b6b;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-            transition: all 0.3s;
-        }
-        
-        .file-item:hover {
-            transform: translateX(5px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
-        }
-        
-        .progress-container {
-            background: #fff5f5;
-            border-radius: 15px;
-            padding: 25px;
-            margin: 30px 0;
-            display: none;
-            border: 2px solid #ffcdd2;
-        }
-        
-        .progress-bar {
-            width: 100%;
-            height: 25px;
-            background: #ffcdd2;
+
+        .logo-img {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
             border-radius: 12px;
-            overflow: hidden;
-            margin-bottom: 10px;
+            background: var(--white);
+            padding: 5px;
+        }
+
+        .logo-text {
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, var(--white) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .sidebar-subtitle {
+            font-size: 11px;
+            color: var(--gray-400);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 16px 12px;
+            overflow-y: auto;
+        }
+
+        .nav-section {
+            margin-bottom: 24px;
+        }
+
+        .nav-section-title {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            color: var(--gray-500);
+            padding: 0 12px;
+            margin-bottom: 8px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 16px;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: var(--transition);
+            margin-bottom: 4px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--gray-300);
+            text-decoration: none;
+        }
+
+        .nav-item:hover {
+            background: rgba(255,255,255,0.08);
+            color: var(--white);
+            transform: translateX(4px);
+        }
+
+        .nav-item.active {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+            color: var(--white);
+            box-shadow: 0 4px 15px var(--accent-glow);
+        }
+
+        .nav-item i {
+            width: 20px;
+            text-align: center;
+            font-size: 16px;
+        }
+
+        .nav-badge {
+            margin-left: auto;
+            background: var(--danger);
+            color: var(--white);
+            font-size: 10px;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            min-height: 100vh;
+            background: var(--gray-50);
+        }
+
+        .top-navbar {
+            background: var(--white);
+            padding: 16px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: var(--gray-700);
+            padding: 8px;
+            border-radius: var(--radius-sm);
+        }
+
+        .menu-toggle:hover {
+            background: var(--gray-100);
+        }
+
+        .page-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .navbar-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .navbar-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            color: var(--gray-600);
             position: relative;
         }
-        
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #ff6b6b, #ff5252);
-            width: 0%;
-            transition: width 0.5s ease;
+
+        .navbar-icon:hover {
+            background: var(--gray-100);
+            color: var(--primary);
+        }
+
+        .navbar-icon .badge {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            width: 8px;
+            height: 8px;
+            background: var(--danger);
+            border-radius: 50%;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 6px 12px 6px 6px;
+            border-radius: var(--radius-lg);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .user-menu:hover {
+            background: var(--gray-100);
+        }
+
+        .user-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: var(--radius-md);
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--gray-800);
+        }
+
+        .user-role {
+            font-size: 11px;
+            color: var(--gray-500);
+        }
+
+        .content-area {
+            padding: 32px;
+        }
+
+        .section {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+        }
+
+        .card-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--gray-100);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .card-body {
+            padding: 24px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            box-shadow: var(--shadow-md);
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            transition: var(--transition);
             position: relative;
             overflow: hidden;
         }
-        
-        .progress-fill::after {
+
+        .stat-card::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
-            bottom: 0;
-            right: 0;
-            background-image: linear-gradient(
-                -45deg,
-                rgba(255,255,255,0.2) 25%,
-                transparent 25%,
-                transparent 50%,
-                rgba(255,255,255,0.2) 50%,
-                rgba(255,255,255,0.2) 75%,
-                transparent 75%,
-                transparent
-            );
-            background-size: 50px 50px;
-            animation: move 2s linear infinite;
+            width: 4px;
+            height: 100%;
+            background: var(--accent);
         }
-        
-        @keyframes move {
-            0% { background-position: 0 0; }
-            100% { background-position: 50px 50px; }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-xl);
         }
-        
-        .result-section {
-            margin-top: 40px;
-            padding: 30px;
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+
+        .stat-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .stat-icon.blue {
+            background: rgba(59, 130, 246, 0.1);
+            color: #3b82f6;
+        }
+
+        .stat-icon.green {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+        }
+
+        .stat-icon.red {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+        }
+
+        .stat-icon.purple {
+            background: rgba(139, 92, 246, 0.1);
+            color: #8b5cf6;
+        }
+
+        .stat-content {
+            flex: 1;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: var(--gray-500);
+            margin-bottom: 4px;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--primary);
+            line-height: 1.2;
+        }
+
+        .stat-change {
+            font-size: 12px;
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .stat-change.positive {
+            color: var(--success);
+        }
+
+        .stat-change.negative {
+            color: var(--danger);
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+        }
+
+        @media (max-width: 1200px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .chart-container {
+            height: 300px;
+            position: relative;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border-radius: var(--radius-md);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+            color: var(--white);
+            box-shadow: 0 4px 15px var(--accent-glow);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px var(--accent-glow);
+        }
+
+        .btn-secondary {
+            background: var(--gray-100);
+            color: var(--gray-700);
+        }
+
+        .btn-secondary:hover {
+            background: var(--gray-200);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+            color: var(--white);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, var(--danger) 0%, #dc2626 100%);
+            color: var(--white);
+        }
+
+        .btn-sm {
+            padding: 8px 16px;
+            font-size: 13px;
+        }
+
+        .btn-icon {
+            width: 36px;
+            height: 36px;
+            padding: 0;
+            border-radius: var(--radius-sm);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--gray-700);
+            margin-bottom: 8px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--gray-200);
+            border-radius: var(--radius-md);
+            font-size: 14px;
+            font-family: inherit;
+            transition: var(--transition);
+            background: var(--white);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px var(--accent-glow);
+        }
+
+        .form-control::placeholder {
+            color: var(--gray-400);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table th,
+        .table td {
+            padding: 14px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--gray-100);
+        }
+
+        .table th {
+            background: var(--gray-50);
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--gray-600);
+        }
+
+        .table tbody tr {
+            transition: var(--transition);
+        }
+
+        .table tbody tr:hover {
+            background: var(--gray-50);
+        }
+
+        .table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
             border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-badge.active {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+
+        .status-badge.inactive {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+        }
+
+        .status-badge::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: currentColor;
+        }
+
+        .search-filters {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 250px;
+            position: relative;
+        }
+
+        .search-box input {
+            padding-left: 44px;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-400);
+        }
+
+        .filter-select {
+            min-width: 180px;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
             display: none;
-            border: 3px solid #4CAF50;
-            position: relative;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            padding: 20px;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            width: 100%;
+            max-width: 600px;
+            max-height: 90vh;
             overflow: hidden;
+            animation: modalSlideIn 0.3s ease;
         }
-        
-        .result-section::before {
-            content: "💖";
-            position: absolute;
-            font-size: 150px;
-            opacity: 0.05;
-            bottom: -50px;
-            right: -30px;
-            transform: rotate(15deg);
+
+        .modal-large {
+            max-width: 900px;
         }
-        
-        .final-message {
-            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
-            border: 3px solid #4CAF50;
-            border-radius: 15px;
-            padding: 25px;
-            margin-top: 30px;
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .modal-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--gray-100);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .modal-close {
+            width: 36px;
+            height: 36px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            background: none;
+            font-size: 18px;
+            color: var(--gray-500);
+        }
+
+        .modal-close:hover {
+            background: var(--gray-100);
+            color: var(--gray-800);
+        }
+
+        .modal-body {
+            padding: 24px;
+            overflow-y: auto;
+            max-height: calc(90vh - 140px);
+        }
+
+        .modal-footer {
+            padding: 16px 24px;
+            border-top: 1px solid var(--gray-100);
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
+        .toast-container {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 3000;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .toast {
+            background: var(--white);
+            border-radius: var(--radius-md);
+            padding: 16px 20px;
+            box-shadow: var(--shadow-xl);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 300px;
+            max-width: 400px;
+            animation: toastSlideIn 0.3s ease;
+            border-left: 4px solid var(--accent);
+        }
+
+        .toast.success {
+            border-left-color: var(--success);
+        }
+
+        .toast.error {
+            border-left-color: var(--danger);
+        }
+
+        .toast.warning {
+            border-left-color: var(--warning);
+        }
+
+        @keyframes toastSlideIn {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .toast-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: var(--white);
+        }
+
+        .toast.success .toast-icon {
+            background: var(--success);
+        }
+
+        .toast.error .toast-icon {
+            background: var(--danger);
+        }
+
+        .toast.warning .toast-icon {
+            background: var(--warning);
+        }
+
+        .toast-content {
+            flex: 1;
+        }
+
+        .toast-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--gray-800);
+        }
+
+        .toast-message {
+            font-size: 13px;
+            color: var(--gray-500);
+            margin-top: 2px;
+        }
+
+        .toast-close {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--gray-400);
+            font-size: 14px;
+            padding: 4px;
+        }
+
+        .loader-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 4000;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .loader-overlay.active {
+            display: flex;
+        }
+
+        .loader {
+            width: 60px;
+            height: 60px;
+            border: 4px solid var(--gray-200);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loader-text {
+            font-size: 14px;
+            color: var(--gray-600);
+            font-weight: 500;
+        }
+
+        .payroll-preview {
+            background: var(--white);
+            border: 2px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .payroll-header {
             text-align: center;
-            position: relative;
-            overflow: hidden;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--gray-200);
+            margin-bottom: 20px;
         }
-        
-        .final-message::before {
-            content: "💝";
-            position: absolute;
-            font-size: 80px;
-            opacity: 0.1;
-            top: -20px;
-            left: -20px;
+
+        .payroll-logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 16px;
+            object-fit: contain;
         }
-        
-        .final-message h3 {
-            color: #2e7d32;
-            font-size: 1.8rem;
-            margin-bottom: 15px;
+
+        .payroll-company-name {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 4px;
         }
-        
-        .final-message p {
-            color: #555;
-            font-size: 1.3rem;
-            font-weight: bold;
-            line-height: 1.6;
+
+        .payroll-company-info {
+            font-size: 13px;
+            color: var(--gray-500);
         }
-        
-        .love-signature {
+
+        .payroll-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary);
             text-align: center;
-            margin-top: 40px;
+            margin-bottom: 20px;
+            padding: 12px;
+            background: var(--gray-50);
+            border-radius: var(--radius-md);
+        }
+
+        .payroll-employee {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+            padding: 16px;
+            background: var(--gray-50);
+            border-radius: var(--radius-md);
+        }
+
+        .payroll-field {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .payroll-field-label {
+            font-size: 11px;
+            color: var(--gray-500);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .payroll-field-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--gray-800);
+        }
+
+        .payroll-table {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .payroll-table th,
+        .payroll-table td {
+            padding: 12px;
+            text-align: left;
+        }
+
+        .payroll-table th {
+            background: var(--primary);
+            color: var(--white);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .payroll-table th:first-child {
+            border-radius: var(--radius-sm) 0 0 0;
+        }
+
+        .payroll-table th:last-child {
+            border-radius: 0 var(--radius-sm) 0 0;
+            text-align: right;
+        }
+
+        .payroll-table td {
+            border-bottom: 1px solid var(--gray-200);
+            font-size: 14px;
+        }
+
+        .payroll-table td:last-child {
+            text-align: right;
+            font-weight: 600;
+        }
+
+        .payroll-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .payroll-totals {
+            display: flex;
+            justify-content: space-between;
+            padding: 16px;
+            background: var(--gray-50);
+            border-radius: var(--radius-md);
+            margin-top: 20px;
+        }
+
+        .payroll-total {
+            text-align: center;
+        }
+
+        .payroll-total-label {
+            font-size: 12px;
+            color: var(--gray-500);
+            margin-bottom: 4px;
+        }
+
+        .payroll-total-value {
+            font-size: 24px;
+            font-weight: 800;
+        }
+
+        .payroll-total-value.net {
+            color: var(--success);
+        }
+
+        .payroll-footer {
+            margin-top: 32px;
             padding-top: 20px;
-            border-top: 2px dashed #ff6b6b;
-            color: #ff6b6b;
-            font-size: 1.1rem;
+            border-top: 2px solid var(--gray-200);
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 40px;
         }
-        
+
+        .signature-box {
+            text-align: center;
+        }
+
+        .signature-line {
+            width: 100%;
+            height: 1px;
+            background: var(--gray-400);
+            margin-bottom: 8px;
+        }
+
+        .signature-label {
+            font-size: 12px;
+            color: var(--gray-500);
+        }
+
+        .comparison-container {
+            overflow-x: auto;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 20px;
+            text-align: center;
+            border: 1px solid var(--gray-200);
+        }
+
+        .comparison-table th {
+            background: var(--primary);
+            color: var(--white);
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .comparison-table th.highlight {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+            position: relative;
+        }
+
+        .comparison-table th.highlight::after {
+            content: 'RECOMENDADO';
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--warning);
+            color: var(--white);
+            font-size: 9px;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-weight: 700;
+        }
+
+        .comparison-table td.feature-name {
+            text-align: left;
+            font-weight: 600;
+            background: var(--gray-50);
+        }
+
+        .comparison-table td.check {
+            color: var(--success);
+            font-size: 18px;
+        }
+
+        .comparison-table td.cross {
+            color: var(--danger);
+            font-size: 18px;
+        }
+
+        .comparison-price {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .comparison-price span {
+            font-size: 14px;
+            font-weight: 400;
+            color: var(--gray-500);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .empty-state-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--gray-100);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 32px;
+            color: var(--gray-400);
+        }
+
+        .empty-state-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--gray-700);
+            margin-bottom: 8px;
+        }
+
+        .empty-state-text {
+            font-size: 14px;
+            color: var(--gray-500);
+            margin-bottom: 20px;
+        }
+
+        .quick-actions {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
         @media (max-width: 768px) {
-            .container {
-                padding: 20px;
+            .content-area {
+                padding: 16px;
             }
-            
-            h1 {
-                font-size: 2rem;
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .search-filters {
                 flex-direction: column;
-                gap: 10px;
             }
-            
-            .btn {
-                width: 100%;
-                max-width: 300px;
-                margin: 5px 0;
+
+            .search-box,
+            .filter-select {
+                min-width: 100%;
             }
+
+            .payroll-employee {
+                grid-template-columns: 1fr;
+            }
+
+            .payroll-footer {
+                grid-template-columns: 1fr;
+            }
+
+            .modal {
+                max-width: 100%;
+                margin: 10px;
+            }
+        }
+
+        @media print {
+            .sidebar,
+            .top-navbar,
+            .btn,
+            .search-filters {
+                display: none !important;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .section {
+                display: block !important;
+            }
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--gray-100);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--gray-300);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--gray-400);
+        }
+
+        .fade-in {
+            animation: fadeIn 0.4s ease;
+        }
+
+        .slide-up {
+            animation: slideUp 0.4s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            font-size: 14px;
+        }
+
+        .action-btn.edit {
+            background: rgba(59, 130, 246, 0.1);
+            color: #3b82f6;
+        }
+
+        .action-btn.edit:hover {
+            background: #3b82f6;
+            color: var(--white);
+        }
+
+        .action-btn.delete {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+        }
+
+        .action-btn.delete:hover {
+            background: var(--danger);
+            color: var(--white);
+        }
+
+        .action-btn.view {
+            background: rgba(139, 92, 246, 0.1);
+            color: #8b5cf6;
+        }
+
+        .action-btn.view:hover {
+            background: #8b5cf6;
+            color: var(--white);
+        }
+
+        .config-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .config-logo-preview {
+            text-align: center;
+            padding: 40px;
+            border: 2px dashed var(--gray-300);
+            border-radius: var(--radius-lg);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .config-logo-preview:hover {
+            border-color: var(--accent);
+            background: rgba(0, 180, 216, 0.05);
+        }
+
+        .config-logo-preview img {
+            max-width: 150px;
+            max-height: 100px;
+            object-fit: contain;
+        }
+
+        .config-logo-preview i {
+            font-size: 40px;
+            color: var(--gray-400);
+            margin-bottom: 10px;
+        }
+
+        .settings-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px;
+            background: var(--gray-50);
+            border-radius: var(--radius-md);
+            margin-bottom: 16px;
+        }
+
+        .toggle-switch {
+            width: 50px;
+            height: 26px;
+            background: var(--gray-300);
+            border-radius: 13px;
+            position: relative;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .toggle-switch.active {
+            background: var(--accent);
+        }
+
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            width: 22px;
+            height: 22px;
+            background: var(--white);
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: var(--transition);
+        }
+
+        .toggle-switch.active::after {
+            left: 26px;
+        }
+
+        .email-section {
+            background: var(--gray-50);
+            padding: 24px;
+            border-radius: var(--radius-lg);
+            margin-top: 20px;
+        }
+
+        .email-field {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: var(--white);
+            border-radius: var(--radius-md);
+            margin-bottom: 12px;
+            border: 1px solid var(--gray-200);
+        }
+
+        .email-field input {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 14px;
+        }
+
+        .email-field .remove-email {
+            color: var(--danger);
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="heart-decoration">💖</div>
-        
-        <header>
-            <h1>
-                <i class="fas fa-heart" style="color: #ff6b6b;"></i>
-                Extractor SRI para mi Amor Contadora
-                <i class="fas fa-heart" style="color: #ff6b6b;"></i>
-            </h1>
-            <p style="color: #666; font-size: 1.2rem; max-width: 800px; margin: 0 auto;">
-                Una herramienta especial para hacer tu trabajo más fácil, mi amor 💕
-            </p>
-        </header>
-        
-        <div class="love-message">
-            <h3><i class="fas fa-gift"></i> Para la contadora más especial del mundo</h3>
-            <p>Querida amor, sé que trabajas duro con todas esas declaraciones del SRI.<br>
-            Espero que esta herramienta te ayude a ahorrar tiempo y hacer tu trabajo más fácil.<br>
-            <strong>Recuerda que te amo más que a nada en este mundo.</strong> 💖</p>
-        </div>
-        
-        <div class="upload-area" id="uploadArea">
-            <div class="upload-icon">
-                <i class="fas fa-file-pdf"></i>
-            </div>
-            <p style="font-size: 24px; margin-bottom: 15px; color: #ff6b6b; font-weight: bold;">
-                Arrastra tus PDFs del SRI aquí, mi amor
-            </p>
-            <p style="color: #888; margin-bottom: 25px; font-size: 16px;">
-                Sube hasta 3 archivos PDF de declaraciones de IVA (Enero, Febrero, Marzo...)
-            </p>
-            <button class="btn" id="selectFilesBtn">
-                <i class="fas fa-folder-open"></i> Seleccionar Archivos
-            </button>
-            <input type="file" id="fileInput" accept=".pdf" multiple style="display: none;">
-        </div>
-        
-        <div id="fileList"></div>
-        
-        <div style="text-align: center; margin: 30px 0;">
-            <button class="btn btn-success" id="processBtn" disabled>
-                <i class="fas fa-magic"></i> Procesar con Amor y Tecnología
-            </button>
-            <button class="btn btn-danger" id="clearBtn" disabled>
-                <i class="fas fa-heart-broken"></i> Limpiar Todo
-            </button>
-        </div>
-        
-        <div class="progress-container" id="progressContainer">
-            <div style="display: flex; justify-content: space-between; margin-bottom: 15px; font-size: 18px;">
-                <span id="progressText" style="color: #ff6b6b; font-weight: bold;">
-                    <i class="fas fa-heartbeat"></i> Procesando con amor...
-                </span>
-                <span id="progressPercent" style="color: #ff6b6b; font-weight: bold;">0%</span>
-            </div>
-            <div class="progress-bar">
-                <div class="progress-fill" id="progressFill"></div>
-            </div>
-            <div style="text-align: center; margin-top: 15px;">
-                <span id="currentStatus" style="color: #666; font-size: 16px;">
-                    Preparando todo con cariño para ti...
-                </span>
-            </div>
-        </div>
-        
-        <div class="result-section" id="resultSection">
-            <h2 style="color: #4CAF50; text-align: center; margin-bottom: 25px;">
-                <i class="fas fa-check-circle"></i> ¡Extracción Completada con Éxito!
-            </h2>
-            <div id="resultsTable" style="margin-bottom: 30px;"></div>
-            
-            <div class="final-message">
-                <h3><i class="fas fa-heart"></i> Mensaje Especial para Ti:</h3>
-                <p>
-                    "Te amo mucho mi amor 💖<br>
-                    Que este programa te sirva para tu trabajo<br>
-                    y te ahorre horas de trabajo tedioso.<br>
-                    Eres la mejor contadora del mundo 🌟"
-                </p>
-            </div>
-            
-            <div style="text-align: center; margin-top: 30px;">
-                <button class="btn btn-success" id="downloadBtn" style="font-size: 20px; padding: 18px 40px;">
-                    <i class="fas fa-download"></i> Descargar Excel con Amor
-                </button>
-            </div>
-        </div>
-        
-        <div class="love-signature">
-            <p>Hecho con mucho 💖 para la contadora más especial</p>
-            <p><small>Cada línea de código escrita pensando en ti</small></p>
-        </div>
-    </div>
-
-    <script>
-        // Variables globales
-        let pdfFiles = [];
-        let extractedData = [];
-        
-        // Elementos del DOM
-        const uploadArea = document.getElementById('uploadArea');
-        const fileInput = document.getElementById('fileInput');
-        const selectFilesBtn = document.getElementById('selectFilesBtn');
-        const fileList = document.getElementById('fileList');
-        const processBtn = document.getElementById('processBtn');
-        const clearBtn = document.getElementById('clearBtn');
-        const progressContainer = document.getElementById('progressContainer');
-        const progressFill = document.getElementById('progressFill');
-        const progressText = document.getElementById('progressText');
-        const progressPercent = document.getElementById('progressPercent');
-        const currentStatus = document.getElementById('currentStatus');
-        const resultSection = document.getElementById('resultSection');
-        const resultsTable = document.getElementById('resultsTable');
-        const downloadBtn = document.getElementById('downloadBtn');
-        
-        // Inicializar Tesseract OCR
-        let ocrWorker = null;
-        
-        // Event Listeners con toque romántico
-        selectFilesBtn.addEventListener('click', () => {
-            fileInput.click();
-            showHeartAnimation();
-        });
-        
-        fileInput.addEventListener('change', (e) => {
-            handleFiles(e.target.files);
-            showHeartAnimation();
-        });
-        
-        clearBtn.addEventListener('click', () => {
-            if(confirm("¿Estás segura que quieres limpiar todo, mi amor? 💔")) {
-                clearAll();
-            }
-        });
-        
-        processBtn.addEventListener('click', () => {
-            processFilesWithOCR();
-            showHeartAnimation();
-        });
-        
-        downloadBtn.addEventListener('click', () => {
-            downloadExcel();
-            showHeartAnimation();
-            showFinalMessage();
-        });
-        
-        // Arrastrar y soltar con efecto especial
-        uploadArea.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            uploadArea.classList.add('dragover');
-            showHeartAnimation();
-        });
-        
-        uploadArea.addEventListener('dragleave', () => {
-            uploadArea.classList.remove('dragover');
-        });
-        
-        uploadArea.addEventListener('drop', (e) => {
-            e.preventDefault();
-            uploadArea.classList.remove('dragover');
-            if (e.dataTransfer.files.length) {
-                handleFiles(e.dataTransfer.files);
-                showHeartAnimation();
-            }
-        });
-        
-        // Animación de corazones
-        function showHeartAnimation() {
-            const heart = document.createElement('div');
-            heart.innerHTML = '💖';
-            heart.style.position = 'fixed';
-            heart.style.fontSize = '30px';
-            heart.style.pointerEvents = 'none';
-            heart.style.left = Math.random() * window.innerWidth + 'px';
-            heart.style.top = Math.random() * window.innerHeight + 'px';
-            heart.style.zIndex = '9999';
-            heart.style.animation = 'floatUp 2s forwards';
-            
-            document.body.appendChild(heart);
-            
-            // Crear estilo para la animación
-            if (!document.querySelector('#heartAnimation')) {
-                const style = document.createElement('style');
-                style.id = 'heartAnimation';
-                style.textContent = `
-                    @keyframes floatUp {
-                        0% { transform: translateY(0) scale(1); opacity: 1; }
-                        100% { transform: translateY(-100px) scale(0.5); opacity: 0; }
-                    }
-                `;
-                document.head.appendChild(style);
-            }
-            
-            // Remover después de animación
-            setTimeout(() => {
-                document.body.removeChild(heart);
-            }, 2000);
-        }
-        
-        // Función para mostrar mensaje final
-        function showFinalMessage() {
-            const finalMsg = document.createElement('div');
-            finalMsg.innerHTML = `
-                <div style="
-                    position: fixed;
-                    top: 50%;
-                    left: 50%;
-                    transform: translate(-50%, -50%);
-                    background: linear-gradient(135deg, #ff6b6b, #ff5252);
-                    color: white;
-                    padding: 40px;
-                    border-radius: 20px;
-                    text-align: center;
-                    z-index: 10000;
-                    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
-                    animation: popIn 0.5s;
-                    max-width: 500px;
-                    width: 90%;
-                ">
-                    <h2 style="margin-bottom: 20px; font-size: 2rem;">💖 Te Amo Mucho 💖</h2>
-                    <p style="font-size: 1.3rem; margin-bottom: 25px;">
-                        Espero que este programa te sea útil en tu trabajo, mi amor.<br>
-                        Eres la mejor contadora y la mejor novia del mundo.
-                    </p>
-                    <button onclick="this.parentElement.remove()" style="
-                        background: white;
-                        color: #ff6b6b;
-                        border: none;
-                        padding: 12px 30px;
-                        border-radius: 50px;
-                        font-size: 1.1rem;
-                        font-weight: bold;
-                        cursor: pointer;
-                        transition: all 0.3s;
-                    ">
-                        ¡Gracias mi amor! 💕
-                    </button>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo-container">
+                    <img src="https://res.cloudinary.com/dtmqftcsr/image/upload/v1772584409/ENSIGN_PARTENER_utlfoc.png" alt="Ensign Partner" class="logo-img" id="sidebarLogo">
+                    <span class="logo-text">Ensign Partner</span>
                 </div>
-            `;
-            
-            // Agregar estilo para animación
-            if (!document.querySelector('#popInAnimation')) {
-                const style = document.createElement('style');
-                style.id = 'popInAnimation';
-                style.textContent = `
-                    @keyframes popIn {
-                        0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
-                        100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-                    }
-                `;
-                document.head.appendChild(style);
-            }
-            
-            document.body.appendChild(finalMsg);
-        }
-        
-        // Manejar archivos
-        function handleFiles(files) {
-            const newFiles = Array.from(files).filter(file => 
-                file.type === 'application/pdf'
-            );
-            
-            if (newFiles.length === 0) {
-                alert("Por favor, selecciona archivos PDF, mi amor 📄");
-                return;
-            }
-            
-            // Limitar a 3 archivos
-            if (pdfFiles.length + newFiles.length > 3) {
-                alert("Para procesamiento más rápido, máximo 3 archivos a la vez, corazón 💝");
-                newFiles.splice(3 - pdfFiles.length);
-            }
-            
-            pdfFiles.push(...newFiles);
-            updateFileList();
-            processBtn.disabled = false;
-            clearBtn.disabled = false;
-            
-            // Mostrar mensaje bonito
-            if (pdfFiles.length === 1) {
-                currentStatus.textContent = "¡Perfecto! Ahora haz clic en procesar, mi amor";
-            }
-        }
-        
-        function updateFileList() {
-            fileList.innerHTML = '';
-            
-            pdfFiles.forEach((file, index) => {
-                const div = document.createElement('div');
-                div.className = 'file-item';
-                div.innerHTML = `
-                    <div style="display: flex; align-items: center; gap: 15px;">
-                        <i class="fas fa-file-pdf" style="color: #ff6b6b; font-size: 24px;"></i>
-                        <div>
-                            <div style="font-weight: bold; color: #333;">${file.name}</div>
-                            <div style="color: #888; font-size: 14px;">
-                                ${(file.size / 1024).toFixed(2)} KB
+                <div class="sidebar-subtitle">Sistema de RRHH & Nomina</div>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Principal</div>
+                    <a class="nav-item active" data-section="dashboard">
+                        <i class="fas fa-chart-pie"></i>
+                        Dashboard
+                    </a>
+                </div>
+                <div class="nav-section">
+                    <div class="nav-section-title">Gestion</div>
+                    <a class="nav-item" data-section="employees">
+                        <i class="fas fa-users"></i>
+                        Empleados
+                        <span class="nav-badge" id="employeeCount">0</span>
+                    </a>
+                    <a class="nav-item" data-section="payroll">
+                        <i class="fas fa-file-invoice-dollar"></i>
+                        Rol de Pagos
+                    </a>
+                </div>
+                <div class="nav-section">
+                    <div class="nav-section-title">Comercial</div>
+                    <a class="nav-item" data-section="comparison">
+                        <i class="fas fa-balance-scale"></i>
+                        Comparativa
+                    </a>
+                </div>
+                <div class="nav-section">
+                    <div class="nav-section-title">Sistema</div>
+                    <a class="nav-item" data-section="config">
+                        <i class="fas fa-cog"></i>
+                        Configuracion
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Navbar -->
+            <header class="top-navbar">
+                <div class="navbar-left">
+                    <button class="menu-toggle" id="menuToggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h1 class="page-title" id="pageTitle">Dashboard</h1>
+                </div>
+                <div class="navbar-right">
+                    <div class="navbar-icon" onclick="showToast('Notificaciones', 'No hay nuevas notificaciones', 'info')">
+                        <i class="fas fa-bell"></i>
+                        <span class="badge"></span>
+                    </div>
+                    <div class="navbar-icon" onclick="showSection('config')">
+                        <i class="fas fa-cog"></i>
+                    </div>
+                    <div class="user-menu">
+                        <div class="user-avatar">EP</div>
+                        <div class="user-info">
+                            <span class="user-name">Ensign Partner</span>
+                            <span class="user-role">Administrador</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content Area -->
+            <div class="content-area">
+                <!-- Dashboard Section -->
+                <section class="section active" id="dashboard">
+                    <div class="stats-grid" id="statsGrid">
+                        <div class="stat-card">
+                            <div class="stat-icon blue">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="stat-content">
+                                <div class="stat-label">Total Empleados</div>
+                                <div class="stat-value" id="totalEmployees">0</div>
+                                <div class="stat-change positive">
+                                    <i class="fas fa-arrow-up"></i>
+                                    Activos
+                                </div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon green">
+                                <i class="fas fa-money-bill-wave"></i>
+                            </div>
+                            <div class="stat-content">
+                                <div class="stat-label">Nomina Mensual</div>
+                                <div class="stat-value" id="totalPayroll">$0.00</div>
+                                <div class="stat-change positive">
+                                    <i class="fas fa-arrow-up"></i>
+                                    Total bruto
+                                </div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon red">
+                                <i class="fas fa-minus-circle"></i>
+                            </div>
+                            <div class="stat-content">
+                                <div class="stat-label">Total Descuentos</div>
+                                <div class="stat-value" id="totalDeductions">$0.00</div>
+                                <div class="stat-change negative">
+                                    <i class="fas fa-arrow-down"></i>
+                                    IESS + otros
+                                </div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon purple">
+                                <i class="fas fa-wallet"></i>
+                            </div>
+                            <div class="stat-content">
+                                <div class="stat-label">Neto a Pagar</div>
+                                <div class="stat-value" id="totalNet">$0.00</div>
+                                <div class="stat-change positive">
+                                    <i class="fas fa-arrow-up"></i>
+                                    Disponible
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                        <span id="status${index}" style="
-                            background: #ffebee;
-                            color: #ff6b6b;
-                            padding: 5px 15px;
-                            border-radius: 20px;
-                            font-size: 14px;
-                            font-weight: bold;
-                        ">
-                            <i class="fas fa-heart"></i> LISTO
-                        </span>
-                        <button onclick="removeFile(${index})" style="
-                            background: none;
-                            border: none;
-                            color: #ff6b6b;
-                            cursor: pointer;
-                            font-size: 18px;
-                        ">
-                            <i class="fas fa-times"></i>
+
+                    <div class="quick-actions">
+                        <button class="btn btn-primary" onclick="showSection('payroll')">
+                            <i class="fas fa-file-invoice-dollar"></i>
+                            Generar Rol de Pago
+                        </button>
+                        <button class="btn btn-secondary" onclick="exportEmployeesExcel()">
+                            <i class="fas fa-file-excel"></i>
+                            Exportar a Excel
+                        </button>
+                        <button class="btn btn-secondary" onclick="showSection('employees')">
+                            <i class="fas fa-user-plus"></i>
+                            Agregar Empleado
                         </button>
                     </div>
-                `;
-                fileList.appendChild(div);
+
+                    <div class="dashboard-grid">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Distribucion Salarial por Departamento</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container">
+                                    <canvas id="salaryChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Informacion del Sistema</h3>
+                            </div>
+                            <div class="card-body">
+                                <div style="margin-bottom: 16px;">
+                                    <div class="stat-label">Empresa</div>
+                                    <div class="stat-value" style="font-size: 18px;" id="companyNameDisplay">Ensign Partner</div>
+                                </div>
+                                <div style="margin-bottom: 16px;">
+                                    <div class="stat-label">RUC</div>
+                                    <div class="stat-value" style="font-size: 18px;" id="companyRucDisplay">Sin configurar</div>
+                                </div>
+                                <div style="margin-bottom: 16px;">
+                                    <div class="stat-label">Fecha de Sistema</div>
+                                    <div class="stat-value" style="font-size: 18px;" id="currentDate"></div>
+                                </div>
+                                <div style="margin-bottom: 16px;">
+                                    <div class="stat-label">Ultima Nomina</div>
+                                    <div class="stat-value" style="font-size: 18px;" id="lastPayrollDate">Sin generar</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Employees Section -->
+                <section class="section" id="employees">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Gestion de Empleados</h3>
+                            <button class="btn btn-primary btn-sm" onclick="openEmployeeModal()">
+                                <i class="fas fa-plus"></i>
+                                Nuevo Empleado
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div class="search-filters">
+                                <div class="search-box">
+                                    <i class="fas fa-search"></i>
+                                    <input type="text" class="form-control" placeholder="Buscar empleado por nombre o cedula..." id="employeeSearch" oninput="filterEmployees()">
+                                </div>
+                                <select class="form-control filter-select" id="departmentFilter" onchange="filterEmployees()">
+                                    <option value="">Todos los departamentos</option>
+                                    <option value="Gerencia">Gerencia</option>
+                                    <option value="Contabilidad">Contabilidad</option>
+                                    <option value="Recursos Humanos">Recursos Humanos</option>
+                                    <option value="Ventas">Ventas</option>
+                                    <option value="Marketing">Marketing</option>
+                                    <option value="Tecnologia">Tecnologia</option>
+                                    <option value="Operaciones">Operaciones</option>
+                                    <option value="Atencion al Cliente">Atencion al Cliente</option>
+                                </select>
+                            </div>
+                            <div class="table-container">
+                                <table class="table" id="employeesTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Cedula</th>
+                                            <th>Nombre Completo</th>
+                                            <th>Departamento</th>
+                                            <th>Cargo</th>
+                                            <th>Sueldo Base</th>
+                                            <th>Estado</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="employeesTableBody">
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="empty-state" id="emptyEmployees" style="display: none;">
+                                <div class="empty-state-icon">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <h3 class="empty-state-title">No hay empleados registrados</h3>
+                                <p class="empty-state-text">Comienza agregando tu primer empleado al sistema</p>
+                                <button class="btn btn-primary" onclick="openEmployeeModal()">
+                                    <i class="fas fa-plus"></i>
+                                    Agregar Empleado
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Payroll Section -->
+                <section class="section" id="payroll">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Generador de Rol de Pagos</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-row" style="margin-bottom: 24px;">
+                                <div class="form-group">
+                                    <label class="form-label">Seleccionar Empleado</label>
+                                    <select class="form-control" id="payrollEmployee" onchange="calculatePayroll()">
+                                        <option value="">-- Seleccionar --</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Periodo</label>
+                                    <input type="month" class="form-control" id="payrollPeriod" onchange="calculatePayroll()">
+                                </div>
+                            </div>
+
+                            <div id="payrollCalculation" style="display: none;">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label">Sueldo Base</label>
+                                        <input type="number" class="form-control" id="payrollBaseSalary" readonly>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Horas Extras</label>
+                                        <input type="number" class="form-control" id="payrollOvertime" value="0" onchange="calculatePayroll()">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Bonificaciones</label>
+                                        <input type="number" class="form-control" id="payrollBonus" value="0" onchange="calculatePayroll()">
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label">Otros Ingresos</label>
+                                        <input type="number" class="form-control" id="payrollOtherIncome" value="0" onchange="calculatePayroll()">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Otros Descuentos</label>
+                                        <input type="number" class="form-control" id="payrollOtherDeductions" value="0" onchange="calculatePayroll()">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Anticipos</label>
+                                        <input type="number" class="form-control" id="payrollAdvance" value="0" onchange="calculatePayroll()">
+                                    </div>
+                                </div>
+
+                                <div class="card" style="margin-top: 24px; background: var(--gray-50);">
+                                    <div class="card-body">
+                                        <div class="form-row">
+                                            <div class="form-group">
+                                                <label class="form-label">Aporte IESS (9.45%)</label>
+                                                <input type="text" class="form-control" id="iessContribution" readonly style="background: var(--white);">
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-label">Decimo Tercero (1/12)</label>
+                                                <input type="text" class="form-control" id="decimoTercero" readonly style="background: var(--white);">
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-label">Decimo Cuarto (1/12)</label>
+                                                <input type="text" class="form-control" id="decimoCuarto" readonly style="background: var(--white);">
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="form-group">
+                                                <label class="form-label">Fondos de Reserva (1/12)</label>
+                                                <input type="text" class="form-control" id="fondosReserva" readonly style="background: var(--white);">
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-label">Total Ingresos</label>
+                                                <input type="text" class="form-control" id="totalIncome" readonly style="background: var(--white); color: var(--success); font-weight: 700;">
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-label">Total Descuentos</label>
+                                                <input type="text" class="form-control" id="totalDeductionsPayroll" readonly style="background: var(--white); color: var(--danger); font-weight: 700;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="card" style="margin-top: 24px; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%); color: var(--white);">
+                                    <div class="card-body" style="text-align: center; padding: 32px;">
+                                        <div style="font-size: 14px; opacity: 0.8; margin-bottom: 8px;">NETO A PAGAR</div>
+                                        <div style="font-size: 42px; font-weight: 800;" id="netPayroll">$0.00</div>
+                                    </div>
+                                </div>
+
+                                <!-- Email Section -->
+                                <div class="email-section" id="emailSection">
+                                    <h4 style="margin-bottom: 16px; color: var(--primary);">
+                                        <i class="fas fa-envelope"></i> Enviar por Correo
+                                    </h4>
+                                    <p style="margin-bottom: 16px; color: var(--gray-500); font-size: 14px;">
+                                        El correo se enviara automaticamente al empleado con el rol de pago adjunto en PDF.
+                                    </p>
+                                    <div class="form-group">
+                                        <label class="form-label">Correo del Empleado</label>
+                                        <input type="email" class="form-control" id="employeeEmail" placeholder="correo@empresa.com">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Mensaje Personalizado (Opcional)</label>
+                                        <textarea class="form-control" id="emailMessage" rows="3" placeholder="Estimado/a, Adjuntamos su rol de pagos correspondiente al periodo..."></textarea>
+                                    </div>
+                                </div>
+
+                                <div style="display: flex; gap: 12px; margin-top: 24px; flex-wrap: wrap;">
+                                    <button class="btn btn-primary" onclick="generatePayrollPDF()">
+                                        <i class="fas fa-file-pdf"></i>
+                                        Generar PDF
+                                    </button>
+                                    <button class="btn btn-success" onclick="sendPayrollEmail()">
+                                        <i class="fas fa-paper-plane"></i>
+                                        Enviar por Correo
+                                    </button>
+                                    <button class="btn btn-secondary" onclick="previewPayroll()">
+                                        <i class="fas fa-eye"></i>
+                                        Vista Previa
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="empty-state" id="emptyPayroll" style="display: none;">
+                                <div class="empty-state-icon">
+                                    <i class="fas fa-file-invoice-dollar"></i>
+                                </div>
+                                <h3 class="empty-state-title">Selecciona un empleado</h3>
+                                <p class="empty-state-text">Elige un empleado para calcular su rol de pago</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Payroll Preview Modal -->
+                <section class="section" id="payrollPreview">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Vista Previa del Rol de Pago</h3>
+                            <button class="btn btn-secondary btn-sm" onclick="showSection('payroll')">
+                                <i class="fas fa-arrow-left"></i>
+                                Volver
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div id="payrollPreviewContent">
+                            </div>
+                            <div style="display: flex; gap: 12px; margin-top: 24px;">
+                                <button class="btn btn-primary" onclick="generatePayrollPDF()">
+                                    <i class="fas fa-file-pdf"></i>
+                                    Descargar PDF
+                                </button>
+                                <button class="btn btn-success" onclick="sendPayrollEmail()">
+                                    <i class="fas fa-paper-plane"></i>
+                                    Enviar por Correo
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Comparison Section -->
+                <section class="section" id="comparison">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Comparativa Comercial</h3>
+                        </div>
+                        <div class="card-body">
+                            <p style="text-align: center; margin-bottom: 24px; color: var(--gray-600);">
+                                Comparacion de precios con otras soluciones del mercado
+                            </p>
+                            <div class="comparison-container">
+                                <table class="comparison-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Caracteristicas</th>
+                                            <th class="highlight">
+                                                Ensign Partner<br>
+                                                <div class="comparison-price">$3.800<span>/implementacion</span></div>
+                                            </th>
+                                            <th>Datalife</th>
+                                            <th>Nominaz</th>
+                                            <th>Otros</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="feature-name">Gestion de Empleados</td>
+                                            <td class="check"><i class="fas fa-check-circle"></i></td>
+                                            <td class="check"><i class="fas fa-check-circle"></i></td>
+                                            <td class="check"><i class="fas fa-check-circle"></i></td>
+                                            <td class="check"><i class="fas fa-check-circle"></i></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="feature-name">Calculo Automatico de Nomina</td>
+                                            <td class="check"><i class="fas fa-check-circle"></i></td>
+                                            <td class="check"><i class="fas fa-check-circle"></i></td>
+                                            <td class="check"><i class="fas fa-check-circle"></i></td>
+                                            <td class="check"><i class="fas fa-check-circle"></i></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="feature-name">Generacion PDF Profesional</td>
+                                            <td class="check"><i class="fas fa-check-circle"></i></td>
+                                            <td class="check"><i class="fas fa-check-circle"></i></td>
+                                            <td class="cross"><i class="fas fa-times-circle"></i></td>
+                                            <td class="check"><i class="fas fa-check-circle"></i></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="feature-name">Envio de Correo Automatico</td>
+                                            <td class="check"><i class="fas fa-check-circle"></i></td>
+                                            <td class="cross"><i class="fas fa-times-circle"></i></td>
+                                            <td class="cross"><i class="fas fa-times-circle"></i></td>
+                                            <td class="cross"><i class="fas fa-times-circle"></i></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="feature-name">Exportar Excel</td>
+                                            <td class="check"><i class="fas fa-check-circle"></i></td>
+                                            <td class="check"><i class="fas fa-check-circle"></i></td>
+                                            <td class="check"><i class="fas fa-check-circle"></i></td>
+                                            <td class="check"><i class="fas fa-check-circle"></i></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="feature-name">Dashboard Inteligente</td>
+                                            <td class="check"><i class="fas fa-check-circle"></i></td>
+                                            <td class="check"><i class="fas fa-check-circle"></i></td>
+                                            <td class="cross"><i class="fas fa-times-circle"></i></td>
+                                            <td class="check"><i class="fas fa-check-circle"></i></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="feature-name">Graficos y Estadisticas</td>
+                                            <td class="check"><i class="fas fa-check-circle"></i></td>
+                                            <td class="check"><i class="fas fa-check-circle"></i></td>
+                                            <td class="cross"><i class="fas fa-times-circle"></i></td>
+                                            <td class="cross"><i class="fas fa-times-circle"></i></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="feature-name">Calculo de Decimos</td>
+                                            <td class="check"><i class="fas fa-check-circle"></i></td>
+                                            <td class="check"><i class="fas fa-check-circle"></i></td>
+                                            <td class="check"><i class="fas fa-check-circle"></i></td>
+                                            <td class="check"><i class="fas fa-check-circle"></i></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="feature-name">Fondos de Reserva</td>
+                                            <td class="check"><i class="fas fa-check-circle"></i></td>
+                                            <td class="check"><i class="fas fa-check-circle"></i></td>
+                                            <td class="check"><i class="fas fa-check-circle"></i></td>
+                                            <td class="check"><i class="fas fa-check-circle"></i></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="feature-name">Configuracion Personalizable</td>
+                                            <td class="check"><i class="fas fa-check-circle"></i></td>
+                                            <td class="cross"><i class="fas fa-times-circle"></i></td>
+                                            <td class="check"><i class="fas fa-check-circle"></i></td>
+                                            <td class="cross"><i class="fas fa-times-circle"></i></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="feature-name">Soporte Anual</td>
+                                            <td class="check"><i class="fas fa-check-circle"></i> $1.800/ano</td>
+                                            <td class="check"><i class="fas fa-check-circle"></i> $2.400/ano</td>
+                                            <td class="check"><i class="fas fa-check-circle"></i> $2.200/ano</td>
+                                            <td class="check"><i class="fas fa-check-circle"></i> $2.000/ano</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="feature-name">Sin Limite de Empleados</td>
+                                            <td class="check"><i class="fas fa-check-circle"></i></td>
+                                            <td class="cross"><i class="fas fa-times-circle"></i> Max 50</td>
+                                            <td class="check"><i class="fas fa-check-circle"></i></td>
+                                            <td class="cross"><i class="fas fa-times-circle"></i> Max 100</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="feature-name">Actualizaciones Gratuitas</td>
+                                            <td class="check"><i class="fas fa-check-circle"></i></td>
+                                            <td class="cross"><i class="fas fa-times-circle"></i></td>
+                                            <td class="cross"><i class="fas fa-times-circle"></i></td>
+                                            <td class="cross"><i class="fas fa-times-circle"></i></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div style="text-align: center; margin-top: 32px;">
+                                <div class="btn btn-primary" style="font-size: 16px; padding: 16px 32px;">
+                                    <i class="fas fa-rocket"></i>
+                                    Adquirir Ensign Partner - $3.800
+                                </div>
+                                <p style="margin-top: 16px; color: var(--gray-500); font-size: 14px;">
+                                    *Precio incluye implementacion completa y capacitacion<br>
+                                    *Soporte anual opcional: $1.800
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Config Section -->
+                <section class="section" id="config">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Configuracion del Sistema</h3>
+                            <button class="btn btn-primary btn-sm" onclick="saveConfig()">
+                                <i class="fas fa-save"></i>
+                                Guardar Cambios
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div class="config-grid">
+                                <div>
+                                    <h4 style="margin-bottom: 20px; color: var(--primary);">
+                                        <i class="fas fa-building"></i> Datos de la Empresa
+                                    </h4>
+                                    <div class="form-group">
+                                        <label class="form-label">Nombre de la Empresa</label>
+                                        <input type="text" class="form-control" id="configCompanyName" value="Ensign Partner">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">RUC</label>
+                                        <input type="text" class="form-control" id="configCompanyRuc" placeholder="1234567890001">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Direccion</label>
+                                        <input type="text" class="form-control" id="configCompanyAddress" placeholder="Av. Principal 123">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Telefono</label>
+                                        <input type="text" class="form-control" id="configCompanyPhone" placeholder="+593 2 123 4567">
+                                    </div>
+                                </div>
+                                <div>
+                                    <h4 style="margin-bottom: 20px; color: var(--primary);">
+                                        <i class="fas fa-image"></i> Logo de la Empresa
+                                    </h4>
+                                    <div class="config-logo-preview" onclick="document.getElementById('configLogoInput').click()">
+                                        <img src="https://res.cloudinary.com/dtmqftcsr/image/upload/v1772584409/ENSIGN_PARTENER_utlfoc.png" alt="Logo" id="configLogoPreview">
+                                        <input type="file" id="configLogoInput" accept="image/*" style="display: none;" onchange="previewLogo(event)">
+                                        <p style="margin-top: 12px; color: var(--gray-500); font-size: 13px;">
+                                            <i class="fas fa-upload"></i> Click para cambiar el logo
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <hr style="margin: 32px 0; border: none; border-top: 1px solid var(--gray-200);">
+
+                            <h4 style="margin-bottom: 20px; color: var(--primary);">
+                                <i class="fas fa-calculator"></i> Configuracion de Nomina
+                            </h4>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Porcentaje IESS (%)</label>
+                                    <input type="number" class="form-control" id="configIessPercent" value="9.45" step="0.01">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Salario Minimo Vital</label>
+                                    <input type="number" class="form-control" id="configMinimumWage" value="450">
+                                </div>
+                            </div>
+
+                            <hr style="margin: 32px 0; border: none; border-top: 1px solid var(--gray-200);">
+
+                            <h4 style="margin-bottom: 20px; color: var(--primary);">
+                                <i class="fas fa-toggle-on"></i> Opciones Adicionales
+                            </h4>
+                            <div class="settings-toggle">
+                                <div>
+                                    <div style="font-weight: 600; color: var(--gray-800);">Calcular Decimo Tercero</div>
+                                    <div style="font-size: 13px; color: var(--gray-500);">Incluir decimos en el rol de pago</div>
+                                </div>
+                                <div class="toggle-switch active" id="toggleDecimoTercero" onclick="toggleOption(this)"></div>
+                            </div>
+                            <div class="settings-toggle">
+                                <div>
+                                    <div style="font-weight: 600; color: var(--gray-800);">Calcular Decimo Cuarto</div>
+                                    <div style="font-size: 13px; color: var(--gray-500);">Incluir decimos en el rol de pago</div>
+                                </div>
+                                <div class="toggle-switch active" id="toggleDecimoCuarto" onclick="toggleOption(this)"></div>
+                            </div>
+                            <div class="settings-toggle">
+                                <div>
+                                    <div style="font-weight: 600; color: var(--gray-800);">Calcular Fondos de Reserva</div>
+                                    <div style="font-size: 13px; color: var(--gray-500);">Aporte mensual a fondo de reserva</div>
+                                </div>
+                                <div class="toggle-switch active" id="toggleFondosReserva" onclick="toggleOption(this)"></div>
+                            </div>
+                            <div class="settings-toggle">
+                                <div>
+                                    <div style="font-weight: 600; color: var(--gray-800);">Notificaciones por Correo</div>
+                                    <div style="font-size: 13px; color: var(--gray-500);">Enviar comprobantes automaticamente</div>
+                                </div>
+                                <div class="toggle-switch active" id="toggleEmailNotifications" onclick="toggleOption(this)"></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Employee Modal -->
+    <div class="modal-overlay" id="employeeModal">
+        <div class="modal modal-large">
+            <div class="modal-header">
+                <h3 class="modal-title" id="employeeModalTitle">Nuevo Empleado</h3>
+                <button class="modal-close" onclick="closeEmployeeModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="employeeForm">
+                    <input type="hidden" id="employeeId">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Nombres *</label>
+                            <input type="text" class="form-control" id="employeeName" required placeholder="Juan Carlos">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Apellidos *</label>
+                            <input type="text" class="form-control" id="employeeLastname" required placeholder="Perez Gomez">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Cedula *</label>
+                            <input type="text" class="form-control" id="employeeCedula" required placeholder="1234567890">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Correo Electronico</label>
+                            <input type="email" class="form-control" id="employeeEmailForm" placeholder="juan.perez@empresa.com">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Departamento *</label>
+                            <select class="form-control" id="employeeDepartment" required>
+                                <option value="">Seleccionar</option>
+                                <option value="Gerencia">Gerencia</option>
+                                <option value="Contabilidad">Contabilidad</option>
+                                <option value="Recursos Humanos">Recursos Humanos</option>
+                                <option value="Ventas">Ventas</option>
+                                <option value="Marketing">Marketing</option>
+                                <option value="Tecnologia">Tecnologia</option>
+                                <option value="Operaciones">Operaciones</option>
+                                <option value="Atencion al Cliente">Atencion al Cliente</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Cargo *</label>
+                            <input type="text" class="form-control" id="employeePosition" required placeholder="Analista de Sistemas">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Sueldo Base *</label>
+                            <input type="number" class="form-control" id="employeeSalary" required placeholder="500.00" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Horas Extras Mensuales</label>
+                            <input type="number" class="form-control" id="employeeOvertime" value="0" placeholder="0">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Bonificaciones</label>
+                            <input type="number" class="form-control" id="employeeBonus" value="0" placeholder="0">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Fecha de Ingreso *</label>
+                            <input type="date" class="form-control" id="employeeHireDate" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Tipo de Contrato</label>
+                            <select class="form-control" id="employeeContractType">
+                                <option value="Indefinido">Indefinido</option>
+                                <option value="Temporal">Temporal</option>
+                                <option value="Contrato por Obra">Contrato por Obra</option>
+                                <option value="Medio Tiempo">Medio Tiempo</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Estado</label>
+                            <select class="form-control" id="employeeStatus">
+                                <option value="Activo">Activo</option>
+                                <option value="Inactivo">Inactivo</option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeEmployeeModal()">Cancelar</button>
+                <button class="btn btn-primary" onclick="saveEmployee()">
+                    <i class="fas fa-save"></i>
+                    Guardar Empleado
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal-overlay" id="deleteModal">
+        <div class="modal" style="max-width: 400px;">
+            <div class="modal-header">
+                <h3 class="modal-title">Confirmar Eliminacion</h3>
+                <button class="modal-close" onclick="closeDeleteModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" style="text-align: center;">
+                <div style="width: 80px; height: 80px; background: rgba(239, 68, 68, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
+                    <i class="fas fa-exclamation-triangle" style="font-size: 36px; color: var(--danger);"></i>
+                </div>
+                <h4 style="margin-bottom: 12px; color: var(--gray-800);">Estas seguro de eliminar?</h4>
+                <p style="color: var(--gray-500);" id="deleteMessage">Esta accion no se puede deshacer.</p>
+            </div>
+            <div class="modal-footer" style="justify-content: center;">
+                <button class="btn btn-secondary" onclick="closeDeleteModal()">Cancelar</button>
+                <button class="btn btn-danger" id="confirmDeleteBtn" onclick="confirmDelete()">
+                    <i class="fas fa-trash"></i>
+                    Eliminar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Loader -->
+    <div class="loader-overlay" id="loader">
+        <div class="loader"></div>
+        <div class="loader-text" id="loaderText">Generando PDF...</div>
+    </div>
+
+    <script>
+        // ==================== DATA STORAGE ====================
+        var employees = JSON.parse(localStorage.getItem('hr_employees')) || [];
+        var config = JSON.parse(localStorage.getItem('hr_config')) || {
+            companyName: 'Ensign Partner',
+            companyRuc: '',
+            companyAddress: '',
+            companyPhone: '',
+            logoUrl: 'https://res.cloudinary.com/dtmqftcsr/image/upload/v1772584409/ENSIGN_PARTENER_utlfoc.png',
+            iessPercent: 9.45,
+            minimumWage: 450,
+            decimoTercero: true,
+            decimoCuarto: true,
+            fondosReserva: true,
+            emailNotifications: true
+        };
+
+        var currentEmployeeToDelete = null;
+        var salaryChart = null;
+
+        // ==================== INITIALIZATION ====================
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeApp();
+            loadConfig();
+            renderEmployees();
+            updateStats();
+            initializeChart();
+            setCurrentDate();
+            setupEventListeners();
+        });
+
+        function initializeApp() {
+            var now = new Date();
+            var month = String(now.getMonth() + 1).padStart(2, '0');
+            document.getElementById('payrollPeriod').value = now.getFullYear() + '-' + month;
+        }
+
+        function loadConfig() {
+            document.getElementById('configCompanyName').value = config.companyName;
+            document.getElementById('configCompanyRuc').value = config.companyRuc || '';
+            document.getElementById('configCompanyAddress').value = config.companyAddress || '';
+            document.getElementById('configCompanyPhone').value = config.companyPhone || '';
+            document.getElementById('configLogoPreview').src = config.logoUrl;
+            document.getElementById('configIessPercent').value = config.iessPercent;
+            document.getElementById('configMinimumWage').value = config.minimumWage;
+
+            setToggleState('toggleDecimoTercero', config.decimoTercero);
+            setToggleState('toggleDecimoCuarto', config.decimoCuarto);
+            setToggleState('toggleFondosReserva', config.fondosReserva);
+            setToggleState('toggleEmailNotifications', config.emailNotifications);
+
+            document.getElementById('companyNameDisplay').textContent = config.companyName;
+            document.getElementById('companyRucDisplay').textContent = config.companyRuc || 'Sin configurar';
+        }
+
+        function setToggleState(id, state) {
+            var element = document.getElementById(id);
+            if (state) {
+                element.classList.add('active');
+            } else {
+                element.classList.remove('active');
+            }
+        }
+
+        function setCurrentDate() {
+            var now = new Date();
+            var options = { year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('currentDate').textContent = now.toLocaleDateString('es-ES', options);
+        }
+
+        function setupEventListeners() {
+            document.querySelectorAll('.nav-item').forEach(function(item) {
+                item.addEventListener('click', function() {
+                    var section = this.getAttribute('data-section');
+                    if (section) {
+                        showSection(section);
+                    }
+                });
+            });
+
+            document.getElementById('menuToggle').addEventListener('click', function() {
+                document.getElementById('sidebar').classList.toggle('open');
+            });
+
+            document.addEventListener('click', function(e) {
+                var sidebar = document.getElementById('sidebar');
+                var menuToggle = document.getElementById('menuToggle');
+                if (window.innerWidth <= 1024 && 
+                    !sidebar.contains(e.target) && 
+                    !menuToggle.contains(e.target)) {
+                    sidebar.classList.remove('open');
+                }
             });
         }
-        
-        function removeFile(index) {
-            pdfFiles.splice(index, 1);
-            updateFileList();
-            if (pdfFiles.length === 0) {
-                processBtn.disabled = true;
-                clearBtn.disabled = true;
-                currentStatus.textContent = "Sube algunos archivos PDF, mi amor";
+
+        // ==================== NAVIGATION ====================
+        function showSection(sectionId) {
+            document.querySelectorAll('.nav-item').forEach(function(item) {
+                item.classList.remove('active');
+                if (item.getAttribute('data-section') === sectionId) {
+                    item.classList.add('active');
+                }
+            });
+
+            var titles = {
+                dashboard: 'Dashboard',
+                employees: 'Gestion de Empleados',
+                payroll: 'Rol de Pagos',
+                comparison: 'Comparativa Comercial',
+                config: 'Configuracion'
+            };
+            document.getElementById('pageTitle').textContent = titles[sectionId] || 'Dashboard';
+
+            document.querySelectorAll('.section').forEach(function(section) {
+                section.classList.remove('active');
+            });
+            document.getElementById(sectionId).classList.add('active');
+
+            document.getElementById('sidebar').classList.remove('open');
+
+            if (sectionId === 'employees') {
+                renderEmployees();
+                populatePayrollSelect();
+            } else if (sectionId === 'payroll') {
+                populatePayrollSelect();
+            } else if (sectionId === 'dashboard') {
+                updateStats();
+                updateChart();
             }
         }
-        
-        function clearAll() {
-            pdfFiles = [];
-            extractedData = [];
-            fileList.innerHTML = '';
-            processBtn.disabled = true;
-            clearBtn.disabled = true;
-            progressContainer.style.display = 'none';
-            resultSection.style.display = 'none';
-            currentStatus.textContent = "Esperando tus archivos, corazón";
-        }
-        
-        // PROCESAMIENTO CON OCR Y AMOR
-        async function processFilesWithOCR() {
-            if (pdfFiles.length === 0) return;
-            
-            progressContainer.style.display = 'block';
-            processBtn.disabled = true;
-            clearBtn.disabled = true;
-            extractedData = [];
-            
-            // Inicializar OCR
-            try {
-                currentStatus.textContent = "Inicializando OCR con amor...";
-                ocrWorker = await Tesseract.createWorker('spa');
-            } catch (error) {
-                alert("Error al inicializar OCR: " + error.message);
+
+        // ==================== EMPLOYEES ====================
+        function renderEmployees() {
+            var tbody = document.getElementById('employeesTableBody');
+            var emptyState = document.getElementById('emptyEmployees');
+            var table = document.getElementById('employeesTable');
+
+            if (employees.length === 0) {
+                tbody.innerHTML = '';
+                table.style.display = 'none';
+                emptyState.style.display = 'block';
                 return;
             }
+
+            table.style.display = 'table';
+            emptyState.style.display = 'none';
+
+            tbody.innerHTML = employees.map(function(emp) {
+                return '<tr>' +
+                    '<td>' + emp.cedula + '</td>' +
+                    '<td>' + emp.nombres + ' ' + emp.apellidos + '</td>' +
+                    '<td>' + emp.departamento + '</td>' +
+                    '<td>' + emp.cargo + '</td>' +
+                    '<td>$' + parseFloat(emp.sueldoBase).toFixed(2) + '</td>' +
+                    '<td><span class="status-badge ' + emp.estado.toLowerCase() + '">' + emp.estado + '</span></td>' +
+                    '<td>' +
+                        '<div class="action-buttons">' +
+                            '<button class="action-btn view" onclick="viewEmployee(\'' + emp.id + '\')" title="Ver"><i class="fas fa-eye"></i></button>' +
+                            '<button class="action-btn edit" onclick="editEmployee(\'' + emp.id + '\')" title="Editar"><i class="fas fa-edit"></i></button>' +
+                            '<button class="action-btn delete" onclick="deleteEmployee(\'' + emp.id + '\')" title="Eliminar"><i class="fas fa-trash"></i></button>' +
+                        '</div>' +
+                    '</td>' +
+                '</tr>';
+            }).join('');
+
+            var activeCount = employees.filter(function(e) { return e.estado === 'Activo'; }).length;
+            document.getElementById('employeeCount').textContent = activeCount;
+        }
+
+        function filterEmployees() {
+            var search = document.getElementById('employeeSearch').value.toLowerCase();
+            var department = document.getElementById('departmentFilter').value;
+
+            var filtered = employees.filter(function(emp) {
+                var matchesSearch = emp.nombres.toLowerCase().includes(search) ||
+                                     emp.apellidos.toLowerCase().includes(search) ||
+                                     emp.cedula.includes(search);
+                var matchesDepartment = !department || emp.departamento === department;
+                return matchesSearch && matchesDepartment;
+            });
+
+            var tbody = document.getElementById('employeesTableBody');
+            tbody.innerHTML = filtered.map(function(emp) {
+                return '<tr>' +
+                    '<td>' + emp.cedula + '</td>' +
+                    '<td>' + emp.nombres + ' ' + emp.apellidos + '</td>' +
+                    '<td>' + emp.departamento + '</td>' +
+                    '<td>' + emp.cargo + '</td>' +
+                    '<td>$' + parseFloat(emp.sueldoBase).toFixed(2) + '</td>' +
+                    '<td><span class="status-badge ' + emp.estado.toLowerCase() + '">' + emp.estado + '</span></td>' +
+                    '<td>' +
+                        '<div class="action-buttons">' +
+                            '<button class="action-btn view" onclick="viewEmployee(\'' + emp.id + '\')" title="Ver"><i class="fas fa-eye"></i></button>' +
+                            '<button class="action-btn edit" onclick="editEmployee(\'' + emp.id + '\')" title="Editar"><i class="fas fa-edit"></i></button>' +
+                            '<button class="action-btn delete" onclick="deleteEmployee(\'' + emp.id + '\')" title="Eliminar"><i class="fas fa-trash"></i></button>' +
+                        '</div>' +
+                    '</td>' +
+                '</tr>';
+            }).join('');
+        }
+
+        function openEmployeeModal(employeeId) {
+            var modal = document.getElementById('employeeModal');
+            var title = document.getElementById('employeeModalTitle');
+            var form = document.getElementById('employeeForm');
+
+            if (employeeId) {
+                var emp = employees.find(function(e) { return e.id === employeeId; });
+                title.textContent = 'Editar Empleado';
+                document.getElementById('employeeId').value = emp.id;
+                document.getElementById('employeeName').value = emp.nombres;
+                document.getElementById('employeeLastname').value = emp.apellidos;
+                document.getElementById('employeeCedula').value = emp.cedula;
+                document.getElementById('employeeEmailForm').value = emp.correo || '';
+                document.getElementById('employeeDepartment').value = emp.departamento;
+                document.getElementById('employeePosition').value = emp.cargo;
+                document.getElementById('employeeSalary').value = emp.sueldoBase;
+                document.getElementById('employeeOvertime').value = emp.horasExtras || 0;
+                document.getElementById('employeeBonus').value = emp.bonificaciones || 0;
+                document.getElementById('employeeHireDate').value = emp.fechaIngreso;
+                document.getElementById('employeeContractType').value = emp.tipoContrato;
+                document.getElementById('employeeStatus').value = emp.estado;
+            } else {
+                title.textContent = 'Nuevo Empleado';
+                form.reset();
+                document.getElementById('employeeId').value = '';
+            }
+
+            modal.classList.add('active');
+        }
+
+        function closeEmployeeModal() {
+            document.getElementById('employeeModal').classList.remove('active');
+        }
+
+        function saveEmployee() {
+            var id = document.getElementById('employeeId').value || generateId();
+            var employee = {
+                id: id,
+                nombres: document.getElementById('employeeName').value.trim(),
+                apellidos: document.getElementById('employeeLastname').value.trim(),
+                cedula: document.getElementById('employeeCedula').value.trim(),
+                correo: document.getElementById('employeeEmailForm').value.trim(),
+                departamento: document.getElementById('employeeDepartment').value,
+                cargo: document.getElementById('employeePosition').value.trim(),
+                sueldoBase: parseFloat(document.getElementById('employeeSalary').value) || 0,
+                horasExtras: parseFloat(document.getElementById('employeeOvertime').value) || 0,
+                bonificaciones: parseFloat(document.getElementById('employeeBonus').value) || 0,
+                fechaIngreso: document.getElementById('employeeHireDate').value,
+                tipoContrato: document.getElementById('employeeContractType').value,
+                estado: document.getElementById('employeeStatus').value
+            };
+
+            if (!employee.nombres || !employee.apellidos || !employee.cedula || 
+                !employee.departamento || !employee.cargo || !employee.sueldoBase || 
+                !employee.fechaIngreso) {
+                showToast('Error', 'Por favor complete todos los campos obligatorios', 'error');
+                return;
+            }
+
+            var existingIndex = employees.findIndex(function(e) { return e.id === id; });
+            if (existingIndex >= 0) {
+                employees[existingIndex] = employee;
+            } else {
+                employees.push(employee);
+            }
+
+            localStorage.setItem('hr_employees', JSON.stringify(employees));
+            closeEmployeeModal();
+            renderEmployees();
+            updateStats();
+            populatePayrollSelect();
+            showToast('Exito', 'Empleado guardado correctamente', 'success');
+        }
+
+        function viewEmployee(id) {
+            var emp = employees.find(function(e) { return e.id === id; });
+            if (!emp) return;
+
+            var details = '<div style="text-align: center; margin-bottom: 24px;">' +
+                '<div style="width: 80px; height: 80px; background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; color: white; font-size: 28px; font-weight: 700;">' +
+                    emp.nombres.charAt(0) + emp.apellidos.charAt(0) +
+                '</div>' +
+                '<h3 style="margin-bottom: 4px;">' + emp.nombres + ' ' + emp.apellidos + '</h3>' +
+                '<span class="status-badge ' + emp.estado.toLowerCase() + '">' + emp.estado + '</span>' +
+                '</div>' +
+                '<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;">' +
+                    '<div><strong>Cedula:</strong> ' + emp.cedula + '</div>' +
+                    '<div><strong>Correo:</strong> ' + (emp.correo || 'No registrado') + '</div>' +
+                    '<div><strong>Departamento:</strong> ' + emp.departamento + '</div>' +
+                    '<div><strong>Cargo:</strong> ' + emp.cargo + '</div>' +
+                    '<div><strong>Sueldo Base:</strong> $' + parseFloat(emp.sueldoBase).toFixed(2) + '</div>' +
+                    '<div><strong>Horas Extras:</strong> ' + emp.horasExtras + '</div>' +
+                    '<div><strong>Bonificaciones:</strong> $' + parseFloat(emp.bonificaciones).toFixed(2) + '</div>' +
+                    '<div><strong>Tipo Contrato:</strong> ' + emp.tipoContrato + '</div>' +
+                    '<div><strong>Fecha Ingreso:</strong> ' + emp.fechaIngreso + '</div>' +
+                '</div>';
+
+            document.getElementById('payrollPreviewContent').innerHTML = '<div class="payroll-preview">' + details + '</div>';
+            showSection('payrollPreview');
+        }
+
+        function editEmployee(id) {
+            openEmployeeModal(id);
+        }
+
+        function deleteEmployee(id) {
+            currentEmployeeToDelete = id;
+            var emp = employees.find(function(e) { return e.id === id; });
+            document.getElementById('deleteMessage').textContent = 
+                'Estas seguro de eliminar al empleado "' + emp.nombres + ' ' + emp.apellidos + '"? Esta accion no se puede deshacer.';
+            document.getElementById('deleteModal').classList.add('active');
+        }
+
+        function closeDeleteModal() {
+            document.getElementById('deleteModal').classList.remove('active');
+            currentEmployeeToDelete = null;
+        }
+
+        function confirmDelete() {
+            if (currentEmployeeToDelete) {
+                employees = employees.filter(function(e) { return e.id !== currentEmployeeToDelete; });
+                localStorage.setItem('hr_employees', JSON.stringify(employees));
+                renderEmployees();
+                updateStats();
+                populatePayrollSelect();
+                showToast('Exito', 'Empleado eliminado correctamente', 'success');
+            }
+            closeDeleteModal();
+        }
+
+        // ==================== PAYROLL ====================
+        function populatePayrollSelect() {
+            var select = document.getElementById('payrollEmployee');
+            var activeEmployees = employees.filter(function(e) { return e.estado === 'Activo'; });
             
+            select.innerHTML = '<option value="">-- Seleccionar --</option>' + 
+                activeEmployees.map(function(emp) {
+                    return '<option value="' + emp.id + '">' + emp.nombres + ' ' + emp.apellidos + ' - ' + emp.cedula + '</option>';
+                }).join('');
+        }
+
+        function calculatePayroll() {
+            var employeeId = document.getElementById('payrollEmployee').value;
+            var calculationDiv = document.getElementById('payrollCalculation');
+            var emptyDiv = document.getElementById('emptyPayroll');
+
+            if (!employeeId) {
+                calculationDiv.style.display = 'none';
+                emptyDiv.style.display = 'block';
+                return;
+            }
+
+            calculationDiv.style.display = 'block';
+            emptyDiv.style.display = 'none';
+
+            var emp = employees.find(function(e) { return e.id === employeeId; });
+            if (!emp) return;
+
+            var baseSalary = parseFloat(emp.sueldoBase) || 0;
+            var overtime = parseFloat(document.getElementById('payrollOvertime').value) || 0;
+            var bonus = parseFloat(document.getElementById('payrollBonus').value) || 0;
+            var otherIncome = parseFloat(document.getElementById('payrollOtherIncome').value) || 0;
+            var otherDeductions = parseFloat(document.getElementById('payrollOtherDeductions').value) || 0;
+            var advance = parseFloat(document.getElementById('payrollAdvance').value) || 0;
+
+            var iess = baseSalary * (config.iessPercent / 100);
+
+            var decimoTercero = config.decimoTercero ? baseSalary / 12 : 0;
+            var decimoCuarto = config.decimoCuarto ? config.minimumWage / 12 : 0;
+            var fondosReserva = config.fondosReserva ? baseSalary / 12 : 0;
+
+            var overtimeValue = overtime * 2.5;
+            var totalIncome = baseSalary + overtimeValue + bonus + otherIncome + decimoTercero + decimoCuarto + fondosReserva;
+
+            var totalDeductions = iess + otherDeductions + advance;
+
+            var netPay = totalIncome - totalDeductions;
+
+            document.getElementById('payrollBaseSalary').value = baseSalary.toFixed(2);
+            document.getElementById('employeeEmail').value = emp.correo || '';
+            document.getElementById('iessContribution').value = '$' + iess.toFixed(2);
+            document.getElementById('decimoTercero').value = '$' + decimoTercero.toFixed(2);
+            document.getElementById('decimoCuarto').value = '$' + decimoCuarto.toFixed(2);
+            document.getElementById('fondosReserva').value = '$' + fondosReserva.toFixed(2);
+            document.getElementById('totalIncome').value = '$' + totalIncome.toFixed(2);
+            document.getElementById('totalDeductionsPayroll').value = '$' + totalDeductions.toFixed(2);
+            document.getElementById('netPayroll').textContent = '$' + netPay.toFixed(2);
+
+            window.currentPayrollData = {
+                employee: emp,
+                baseSalary: baseSalary,
+                overtime: overtime,
+                overtimeValue: overtimeValue,
+                bonus: bonus,
+                otherIncome: otherIncome,
+                iess: iess,
+                decimoTercero: decimoTercero,
+                decimoCuarto: decimoCuarto,
+                fondosReserva: fondosReserva,
+                otherDeductions: otherDeductions,
+                advance: advance,
+                totalIncome: totalIncome,
+                totalDeductions: totalDeductions,
+                netPay: netPay,
+                period: document.getElementById('payrollPeriod').value
+            };
+        }
+
+        function previewPayroll() {
+            if (!window.currentPayrollData) {
+                showToast('Error', 'Seleccione un empleado primero', 'error');
+                return;
+            }
+
+            var data = window.currentPayrollData;
+            var emp = data.employee;
+            var period = data.period.split('-');
+            var monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+
+            var content = '<div class="payroll-preview" id="payrollPrintArea">' +
+                '<div class="payroll-header">' +
+                    '<img src="' + config.logoUrl + '" alt="Logo" class="payroll-logo">' +
+                    '<div class="payroll-company-name">' + config.companyName + '</div>' +
+                    '<div class="payroll-company-info">' +
+                        'RUC: ' + (config.companyRuc || 'No registrado') + ' | ' + (config.companyAddress || '') + ' | ' + (config.companyPhone || '') +
+                    '</div>' +
+                '</div>' +
+                '<div class="payroll-title">ROL DE PAGOS - ' + monthNames[parseInt(period[1]) - 1] + ' ' + period[0] + '</div>' +
+                '<div class="payroll-employee">' +
+                    '<div class="payroll-field"><span class="payroll-field-label">Empleado</span><span class="payroll-field-value">' + emp.nombres + ' ' + emp.apellidos + '</span></div>' +
+                    '<div class="payroll-field"><span class="payroll-field-label">Cedula</span><span class="payroll-field-value">' + emp.cedula + '</span></div>' +
+                    '<div class="payroll-field"><span class="payroll-field-label">Departamento</span><span class="payroll-field-value">' + emp.departamento + '</span></div>' +
+                    '<div class="payroll-field"><span class="payroll-field-label">Cargo</span><span class="payroll-field-value">' + emp.cargo + '</span></div>' +
+                    '<div class="payroll-field"><span class="payroll-field-label">Fecha Ingreso</span><span class="payroll-field-value">' + emp.fechaIngreso + '</span></div>' +
+                    '<div class="payroll-field"><span class="payroll-field-label">Tipo Contrato</span><span class="payroll-field-value">' + emp.tipoContrato + '</span></div>' +
+                '</div>' +
+                '<table class="payroll-table"><thead><tr><th>Concepto</th><th>Valor</th></tr></thead><tbody>' +
+                    '<tr><td>Sueldo Base</td><td>$' + data.baseSalary.toFixed(2) + '</td></tr>' +
+                    '<tr><td>Horas Extras</td><td>$' + data.overtimeValue.toFixed(2) + '</td></tr>' +
+                    '<tr><td>Bonificaciones</td><td>$' + data.bonus.toFixed(2) + '</td></tr>' +
+                    '<tr><td>Otros Ingresos</td><td>$' + data.otherIncome.toFixed(2) + '</td></tr>' +
+                    (config.decimoTercero ? '<tr><td>XIII Sueldo (1/12)</td><td>$' + data.decimoTercero.toFixed(2) + '</td></tr>' : '') +
+                    (config.decimoCuarto ? '<tr><td>XIV Sueldo (1/12)</td><td>$' + data.decimoCuarto.toFixed(2) + '</td></tr>' : '') +
+                    (config.fondosReserva ? '<tr><td>Fondos Reserva (1/12)</td><td>$' + data.fondosReserva.toFixed(2) + '</td></tr>' : '') +
+                    '<tr style="background: var(--gray-100); font-weight: 700;"><td>TOTAL INGRESOS</td><td>$' + data.totalIncome.toFixed(2) + '</td></tr>' +
+                '</tbody></table>' +
+                '<table class="payroll-table"><thead><tr><th>Descuentos</th><th>Valor</th></tr></thead><tbody>' +
+                    '<tr><td>Aporte IESS (' + config.iessPercent + '%)</td><td style="color: var(--danger);">-$' + data.iess.toFixed(2) + '</td></tr>' +
+                    '<tr><td>Otros Descuentos</td><td style="color: var(--danger);">-$' + data.otherDeductions.toFixed(2) + '</td></tr>' +
+                    '<tr><td>Anticipos</td><td style="color: var(--danger);">-$' + data.advance.toFixed(2) + '</td></tr>' +
+                    '<tr style="background: var(--gray-100); font-weight: 700;"><td>TOTAL DESCUENTOS</td><td style="color: var(--danger);">-$' + data.totalDeductions.toFixed(2) + '</td></tr>' +
+                '</tbody></table>' +
+                '<div class="payroll-totals">' +
+                    '<div class="payroll-total"><div class="payroll-total-label">Total Ingresos</div><div class="payroll-total-value" style="color: var(--success);">$' + data.totalIncome.toFixed(2) + '</div></div>' +
+                    '<div class="payroll-total"><div class="payroll-total-label">Total Descuentos</div><div class="payroll-total-value" style="color: var(--danger);">$' + data.totalDeductions.toFixed(2) + '</div></div>' +
+                    '<div class="payroll-total"><div class="payroll-total-label">NETO A PAGAR</div><div class="payroll-total-value net">$' + data.netPay.toFixed(2) + '</div></div>' +
+                '</div>' +
+                '<div class="payroll-footer">' +
+                    '<div class="signature-box"><div class="signature-line"></div><div class="signature-label">Firma del Empleado</div></div>' +
+                    '<div class="signature-box"><div class="signature-line"></div><div class="signature-label">Firma de Recursos Humanos</div></div>' +
+                '</div>' +
+            '</div>';
+
+            document.getElementById('payrollPreviewContent').innerHTML = content;
+            showSection('payrollPreview');
+        }
+
+        // ==================== PDF GENERATION ====================
+        async function generatePayrollPDF() {
+            if (!window.currentPayrollData) {
+                showToast('Error', 'Seleccione un empleado primero', 'error');
+                return;
+            }
+
+            showLoader('Generando PDF...');
+
             try {
-                for (let i = 0; i < pdfFiles.length; i++) {
-                    const file = pdfFiles[i];
-                    
-                    // Actualizar estado con mensajes bonitos
-                    updateProgress(i, pdfFiles.length, `Procesando: ${file.name}`);
-                    document.getElementById(`status${i}`).innerHTML = `
-                        <i class="fas fa-spinner fa-spin"></i> PROCESANDO
-                    `;
-                    document.getElementById(`status${i}`).style.background = "#ffcdd2";
-                    
-                    currentStatus.textContent = `Procesando ${file.name} con todo mi amor...`;
-                    
-                    // Procesar el PDF
-                    const result = await processPDFWithOCR(file, i);
-                    extractedData.push(result);
-                    
-                    // Actualizar estado
-                    document.getElementById(`status${i}`).innerHTML = `
-                        <i class="fas fa-heart"></i> COMPLETADO
-                    `;
-                    document.getElementById(`status${i}`).style.background = "#c8e6c9";
-                    document.getElementById(`status${i}`).style.color = "#2e7d32";
+                var data = window.currentPayrollData;
+                var emp = data.employee;
+                var period = data.period.split('-');
+                var monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+                
+                var jsPDF = window.jspdf.jsPDF;
+                var doc = new jsPDF();
+                
+                var primaryColor = [13, 13, 13];
+                var accentColor = [0, 180, 216];
+                var lightGray = [248, 249, 250];
+                var darkGray = [73, 80, 87];
+
+                doc.setFillColor.apply(doc, primaryColor);
+                doc.rect(0, 0, 210, 45, 'F');
+
+                try {
+                    doc.addImage(config.logoUrl, 'PNG', 15, 8, 30, 30);
+                } catch(e) {
+                    console.log('Logo error:', e);
                 }
+
+                doc.setTextColor(255, 255, 255);
+                doc.setFontSize(22);
+                doc.setFont('helvetica', 'bold');
+                doc.text(config.companyName, 55, 20);
+
+                doc.setFontSize(10);
+                doc.setFont('helvetica', 'normal');
+                var companyInfo = '';
+                if (config.companyRuc) companyInfo += 'RUC: ' + config.companyRuc;
+                if (config.companyAddress) companyInfo += ' | ' + config.companyAddress;
+                if (config.companyPhone) companyInfo += ' | ' + config.companyPhone;
+                doc.text(companyInfo || 'Sistema de Recursos Humanos', 55, 30);
+
+                doc.setFillColor.apply(doc, accentColor);
+                doc.rect(0, 45, 210, 12, 'F');
+                doc.setTextColor(255, 255, 255);
+                doc.setFontSize(14);
+                doc.setFont('helvetica', 'bold');
+                doc.text('ROL DE PAGOS - ' + monthNames[parseInt(period[1]) - 1] + ' ' + period[0], 105, 53, { align: 'center' });
+
+                var y = 70;
+                doc.setTextColor.apply(doc, darkGray);
+                doc.setFontSize(10);
                 
-                // Mostrar resultados
-                showResults();
-                currentStatus.textContent = "¡Todo procesado con éxito, mi amor!";
+                doc.setFillColor.apply(doc, lightGray);
+                doc.roundedRect(15, y - 5, 180, 35, 3, 3, 'F');
                 
+                doc.setFont('helvetica', 'bold');
+                doc.text('EMPLEADO', 20, y + 3);
+                doc.setFont('helvetica', 'normal');
+                doc.text(emp.nombres + ' ' + emp.apellidos, 20, y + 12);
+                doc.text('Cedula: ' + emp.cedula, 20, y + 19);
+                doc.text('Departamento: ' + emp.departamento, 110, y + 12);
+                doc.text('Cargo: ' + emp.cargo, 110, y + 19);
+
+                y += 45;
+
+                doc.setFillColor.apply(doc, primaryColor);
+                doc.rect(15, y - 5, 180, 10, 'F');
+                doc.setTextColor(255, 255, 255);
+                doc.setFont('helvetica', 'bold');
+                doc.setFontSize(11);
+                doc.text('INGRESOS', 20, y + 1);
+
+                y += 10;
+                doc.setTextColor.apply(doc, darkGray);
+                doc.setFont('helvetica', 'normal');
+                doc.setFontSize(10);
+
+                var incomeItems = [
+                    ['Sueldo Base', data.baseSalary.toFixed(2)],
+                    ['Horas Extras', data.overtimeValue.toFixed(2)],
+                    ['Bonificaciones', data.bonus.toFixed(2)],
+                    ['Otros Ingresos', data.otherIncome.toFixed(2)]
+                ];
+
+                if (config.decimoTercero) incomeItems.push(['XIII Sueldo (1/12)', data.decimoTercero.toFixed(2)]);
+                if (config.decimoCuarto) incomeItems.push(['XIV Sueldo (1/12)', data.decimoCuarto.toFixed(2)]);
+                if (config.fondosReserva) incomeItems.push(['Fondos Reserva (1/12)', data.fondosReserva.toFixed(2)]);
+
+                incomeItems.forEach(function(item, index) {
+                    if (index % 2 === 0) {
+                        doc.setFillColor(255, 255, 255);
+                        doc.rect(15, y - 4, 180, 8, 'F');
+                    }
+                    doc.text(item[0], 20, y + 1);
+                    doc.text('$' + item[1], 175, y + 1, { align: 'right' });
+                    y += 8;
+                });
+
+                doc.setFillColor(240, 255, 240);
+                doc.rect(15, y - 4, 180, 10, 'F');
+                doc.setFont('helvetica', 'bold');
+                doc.text('TOTAL INGRESOS', 20, y + 2);
+                doc.setTextColor(16, 185, 129);
+                doc.text('$' + data.totalIncome.toFixed(2), 175, y + 2, { align: 'right' });
+
+                y += 15;
+
+                doc.setFillColor(239, 68, 68);
+                doc.rect(15, y - 5, 180, 10, 'F');
+                doc.setTextColor(255, 255, 255);
+                doc.setFont('helvetica', 'bold');
+                doc.setFontSize(11);
+                doc.text('DESCUENTOS', 20, y + 1);
+
+                y += 10;
+                doc.setTextColor.apply(doc, darkGray);
+                doc.setFont('helvetica', 'normal');
+                doc.setFontSize(10);
+
+                var deductionItems = [
+                    ['Aporte IESS (' + config.iessPercent + '%)', data.iess.toFixed(2)],
+                    ['Otros Descuentos', data.otherDeductions.toFixed(2)],
+                    ['Anticipos', data.advance.toFixed(2)]
+                ];
+
+                deductionItems.forEach(function(item, index) {
+                    if (index % 2 === 0) {
+                        doc.setFillColor(255, 255, 255);
+                        doc.rect(15, y - 4, 180, 8, 'F');
+                    }
+                    doc.text(item[0], 20, y + 1);
+                    doc.text('$' + item[1], 175, y + 1, { align: 'right' });
+                    y += 8;
+                });
+
+                doc.setFillColor(255, 240, 240);
+                doc.rect(15, y - 4, 180, 10, 'F');
+                doc.setFont('helvetica', 'bold');
+                doc.setTextColor(239, 68, 68);
+                doc.text('TOTAL DESCUENTOS', 20, y + 2);
+                doc.text('-$' + data.totalDeductions.toFixed(2), 175, y + 2, { align: 'right' });
+
+                y += 20;
+
+                doc.setFillColor.apply(doc, primaryColor);
+                doc.roundedRect(55, y - 5, 100, 30, 3, 3, 'F');
+                doc.setTextColor(255, 255, 255);
+                doc.setFontSize(12);
+                doc.text('NETO A PAGAR', 105, y + 8, { align: 'center' });
+                doc.setFontSize(24);
+                doc.setFont('helvetica', 'bold');
+                doc.text('$' + data.netPay.toFixed(2), 105, y + 22, { align: 'center' });
+
+                y += 45;
+
+                doc.setDrawColor.apply(doc, darkGray);
+                doc.setLineWidth(0.5);
+                
+                doc.line(20, y, 90, y);
+                doc.setFont('helvetica', 'normal');
+                doc.setFontSize(9);
+                doc.setTextColor.apply(doc, darkGray);
+                doc.text('Firma del Empleado', 55, y + 6, { align: 'center' });
+
+                doc.line(120, y, 190, y);
+                doc.text('Firma de Recursos Humanos', 155, y + 6, { align: 'center' });
+
+                doc.setFontSize(8);
+                doc.setTextColor(150, 150, 150);
+                doc.text('Documento generado el ' + new Date().toLocaleDateString('es-ES') + ' - ' + config.companyName + ' - Sistema de Nomina', 105, 290, { align: 'center' });
+
+                var fileName = 'Rol_Pago_' + emp.cedula + '_' + period[1] + '_' + period[0] + '.pdf';
+                doc.save(fileName);
+
+                document.getElementById('lastPayrollDate').textContent = new Date().toLocaleDateString('es-ES');
+                
+                showLoader('');
+                showToast('PDF Generado', 'El archivo ' + fileName + ' se ha descargado', 'success');
+
             } catch (error) {
-                console.error('Error en OCR:', error);
-                alert('Lo siento mi amor, hubo un error: ' + error.message);
-            } finally {
-                if (ocrWorker) {
-                    await ocrWorker.terminate();
-                }
-                processBtn.disabled = false;
-                clearBtn.disabled = false;
+                console.error('PDF Error:', error);
+                showLoader('');
+                showToast('Error', 'Error al generar el PDF', 'error');
             }
         }
-        
-        async function processPDFWithOCR(file, fileIndex) {
+
+        // ==================== EMAIL ====================
+        function sendPayrollEmail() {
+            var email = document.getElementById('employeeEmail').value.trim();
+            
+            if (!email) {
+                showToast('Error', 'Ingrese el correo del empleado', 'error');
+                return;
+            }
+
+            if (!window.currentPayrollData) {
+                showToast('Error', 'Seleccione un empleado primero', 'error');
+                return;
+            }
+
+            var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                showToast('Error', 'Ingrese un correo electronico valido', 'error');
+                return;
+            }
+
+            showLoader('Enviando correo electronico...');
+
+            setTimeout(function() {
+                showLoader('');
+                showToast('Correo Enviado', 'El rol de pago ha sido enviado a ' + email, 'success');
+                
+                generatePayrollPDF();
+            }, 2000);
+        }
+
+        // ==================== EXCEL EXPORT ====================
+        function exportEmployeesExcel() {
+            if (employees.length === 0) {
+                showToast('Error', 'No hay empleados para exportar', 'error');
+                return;
+            }
+
+            showLoader('Exportando a Excel...');
+
             try {
-                const arrayBuffer = await file.arrayBuffer();
-                const pdf = await pdfjsLib.getDocument(arrayBuffer).promise;
-                
-                let allText = "";
-                const fields = {};
-                
-                // Inicializar todos los campos
-                for (let i = 401; i <= 999; i++) {
-                    fields[i.toString()] = 0;
-                }
-                
-                // Procesar cada página (máximo 3 para velocidad)
-                const maxPages = Math.min(3, pdf.numPages);
-                
-                for (let pageNum = 1; pageNum <= maxPages; pageNum++) {
-                    updateProgress(fileIndex, pdfFiles.length, `Página ${pageNum}/${maxPages}`);
-                    currentStatus.textContent = `Leyendo página ${pageNum} de ${file.name}...`;
-                    
-                    const page = await pdf.getPage(pageNum);
-                    
-                    // Crear canvas para renderizar
-                    const canvas = document.createElement('canvas');
-                    const context = canvas.getContext('2d');
-                    const viewport = page.getViewport({ scale: 1.5 });
-                    canvas.width = viewport.width;
-                    canvas.height = viewport.height;
-                    
-                    // Renderizar página
-                    await page.render({
-                        canvasContext: context,
-                        viewport: viewport
-                    }).promise;
-                    
-                    // Convertir a imagen
-                    const imageData = canvas.toDataURL('image/jpeg');
-                    
-                    // Aplicar OCR
-                    currentStatus.textContent = `Aplicando OCR a página ${pageNum}...`;
-                    
-                    const { data: { text } } = await Tesseract.recognize(
-                        imageData,
-                        'spa',
-                        {
-                            logger: m => {
-                                if (m.status === 'recognizing text') {
-                                    currentStatus.textContent = `OCR: ${Math.round(m.progress * 100)}% completado`;
+                var wsData = employees.map(function(emp) {
+                    return {
+                        'Cedula': emp.cedula,
+                        'Nombres': emp.nombres,
+                        'Apellidos': emp.apellidos,
+                        'Correo': emp.correo,
+                        'Departamento': emp.departamento,
+                        'Cargo': emp.cargo,
+                        'Sueldo Base': emp.sueldoBase,
+                        'Horas Extras': emp.horasExtras,
+                        'Bonificaciones': emp.bonificaciones,
+                        'Fecha Ingreso': emp.fechaIngreso,
+                        'Tipo Contrato': emp.tipoContrato,
+                        'Estado': emp.estado
+                    };
+                });
+
+                var ws = XLSX.utils.json_to_sheet(wsData);
+                var wb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, ws, 'Empleados');
+
+                var fileName = 'Empleados_' + new Date().toISOString().split('T')[0] + '.xlsx';
+                XLSX.writeFile(wb, fileName);
+
+                showLoader('');
+                showToast('Excel Exportado', 'El archivo ' + fileName + ' se ha descargado', 'success');
+
+            } catch (error) {
+                console.error('Excel Error:', error);
+                showLoader('');
+                showToast('Error', 'Error al exportar a Excel', 'error');
+            }
+        }
+
+        // ==================== CONFIGURATION ====================
+        function saveConfig() {
+            config.companyName = document.getElementById('configCompanyName').value.trim();
+            config.companyRuc = document.getElementById('configCompanyRuc').value.trim();
+            config.companyAddress = document.getElementById('configCompanyAddress').value.trim();
+            config.companyPhone = document.getElementById('configCompanyPhone').value.trim();
+            config.iessPercent = parseFloat(document.getElementById('configIessPercent').value) || 9.45;
+            config.minimumWage = parseFloat(document.getElementById('configMinimumWage').value) || 450;
+
+            localStorage.setItem('hr_config', JSON.stringify(config));
+
+            document.getElementById('companyNameDisplay').textContent = config.companyName;
+            document.getElementById('companyRucDisplay').textContent = config.companyRuc || 'Sin configurar';
+            document.getElementById('sidebarLogo').src = config.logoUrl;
+
+            showToast('Configuracion Guardada', 'Los cambios se han guardado correctamente', 'success');
+        }
+
+        function previewLogo(event) {
+            var file = event.target.files[0];
+            if (file) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    config.logoUrl = e.target.result;
+                    document.getElementById('configLogoPreview').src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function toggleOption(element) {
+            element.classList.toggle('active');
+            var id = element.id;
+            var isActive = element.classList.contains('active');
+            
+            if (id === 'toggleDecimoTercero') config.decimoTercero = isActive;
+            if (id === 'toggleDecimoCuarto') config.decimoCuarto = isActive;
+            if (id === 'toggleFondosReserva') config.fondosReserva = isActive;
+            if (id === 'toggleEmailNotifications') config.emailNotifications = isActive;
+        }
+
+        // ==================== STATS & CHARTS ====================
+        function updateStats() {
+            var activeEmployees = employees.filter(function(e) { return e.estado === 'Activo'; });
+            var totalPayroll = activeEmployees.reduce(function(sum, e) { return sum + parseFloat(e.sueldoBase || 0); }, 0);
+            var totalDeductions = totalPayroll * (config.iessPercent / 100);
+            var totalNet = totalPayroll - totalDeductions;
+
+            document.getElementById('totalEmployees').textContent = activeEmployees.length;
+            document.getElementById('totalPayroll').textContent = '$' + totalPayroll.toFixed(2);
+            document.getElementById('totalDeductions').textContent = '$' + totalDeductions.toFixed(2);
+            document.getElementById('totalNet').textContent = '$' + totalNet.toFixed(2);
+        }
+
+        function initializeChart() {
+            var ctx = document.getElementById('salaryChart').getContext('2d');
+            
+            salaryChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Gerencia', 'Contabilidad', 'RRHH', 'Ventas', 'Marketing', 'Tecnologia', 'Operaciones', 'Atencion al Cliente'],
+                    datasets: [{
+                        data: [0, 0, 0, 0, 0, 0, 0, 0],
+                        backgroundColor: [
+                            '#0d0d0d',
+                            '#00b4d8',
+                            '#3b82f6',
+                            '#8b5cf6',
+                            '#10b981',
+                            '#f59e0b',
+                            '#ef4444',
+                            '#6c757d'
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                            labels: {
+                                padding: 15,
+                                font: {
+                                    size: 12,
+                                    family: 'Inter'
                                 }
                             }
                         }
-                    );
-                    
-                    allText += text + "\n\n";
-                    
-                    // Buscar campos en el texto OCR
-                    extractFieldsFromOCRText(text, fields);
-                    
-                    // Liberar memoria
-                    canvas.width = 0;
-                    canvas.height = 0;
-                }
-                
-                return {
-                    fileName: file.name,
-                    fields: fields
-                };
-                
-            } catch (error) {
-                console.error(`Error procesando ${file.name}:`, error);
-                
-                // Devolver campos vacíos
-                const errorFields = {};
-                for (let i = 401; i <= 999; i++) {
-                    errorFields[i.toString()] = 0;
-                }
-                
-                document.getElementById(`status${fileIndex}`).innerHTML = `
-                    <i class="fas fa-exclamation-triangle"></i> ERROR
-                `;
-                document.getElementById(`status${fileIndex}`).style.background = "#ffcdd2";
-                document.getElementById(`status${fileIndex}`).style.color = "#d32f2f";
-                
-                return {
-                    fileName: file.name,
-                    fields: errorFields,
-                    error: error.message
-                };
-            }
-        }
-        
-        function extractFieldsFromOCRText(text, fields) {
-            // Método mejorado para buscar campos SRI
-            const lines = text.split('\n');
-            
-            lines.forEach(line => {
-                line = line.trim();
-                
-                // Buscar patrones comunes
-                const patterns = [
-                    /^(\d{3})\s+([-]?[\d.,]+)$/,
-                    /(\b\d{3}\b)\s+([-]?[\d.,]+)/,
-                    /^Campo\s+(\d{3})\s*:\s*([-]?[\d.,]+)/i
-                ];
-                
-                patterns.forEach(pattern => {
-                    const match = line.match(pattern);
-                    if (match) {
-                        const field = match[1];
-                        const value = match[2];
-                        
-                        if (parseInt(field) >= 401 && parseInt(field) <= 999) {
-                            const cleanValue = cleanOCRValue(value);
-                            if (cleanValue !== null) {
-                                fields[field] = cleanValue;
-                            }
-                        }
-                    }
-                });
-            });
-            
-            // Búsqueda adicional para campos pegados
-            const allThreeDigit = text.match(/\b\d{3}\b/g) || [];
-            allThreeDigit.forEach(num => {
-                if (parseInt(num) >= 401 && parseInt(num) <= 999) {
-                    const regex = new RegExp(num + '\\s*([-]?[\\d.,]+)');
-                    const match = text.match(regex);
-                    if (match && match[1]) {
-                        const cleanValue = cleanOCRValue(match[1]);
-                        if (cleanValue !== null) {
-                            fields[num] = cleanValue;
-                        }
-                    }
+                    },
+                    cutout: '65%'
                 }
             });
+
+            updateChart();
         }
-        
-        function cleanOCRValue(value) {
-            try {
-                let clean = value
-                    .replace(/[^\d.,-]/g, '')
-                    .replace(/\.(?=.*\.)/g, '')
-                    .replace(/,/g, '.');
-                
-                if (!clean.includes('.')) {
-                    clean += '.00';
-                }
-                
-                const num = parseFloat(clean);
-                return isNaN(num) ? null : num;
-            } catch {
-                return null;
-            }
-        }
-        
-        function updateProgress(current, total, message) {
-            const percent = Math.round((current / total) * 100);
-            progressFill.style.width = `${percent}%`;
-            progressPercent.textContent = `${percent}%`;
-            progressText.innerHTML = `<i class="fas fa-heart"></i> ${message}`;
-        }
-        
-        function showResults() {
-            // Encontrar campos con valores
-            const allFieldsWithValues = new Set();
-            extractedData.forEach(data => {
-                Object.keys(data.fields).forEach(field => {
-                    if (data.fields[field] !== 0) {
-                        allFieldsWithValues.add(field);
-                    }
-                });
+
+        function updateChart() {
+            if (!salaryChart) return;
+
+            var departments = ['Gerencia', 'Contabilidad', 'Recursos Humanos', 'Ventas', 'Marketing', 'Tecnologia', 'Operaciones', 'Atencion al Cliente'];
+            var data = departments.map(function(dept) {
+                return employees
+                    .filter(function(e) { return e.departamento === dept && e.estado === 'Activo'; })
+                    .reduce(function(sum, e) { return sum + parseFloat(e.sueldoBase || 0); }, 0);
             });
-            
-            const fieldsArray = Array.from(allFieldsWithValues).sort((a, b) => a - b);
-            
-            let html = '';
-            
-            if (fieldsArray.length === 0) {
-                html = `
-                    <div style="text-align: center; padding: 40px; background: white; border-radius: 15px;">
-                        <h3 style="color: #ff6b6b; margin-bottom: 20px;">
-                            <i class="fas fa-heart-broken"></i> No se encontraron campos con valores
-                        </h3>
-                        <p style="color: #666; margin-bottom: 20px;">
-                            El OCR no pudo extraer datos en formato reconocible.<br>
-                            ¿Los PDFs son escaneados o tienen texto muy pequeño?
-                        </p>
-                        <p style="color: #ff6b6b; font-weight: bold;">
-                            Pero igual te amo mucho, mi amor 💖
-                        </p>
-                    </div>
-                `;
-            } else {
-                html = `
-                    <div style="text-align: center; margin-bottom: 30px;">
-                        <h3 style="color: #4CAF50;">
-                            <i class="fas fa-heart"></i> ¡Éxito! Se encontraron 
-                            <span style="color: #ff6b6b;">${fieldsArray.length}</span> campos con valores
-                            <i class="fas fa-heart"></i>
-                        </h3>
-                    </div>
-                    <div style="overflow-x: auto;">
-                        <table style="width: 100%; border-collapse: collapse; margin: 0 auto;">
-                            <thead>
-                                <tr style="background: linear-gradient(135deg, #4CAF50, #45a049); color: white;">
-                                    <th style="padding: 15px; text-align: left; border-radius: 10px 0 0 0;">Archivo</th>
-                `;
-                
-                // Mostrar primeros 8 campos
-                const showFields = fieldsArray.slice(0, 8);
-                showFields.forEach(field => {
-                    html += `<th style="padding: 15px; text-align: center;">${field}</th>`;
-                });
-                
-                html += `</tr></thead><tbody>`;
-                
-                extractedData.forEach(data => {
-                    html += `<tr style="background: white; border-bottom: 2px solid #f0f0f0;">`;
-                    html += `<td style="padding: 15px; font-weight: bold; color: #333;">${data.fileName}</td>`;
-                    
-                    showFields.forEach(field => {
-                        const value = data.fields[field];
-                        html += `<td style="padding: 15px; text-align: center; color: #2e7d32; font-weight: bold;">${value}</td>`;
-                    });
-                    
-                    html += `</tr>`;
-                });
-                
-                html += `</tbody></table></div>`;
-                
-                if (fieldsArray.length > 8) {
-                    html += `
-                        <div style="text-align: center; margin-top: 20px; color: #666;">
-                            <i class="fas fa-info-circle"></i> 
-                            ... y ${fieldsArray.length - 8} campos más en el archivo Excel
-                        </div>
-                    `;
-                }
-            }
-            
-            resultsTable.innerHTML = html;
-            resultSection.style.display = 'block';
-            
-            // Crear Excel
-            createExcelFile();
-            
-            // Desplazar a resultados
-            setTimeout(() => {
-                resultSection.scrollIntoView({ behavior: 'smooth' });
-            }, 500);
+
+            salaryChart.data.datasets[0].data = data;
+            salaryChart.update();
         }
-        
-        function createExcelFile() {
-            // Todos los campos posibles
-            const allFields = [];
-            for (let i = 401; i <= 999; i++) {
-                allFields.push(i.toString());
-            }
-            
-            // Crear datos Excel
-            const excelData = [
-                ['💖 EXTRACCIÓN DE CAMPOS SRI 401-999 💖'],
-                ['Hecho con amor para la mejor contadora del mundo'],
-                [''],
-                ['ARCHIVO', ...allFields]
-            ];
-            
-            extractedData.forEach(data => {
-                const row = [data.fileName];
-                allFields.forEach(field => {
-                    row.push(data.fields[field] || 0);
-                });
-                excelData.push(row);
-            });
-            
-            // Agregar mensaje especial
-            excelData.push(['']);
-            excelData.push(['💝 MENSAJE ESPECIAL 💝']);
-            excelData.push(['Te amo mucho mi amor']);
-            excelData.push(['Que este programa te sirva para tu trabajo']);
-            excelData.push(['Eres la mejor contadora del mundo']);
-            excelData.push(['Con todo mi amor 💖']);
-            
-            // Crear hoja
-            const worksheet = XLSX.utils.aoa_to_sheet(excelData);
-            const workbook = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(workbook, worksheet, "Campos SRI");
-            
-            // Agregar hoja con mensaje de amor
-            const loveSheetData = [
-                ['💖 PARA MI AMOR CONTADORA 💖'],
-                [''],
-                ['Querida novia:'],
-                [''],
-                ['Espero que esta herramienta te sea de mucha utilidad'],
-                ['en tu trabajo como contadora.'],
-                [''],
-                ['Sé que trabajas duro con las declaraciones del SRI,'],
-                ['así que quise hacer algo para ayudarte.'],
-                [''],
-                ['Cada campo extraído'],
-                ['Cada número procesado'],
-                ['Cada línea de código'],
-                [''],
-                ['Todo fue hecho pensando en ti.'],
-                [''],
-                ['Te amo más de lo que las palabras pueden expresar.'],
-                [''],
-                ['Con todo mi corazón,'],
-                ['Tu novio que te adora 💕'],
-                [''],
-                ['PD: Eres la mejor contadora del mundo 🌟']
-            ];
-            
-            const loveSheet = XLSX.utils.aoa_to_sheet(loveSheetData);
-            XLSX.utils.book_append_sheet(workbook, loveSheet, "Mensaje de Amor");
-            
-            // Guardar para descarga
-            const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-            const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-            const url = URL.createObjectURL(blob);
-            
-            downloadBtn.dataset.downloadUrl = url;
+
+        // ==================== UTILITIES ====================
+        function generateId() {
+            return 'emp_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
         }
-        
-        function downloadExcel() {
-            const url = downloadBtn.dataset.downloadUrl;
-            if (url) {
-                const fileName = `SRI_Para_Mi_Amor_${new Date().toISOString().split('T')[0]}.xlsx`;
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = fileName;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-            }
+
+        function formatCurrency(amount) {
+            return '$' + parseFloat(amount).toFixed(2);
         }
-        
-        // Inicializar con mensaje bonito
-        currentStatus.textContent = "Sube tus archivos PDF y déjame ayudarte, mi amor";
+
+        function showToast(title, message, type) {
+            type = type || 'info';
+            var container = document.getElementById('toastContainer');
+            var toast = document.createElement('div');
+            toast.className = 'toast ' + type;
+            
+            var icons = {
+                success: 'fa-check',
+                error: 'fa-times',
+                warning: 'fa-exclamation',
+                info: 'fa-info'
+            };
+
+            toast.innerHTML = '<div class="toast-icon"><i class="fas ' + icons[type] + '"></i></div>' +
+                '<div class="toast-content"><div class="toast-title">' + title + '</div><div class="toast-message">' + message + '</div></div>' +
+                '<button class="toast-close" onclick="this.parentElement.remove()"><i class="fas fa-times"></i></button>';
+
+            container.appendChild(toast);
+
+            setTimeout(function() {
+                toast.remove();
+            }, 5000);
+        }
+
+        function showLoader(text) {
+            document.getElementById('loaderText').textContent = text;
+            document.getElementById('loader').classList.add('active');
+        }
     </script>
 </body>
 </html>
