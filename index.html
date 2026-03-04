@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Extractor SRI con OCR - Para mi Amor Contadora 💖</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial Rounded MT Bold', 'Arial', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            padding: 40px;
+            position: relative;
+            border: 5px solid #ff6b6b;
+        }
+        
+        .heart-decoration {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 40px;
+            color: #ff6b6b;
+            animation: heartbeat 1.5s infinite;
+        }
+        
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 25px;
+            border-bottom: 3px dashed #ff6b6b;
+            position: relative;
+        }
+        
+        h1 {
+            color: #ff6b6b;
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+        
+        .love-message {
+            background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+            border: 3px solid #ff6b6b;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 25px 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .love-message::before {
+            content: "💕";
+            position: absolute;
+            font-size: 100px;
+            opacity: 0.1;
+            top: -30px;
+            left: -30px;
+            transform: rotate(-15deg);
+        }
+        
+        .love-message h3 {
+            color: #d32f2f;
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+        }
+        
+        .love-message p {
+            color: #555;
+            font-size: 1.2rem;
+            line-height: 1.6;
+        }
+        
+        .upload-area {
+            border: 4px dashed #ff8e8e;
+            border-radius: 15px;
+            padding: 40px 30px;
+            text-align: center;
+            margin-bottom: 30px;
+            background-color: #fff5f5;
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .upload-area:hover {
+            border-color: #ff6b6b;
+            background-color: #ffebee;
+            transform: translateY(-5px);
+        }
+        
+        .upload-icon {
+            font-size: 80px;
+            color: #ff6b6b;
+            margin-bottom: 20px;
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .btn {
+            padding: 16px 35px;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff5252 100%);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.3);
+            margin: 10px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
+            background: linear-gradient(135deg, #ff5252 0%, #ff6b6b 100%);
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.3);
+        }
+        
+        .btn-success:hover {
+            background: linear-gradient(135deg, #45a049 0%, #4CAF50 100%);
+            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.4);
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, #ff5252 0%, #d32f2f 100%);
+            box-shadow: 0 6px 20px rgba(255, 82, 82, 0.3);
+        }
+        
+        .file-item {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 5px solid #ff6b6b;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+        }
+        
+        .file-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+        }
+        
+        .progress-container {
+            background: #fff5f5;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 30px 0;
+            display: none;
+            border: 2px solid #ffcdd2;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 25px;
+            background: #ffcdd2;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 10px;
+            position: relative;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff6b6b, #ff5252);
+            width: 0%;
+            transition: width 0.5s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background-image: linear-gradient(
+                -45deg,
+                rgba(255,255,255,0.2) 25%,
+                transparent 25%,
+                transparent 50%,
+                rgba(255,255,255,0.2) 50%,
+                rgba(255,255,255,0.2) 75%,
+                transparent 75%,
+                transparent
+            );
+            background-size: 50px 50px;
+            animation: move 2s linear infinite;
+        }
+        
+        @keyframes move {
+            0% { background-position: 0 0; }
+            100% { background-position: 50px 50px; }
+        }
+        
+        .result-section {
+            margin-top: 40px;
+            padding: 30px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 20px;
+            display: none;
+            border: 3px solid #4CAF50;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .result-section::before {
+            content: "💖";
+            position: absolute;
+            font-size: 150px;
+            opacity: 0.05;
+            bottom: -50px;
+            right: -30px;
+            transform: rotate(15deg);
+        }
+        
+        .final-message {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            border: 3px solid #4CAF50;
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .final-message::before {
+            content: "💝";
+            position: absolute;
+            font-size: 80px;
+            opacity: 0.1;
+            top: -20px;
+            left: -20px;
+        }
+        
+        .final-message h3 {
+            color: #2e7d32;
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+        }
+        
+        .final-message p {
+            color: #555;
+            font-size: 1.3rem;
+            font-weight: bold;
+            line-height: 1.6;
+        }
+        
+        .love-signature {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px dashed #ff6b6b;
+            color: #ff6b6b;
+            font-size: 1.1rem;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 300px;
+                margin: 5px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="heart-decoration">💖</div>
+        
+        <header>
+            <h1>
+                <i class="fas fa-heart" style="color: #ff6b6b;"></i>
+                Extractor SRI para mi Amor Contadora
+                <i class="fas fa-heart" style="color: #ff6b6b;"></i>
+            </h1>
+            <p style="color: #666; font-size: 1.2rem; max-width: 800px; margin: 0 auto;">
+                Una herramienta especial para hacer tu trabajo más fácil, mi amor 💕
+            </p>
+        </header>
+        
+        <div class="love-message">
+            <h3><i class="fas fa-gift"></i> Para la contadora más especial del mundo</h3>
+            <p>Querida amor, sé que trabajas duro con todas esas declaraciones del SRI.<br>
+            Espero que esta herramienta te ayude a ahorrar tiempo y hacer tu trabajo más fácil.<br>
+            <strong>Recuerda que te amo más que a nada en este mundo.</strong> 💖</p>
+        </div>
+        
+        <div class="upload-area" id="uploadArea">
+            <div class="upload-icon">
+                <i class="fas fa-file-pdf"></i>
+            </div>
+            <p style="font-size: 24px; margin-bottom: 15px; color: #ff6b6b; font-weight: bold;">
+                Arrastra tus PDFs del SRI aquí, mi amor
+            </p>
+            <p style="color: #888; margin-bottom: 25px; font-size: 16px;">
+                Sube hasta 3 archivos PDF de declaraciones de IVA (Enero, Febrero, Marzo...)
+            </p>
+            <button class="btn" id="selectFilesBtn">
+                <i class="fas fa-folder-open"></i> Seleccionar Archivos
+            </button>
+            <input type="file" id="fileInput" accept=".pdf" multiple style="display: none;">
+        </div>
+        
+        <div id="fileList"></div>
+        
+        <div style="text-align: center; margin: 30px 0;">
+            <button class="btn btn-success" id="processBtn" disabled>
+                <i class="fas fa-magic"></i> Procesar con Amor y Tecnología
+            </button>
+            <button class="btn btn-danger" id="clearBtn" disabled>
+                <i class="fas fa-heart-broken"></i> Limpiar Todo
+            </button>
+        </div>
+        
+        <div class="progress-container" id="progressContainer">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 15px; font-size: 18px;">
+                <span id="progressText" style="color: #ff6b6b; font-weight: bold;">
+                    <i class="fas fa-heartbeat"></i> Procesando con amor...
+                </span>
+                <span id="progressPercent" style="color: #ff6b6b; font-weight: bold;">0%</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div style="text-align: center; margin-top: 15px;">
+                <span id="currentStatus" style="color: #666; font-size: 16px;">
+                    Preparando todo con cariño para ti...
+                </span>
+            </div>
+        </div>
+        
+        <div class="result-section" id="resultSection">
+            <h2 style="color: #4CAF50; text-align: center; margin-bottom: 25px;">
+                <i class="fas fa-check-circle"></i> ¡Extracción Completada con Éxito!
+            </h2>
+            <div id="resultsTable" style="margin-bottom: 30px;"></div>
+            
+            <div class="final-message">
+                <h3><i class="fas fa-heart"></i> Mensaje Especial para Ti:</h3>
+                <p>
+                    "Te amo mucho mi amor 💖<br>
+                    Que este programa te sirva para tu trabajo<br>
+                    y te ahorre horas de trabajo tedioso.<br>
+                    Eres la mejor contadora del mundo 🌟"
+                </p>
+            </div>
+            
+            <div style="text-align: center; margin-top: 30px;">
+                <button class="btn btn-success" id="downloadBtn" style="font-size: 20px; padding: 18px 40px;">
+                    <i class="fas fa-download"></i> Descargar Excel con Amor
+                </button>
+            </div>
+        </div>
+        
+        <div class="love-signature">
+            <p>Hecho con mucho 💖 para la contadora más especial</p>
+            <p><small>Cada línea de código escrita pensando en ti</small></p>
+        </div>
+    </div>
+
+    <script>
+        // Variables globales
+        let pdfFiles = [];
+        let extractedData = [];
+        
+        // Elementos del DOM
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const selectFilesBtn = document.getElementById('selectFilesBtn');
+        const fileList = document.getElementById('fileList');
+        const processBtn = document.getElementById('processBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const progressContainer = document.getElementById('progressContainer');
+        const progressFill = document.getElementById('progressFill');
+        const progressText = document.getElementById('progressText');
+        const progressPercent = document.getElementById('progressPercent');
+        const currentStatus = document.getElementById('currentStatus');
+        const resultSection = document.getElementById('resultSection');
+        const resultsTable = document.getElementById('resultsTable');
+        const downloadBtn = document.getElementById('downloadBtn');
+        
+        // Inicializar Tesseract OCR
+        let ocrWorker = null;
+        
+        // Event Listeners con toque romántico
+        selectFilesBtn.addEventListener('click', () => {
+            fileInput.click();
+            showHeartAnimation();
+        });
+        
+        fileInput.addEventListener('change', (e) => {
+            handleFiles(e.target.files);
+            showHeartAnimation();
+        });
+        
+        clearBtn.addEventListener('click', () => {
+            if(confirm("¿Estás segura que quieres limpiar todo, mi amor? 💔")) {
+                clearAll();
+            }
+        });
+        
+        processBtn.addEventListener('click', () => {
+            processFilesWithOCR();
+            showHeartAnimation();
+        });
+        
+        downloadBtn.addEventListener('click', () => {
+            downloadExcel();
+            showHeartAnimation();
+            showFinalMessage();
+        });
+        
+        // Arrastrar y soltar con efecto especial
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+            showHeartAnimation();
+        });
+        
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+        
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            if (e.dataTransfer.files.length) {
+                handleFiles(e.dataTransfer.files);
+                showHeartAnimation();
+            }
+        });
+        
+        // Animación de corazones
+        function showHeartAnimation() {
+            const heart = document.createElement('div');
+            heart.innerHTML = '💖';
+            heart.style.position = 'fixed';
+            heart.style.fontSize = '30px';
+            heart.style.pointerEvents = 'none';
+            heart.style.left = Math.random() * window.innerWidth + 'px';
+            heart.style.top = Math.random() * window.innerHeight + 'px';
+            heart.style.zIndex = '9999';
+            heart.style.animation = 'floatUp 2s forwards';
+            
+            document.body.appendChild(heart);
+            
+            // Crear estilo para la animación
+            if (!document.querySelector('#heartAnimation')) {
+                const style = document.createElement('style');
+                style.id = 'heartAnimation';
+                style.textContent = `
+                    @keyframes floatUp {
+                        0% { transform: translateY(0) scale(1); opacity: 1; }
+                        100% { transform: translateY(-100px) scale(0.5); opacity: 0; }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+            
+            // Remover después de animación
+            setTimeout(() => {
+                document.body.removeChild(heart);
+            }, 2000);
+        }
+        
+        // Función para mostrar mensaje final
+        function showFinalMessage() {
+            const finalMsg = document.createElement('div');
+            finalMsg.innerHTML = `
+                <div style="
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    background: linear-gradient(135deg, #ff6b6b, #ff5252);
+                    color: white;
+                    padding: 40px;
+                    border-radius: 20px;
+                    text-align: center;
+                    z-index: 10000;
+                    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+                    animation: popIn 0.5s;
+                    max-width: 500px;
+                    width: 90%;
+                ">
+                    <h2 style="margin-bottom: 20px; font-size: 2rem;">💖 Te Amo Mucho 💖</h2>
+                    <p style="font-size: 1.3rem; margin-bottom: 25px;">
+                        Espero que este programa te sea útil en tu trabajo, mi amor.<br>
+                        Eres la mejor contadora y la mejor novia del mundo.
+                    </p>
+                    <button onclick="this.parentElement.remove()" style="
+                        background: white;
+                        color: #ff6b6b;
+                        border: none;
+                        padding: 12px 30px;
+                        border-radius: 50px;
+                        font-size: 1.1rem;
+                        font-weight: bold;
+                        cursor: pointer;
+                        transition: all 0.3s;
+                    ">
+                        ¡Gracias mi amor! 💕
+                    </button>
+                </div>
+            `;
+            
+            // Agregar estilo para animación
+            if (!document.querySelector('#popInAnimation')) {
+                const style = document.createElement('style');
+                style.id = 'popInAnimation';
+                style.textContent = `
+                    @keyframes popIn {
+                        0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+                        100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+            
+            document.body.appendChild(finalMsg);
+        }
+        
+        // Manejar archivos
+        function handleFiles(files) {
+            const newFiles = Array.from(files).filter(file => 
+                file.type === 'application/pdf'
+            );
+            
+            if (newFiles.length === 0) {
+                alert("Por favor, selecciona archivos PDF, mi amor 📄");
+                return;
+            }
+            
+            // Limitar a 3 archivos
+            if (pdfFiles.length + newFiles.length > 3) {
+                alert("Para procesamiento más rápido, máximo 3 archivos a la vez, corazón 💝");
+                newFiles.splice(3 - pdfFiles.length);
+            }
+            
+            pdfFiles.push(...newFiles);
+            updateFileList();
+            processBtn.disabled = false;
+            clearBtn.disabled = false;
+            
+            // Mostrar mensaje bonito
+            if (pdfFiles.length === 1) {
+                currentStatus.textContent = "¡Perfecto! Ahora haz clic en procesar, mi amor";
+            }
+        }
+        
+        function updateFileList() {
+            fileList.innerHTML = '';
+            
+            pdfFiles.forEach((file, index) => {
+                const div = document.createElement('div');
+                div.className = 'file-item';
+                div.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <i class="fas fa-file-pdf" style="color: #ff6b6b; font-size: 24px;"></i>
+                        <div>
+                            <div style="font-weight: bold; color: #333;">${file.name}</div>
+                            <div style="color: #888; font-size: 14px;">
+                                ${(file.size / 1024).toFixed(2)} KB
+                            </div>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span id="status${index}" style="
+                            background: #ffebee;
+                            color: #ff6b6b;
+                            padding: 5px 15px;
+                            border-radius: 20px;
+                            font-size: 14px;
+                            font-weight: bold;
+                        ">
+                            <i class="fas fa-heart"></i> LISTO
+                        </span>
+                        <button onclick="removeFile(${index})" style="
+                            background: none;
+                            border: none;
+                            color: #ff6b6b;
+                            cursor: pointer;
+                            font-size: 18px;
+                        ">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                `;
+                fileList.appendChild(div);
+            });
+        }
+        
+        function removeFile(index) {
+            pdfFiles.splice(index, 1);
+            updateFileList();
+            if (pdfFiles.length === 0) {
+                processBtn.disabled = true;
+                clearBtn.disabled = true;
+                currentStatus.textContent = "Sube algunos archivos PDF, mi amor";
+            }
+        }
+        
+        function clearAll() {
+            pdfFiles = [];
+            extractedData = [];
+            fileList.innerHTML = '';
+            processBtn.disabled = true;
+            clearBtn.disabled = true;
+            progressContainer.style.display = 'none';
+            resultSection.style.display = 'none';
+            currentStatus.textContent = "Esperando tus archivos, corazón";
+        }
+        
+        // PROCESAMIENTO CON OCR Y AMOR
+        async function processFilesWithOCR() {
+            if (pdfFiles.length === 0) return;
+            
+            progressContainer.style.display = 'block';
+            processBtn.disabled = true;
+            clearBtn.disabled = true;
+            extractedData = [];
+            
+            // Inicializar OCR
+            try {
+                currentStatus.textContent = "Inicializando OCR con amor...";
+                ocrWorker = await Tesseract.createWorker('spa');
+            } catch (error) {
+                alert("Error al inicializar OCR: " + error.message);
+                return;
+            }
+            
+            try {
+                for (let i = 0; i < pdfFiles.length; i++) {
+                    const file = pdfFiles[i];
+                    
+                    // Actualizar estado con mensajes bonitos
+                    updateProgress(i, pdfFiles.length, `Procesando: ${file.name}`);
+                    document.getElementById(`status${i}`).innerHTML = `
+                        <i class="fas fa-spinner fa-spin"></i> PROCESANDO
+                    `;
+                    document.getElementById(`status${i}`).style.background = "#ffcdd2";
+                    
+                    currentStatus.textContent = `Procesando ${file.name} con todo mi amor...`;
+                    
+                    // Procesar el PDF
+                    const result = await processPDFWithOCR(file, i);
+                    extractedData.push(result);
+                    
+                    // Actualizar estado
+                    document.getElementById(`status${i}`).innerHTML = `
+                        <i class="fas fa-heart"></i> COMPLETADO
+                    `;
+                    document.getElementById(`status${i}`).style.background = "#c8e6c9";
+                    document.getElementById(`status${i}`).style.color = "#2e7d32";
+                }
+                
+                // Mostrar resultados
+                showResults();
+                currentStatus.textContent = "¡Todo procesado con éxito, mi amor!";
+                
+            } catch (error) {
+                console.error('Error en OCR:', error);
+                alert('Lo siento mi amor, hubo un error: ' + error.message);
+            } finally {
+                if (ocrWorker) {
+                    await ocrWorker.terminate();
+                }
+                processBtn.disabled = false;
+                clearBtn.disabled = false;
+            }
+        }
+        
+        async function processPDFWithOCR(file, fileIndex) {
+            try {
+                const arrayBuffer = await file.arrayBuffer();
+                const pdf = await pdfjsLib.getDocument(arrayBuffer).promise;
+                
+                let allText = "";
+                const fields = {};
+                
+                // Inicializar todos los campos
+                for (let i = 401; i <= 999; i++) {
+                    fields[i.toString()] = 0;
+                }
+                
+                // Procesar cada página (máximo 3 para velocidad)
+                const maxPages = Math.min(3, pdf.numPages);
+                
+                for (let pageNum = 1; pageNum <= maxPages; pageNum++) {
+                    updateProgress(fileIndex, pdfFiles.length, `Página ${pageNum}/${maxPages}`);
+                    currentStatus.textContent = `Leyendo página ${pageNum} de ${file.name}...`;
+                    
+                    const page = await pdf.getPage(pageNum);
+                    
+                    // Crear canvas para renderizar
+                    const canvas = document.createElement('canvas');
+                    const context = canvas.getContext('2d');
+                    const viewport = page.getViewport({ scale: 1.5 });
+                    canvas.width = viewport.width;
+                    canvas.height = viewport.height;
+                    
+                    // Renderizar página
+                    await page.render({
+                        canvasContext: context,
+                        viewport: viewport
+                    }).promise;
+                    
+                    // Convertir a imagen
+                    const imageData = canvas.toDataURL('image/jpeg');
+                    
+                    // Aplicar OCR
+                    currentStatus.textContent = `Aplicando OCR a página ${pageNum}...`;
+                    
+                    const { data: { text } } = await Tesseract.recognize(
+                        imageData,
+                        'spa',
+                        {
+                            logger: m => {
+                                if (m.status === 'recognizing text') {
+                                    currentStatus.textContent = `OCR: ${Math.round(m.progress * 100)}% completado`;
+                                }
+                            }
+                        }
+                    );
+                    
+                    allText += text + "\n\n";
+                    
+                    // Buscar campos en el texto OCR
+                    extractFieldsFromOCRText(text, fields);
+                    
+                    // Liberar memoria
+                    canvas.width = 0;
+                    canvas.height = 0;
+                }
+                
+                return {
+                    fileName: file.name,
+                    fields: fields
+                };
+                
+            } catch (error) {
+                console.error(`Error procesando ${file.name}:`, error);
+                
+                // Devolver campos vacíos
+                const errorFields = {};
+                for (let i = 401; i <= 999; i++) {
+                    errorFields[i.toString()] = 0;
+                }
+                
+                document.getElementById(`status${fileIndex}`).innerHTML = `
+                    <i class="fas fa-exclamation-triangle"></i> ERROR
+                `;
+                document.getElementById(`status${fileIndex}`).style.background = "#ffcdd2";
+                document.getElementById(`status${fileIndex}`).style.color = "#d32f2f";
+                
+                return {
+                    fileName: file.name,
+                    fields: errorFields,
+                    error: error.message
+                };
+            }
+        }
+        
+        function extractFieldsFromOCRText(text, fields) {
+            // Método mejorado para buscar campos SRI
+            const lines = text.split('\n');
+            
+            lines.forEach(line => {
+                line = line.trim();
+                
+                // Buscar patrones comunes
+                const patterns = [
+                    /^(\d{3})\s+([-]?[\d.,]+)$/,
+                    /(\b\d{3}\b)\s+([-]?[\d.,]+)/,
+                    /^Campo\s+(\d{3})\s*:\s*([-]?[\d.,]+)/i
+                ];
+                
+                patterns.forEach(pattern => {
+                    const match = line.match(pattern);
+                    if (match) {
+                        const field = match[1];
+                        const value = match[2];
+                        
+                        if (parseInt(field) >= 401 && parseInt(field) <= 999) {
+                            const cleanValue = cleanOCRValue(value);
+                            if (cleanValue !== null) {
+                                fields[field] = cleanValue;
+                            }
+                        }
+                    }
+                });
+            });
+            
+            // Búsqueda adicional para campos pegados
+            const allThreeDigit = text.match(/\b\d{3}\b/g) || [];
+            allThreeDigit.forEach(num => {
+                if (parseInt(num) >= 401 && parseInt(num) <= 999) {
+                    const regex = new RegExp(num + '\\s*([-]?[\\d.,]+)');
+                    const match = text.match(regex);
+                    if (match && match[1]) {
+                        const cleanValue = cleanOCRValue(match[1]);
+                        if (cleanValue !== null) {
+                            fields[num] = cleanValue;
+                        }
+                    }
+                }
+            });
+        }
+        
+        function cleanOCRValue(value) {
+            try {
+                let clean = value
+                    .replace(/[^\d.,-]/g, '')
+                    .replace(/\.(?=.*\.)/g, '')
+                    .replace(/,/g, '.');
+                
+                if (!clean.includes('.')) {
+                    clean += '.00';
+                }
+                
+                const num = parseFloat(clean);
+                return isNaN(num) ? null : num;
+            } catch {
+                return null;
+            }
+        }
+        
+        function updateProgress(current, total, message) {
+            const percent = Math.round((current / total) * 100);
+            progressFill.style.width = `${percent}%`;
+            progressPercent.textContent = `${percent}%`;
+            progressText.innerHTML = `<i class="fas fa-heart"></i> ${message}`;
+        }
+        
+        function showResults() {
+            // Encontrar campos con valores
+            const allFieldsWithValues = new Set();
+            extractedData.forEach(data => {
+                Object.keys(data.fields).forEach(field => {
+                    if (data.fields[field] !== 0) {
+                        allFieldsWithValues.add(field);
+                    }
+                });
+            });
+            
+            const fieldsArray = Array.from(allFieldsWithValues).sort((a, b) => a - b);
+            
+            let html = '';
+            
+            if (fieldsArray.length === 0) {
+                html = `
+                    <div style="text-align: center; padding: 40px; background: white; border-radius: 15px;">
+                        <h3 style="color: #ff6b6b; margin-bottom: 20px;">
+                            <i class="fas fa-heart-broken"></i> No se encontraron campos con valores
+                        </h3>
+                        <p style="color: #666; margin-bottom: 20px;">
+                            El OCR no pudo extraer datos en formato reconocible.<br>
+                            ¿Los PDFs son escaneados o tienen texto muy pequeño?
+                        </p>
+                        <p style="color: #ff6b6b; font-weight: bold;">
+                            Pero igual te amo mucho, mi amor 💖
+                        </p>
+                    </div>
+                `;
+            } else {
+                html = `
+                    <div style="text-align: center; margin-bottom: 30px;">
+                        <h3 style="color: #4CAF50;">
+                            <i class="fas fa-heart"></i> ¡Éxito! Se encontraron 
+                            <span style="color: #ff6b6b;">${fieldsArray.length}</span> campos con valores
+                            <i class="fas fa-heart"></i>
+                        </h3>
+                    </div>
+                    <div style="overflow-x: auto;">
+                        <table style="width: 100%; border-collapse: collapse; margin: 0 auto;">
+                            <thead>
+                                <tr style="background: linear-gradient(135deg, #4CAF50, #45a049); color: white;">
+                                    <th style="padding: 15px; text-align: left; border-radius: 10px 0 0 0;">Archivo</th>
+                `;
+                
+                // Mostrar primeros 8 campos
+                const showFields = fieldsArray.slice(0, 8);
+                showFields.forEach(field => {
+                    html += `<th style="padding: 15px; text-align: center;">${field}</th>`;
+                });
+                
+                html += `</tr></thead><tbody>`;
+                
+                extractedData.forEach(data => {
+                    html += `<tr style="background: white; border-bottom: 2px solid #f0f0f0;">`;
+                    html += `<td style="padding: 15px; font-weight: bold; color: #333;">${data.fileName}</td>`;
+                    
+                    showFields.forEach(field => {
+                        const value = data.fields[field];
+                        html += `<td style="padding: 15px; text-align: center; color: #2e7d32; font-weight: bold;">${value}</td>`;
+                    });
+                    
+                    html += `</tr>`;
+                });
+                
+                html += `</tbody></table></div>`;
+                
+                if (fieldsArray.length > 8) {
+                    html += `
+                        <div style="text-align: center; margin-top: 20px; color: #666;">
+                            <i class="fas fa-info-circle"></i> 
+                            ... y ${fieldsArray.length - 8} campos más en el archivo Excel
+                        </div>
+                    `;
+                }
+            }
+            
+            resultsTable.innerHTML = html;
+            resultSection.style.display = 'block';
+            
+            // Crear Excel
+            createExcelFile();
+            
+            // Desplazar a resultados
+            setTimeout(() => {
+                resultSection.scrollIntoView({ behavior: 'smooth' });
+            }, 500);
+        }
+        
+        function createExcelFile() {
+            // Todos los campos posibles
+            const allFields = [];
+            for (let i = 401; i <= 999; i++) {
+                allFields.push(i.toString());
+            }
+            
+            // Crear datos Excel
+            const excelData = [
+                ['💖 EXTRACCIÓN DE CAMPOS SRI 401-999 💖'],
+                ['Hecho con amor para la mejor contadora del mundo'],
+                [''],
+                ['ARCHIVO', ...allFields]
+            ];
+            
+            extractedData.forEach(data => {
+                const row = [data.fileName];
+                allFields.forEach(field => {
+                    row.push(data.fields[field] || 0);
+                });
+                excelData.push(row);
+            });
+            
+            // Agregar mensaje especial
+            excelData.push(['']);
+            excelData.push(['💝 MENSAJE ESPECIAL 💝']);
+            excelData.push(['Te amo mucho mi amor']);
+            excelData.push(['Que este programa te sirva para tu trabajo']);
+            excelData.push(['Eres la mejor contadora del mundo']);
+            excelData.push(['Con todo mi amor 💖']);
+            
+            // Crear hoja
+            const worksheet = XLSX.utils.aoa_to_sheet(excelData);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Campos SRI");
+            
+            // Agregar hoja con mensaje de amor
+            const loveSheetData = [
+                ['💖 PARA MI AMOR CONTADORA 💖'],
+                [''],
+                ['Querida novia:'],
+                [''],
+                ['Espero que esta herramienta te sea de mucha utilidad'],
+                ['en tu trabajo como contadora.'],
+                [''],
+                ['Sé que trabajas duro con las declaraciones del SRI,'],
+                ['así que quise hacer algo para ayudarte.'],
+                [''],
+                ['Cada campo extraído'],
+                ['Cada número procesado'],
+                ['Cada línea de código'],
+                [''],
+                ['Todo fue hecho pensando en ti.'],
+                [''],
+                ['Te amo más de lo que las palabras pueden expresar.'],
+                [''],
+                ['Con todo mi corazón,'],
+                ['Tu novio que te adora 💕'],
+                [''],
+                ['PD: Eres la mejor contadora del mundo 🌟']
+            ];
+            
+            const loveSheet = XLSX.utils.aoa_to_sheet(loveSheetData);
+            XLSX.utils.book_append_sheet(workbook, loveSheet, "Mensaje de Amor");
+            
+            // Guardar para descarga
+            const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+            const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+            const url = URL.createObjectURL(blob);
+            
+            downloadBtn.dataset.downloadUrl = url;
+        }
+        
+        function downloadExcel() {
+            const url = downloadBtn.dataset.downloadUrl;
+            if (url) {
+                const fileName = `SRI_Para_Mi_Amor_${new Date().toISOString().split('T')[0]}.xlsx`;
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = fileName;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            }
+        }
+        
+        // Inicializar con mensaje bonito
+        currentStatus.textContent = "Sube tus archivos PDF y déjame ayudarte, mi amor";
+    </script>
+</body>
+</html>
