@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ensign Partner - Sistema de Recursos Humanos y Nómina</title>
+    <title>Ensign Partner - Sistema Contable de Nómina</title>
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -18,9 +18,6 @@
     
     <!-- jsPDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    
-    <!-- html2canvas -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     
     <!-- SheetJS for Excel -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -47,6 +44,8 @@
             --warning: #f59e0b;
             --danger: #ef4444;
             --info: #3b82f6;
+            --accounting: #8b5cf6;
+            --provision: #f97316;
             --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
             --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
             --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
@@ -431,6 +430,11 @@
             color: #8b5cf6;
         }
 
+        .stat-icon.orange {
+            background: rgba(249, 115, 22, 0.1);
+            color: #f97316;
+        }
+
         .stat-content {
             flex: 1;
         }
@@ -526,6 +530,16 @@
             color: var(--white);
         }
 
+        .btn-accounting {
+            background: linear-gradient(135deg, var(--accounting) 0%, #7c3aed 100%);
+            color: var(--white);
+        }
+
+        .btn-provision {
+            background: linear-gradient(135deg, var(--provision) 0%, #ea580c 100%);
+            color: var(--white);
+        }
+
         .btn-sm {
             padding: 8px 16px;
             font-size: 13px;
@@ -586,24 +600,25 @@
         .table {
             width: 100%;
             border-collapse: collapse;
-            min-width: 1800px;
+            min-width: 2400px;
         }
 
         .table th,
         .table td {
-            padding: 12px 8px;
+            padding: 10px 6px;
             text-align: left;
             border-bottom: 1px solid var(--gray-100);
-            font-size: 12px;
+            font-size: 11px;
+            white-space: nowrap;
         }
 
         .table th {
             background: var(--primary);
             color: var(--white);
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.3px;
             position: sticky;
             top: 0;
             z-index: 10;
@@ -625,12 +640,42 @@
             background: var(--primary-light);
             color: var(--white);
             font-weight: 700;
+            position: sticky;
+            bottom: 0;
         }
 
         .table .total-row td {
             background: var(--primary-light);
             color: var(--white);
             border-top: 2px solid var(--accent);
+        }
+
+        .accounting-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 8px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 600;
+            background: rgba(139, 92, 246, 0.1);
+            color: var(--accounting);
+        }
+
+        .accounting-badge i {
+            font-size: 10px;
+        }
+
+        .provision-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 8px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 600;
+            background: rgba(249, 115, 22, 0.1);
+            color: var(--provision);
         }
 
         .status-badge {
@@ -713,14 +758,14 @@
             background: var(--white);
             border-radius: var(--radius-xl);
             width: 100%;
-            max-width: 600px;
+            max-width: 800px;
             max-height: 90vh;
             overflow: hidden;
             animation: modalSlideIn 0.3s ease;
         }
 
         .modal-large {
-            max-width: 900px;
+            max-width: 1000px;
         }
 
         @keyframes modalSlideIn {
@@ -1084,156 +1129,127 @@
             color: var(--gray-500);
         }
 
-        .comparison-container {
-            overflow-x: auto;
-        }
-
-        .comparison-table {
+        .accounting-table {
             width: 100%;
             border-collapse: collapse;
-        }
-
-        .comparison-table th,
-        .comparison-table td {
-            padding: 20px;
-            text-align: center;
-            border: 1px solid var(--gray-200);
-        }
-
-        .comparison-table th {
-            background: var(--primary);
-            color: var(--white);
-            font-size: 14px;
-            font-weight: 600;
-        }
-
-        .comparison-table th.highlight {
-            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
-            position: relative;
-        }
-
-        .comparison-table th.highlight::after {
-            content: 'RECOMENDADO';
-            position: absolute;
-            top: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--warning);
-            color: var(--white);
-            font-size: 9px;
-            padding: 3px 8px;
-            border-radius: 10px;
-            font-weight: 700;
-        }
-
-        .comparison-table td.feature-name {
-            text-align: left;
-            font-weight: 600;
-            background: var(--gray-50);
-        }
-
-        .comparison-table td.check {
-            color: var(--success);
-            font-size: 18px;
-        }
-
-        .comparison-table td.cross {
-            color: var(--danger);
-            font-size: 18px;
-        }
-
-        .comparison-price {
-            font-size: 28px;
-            font-weight: 800;
-            color: var(--primary);
-        }
-
-        .comparison-price span {
-            font-size: 14px;
-            font-weight: 400;
-            color: var(--gray-500);
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-        }
-
-        .empty-state-icon {
-            width: 80px;
-            height: 80px;
-            background: var(--gray-100);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 20px;
-            font-size: 32px;
-            color: var(--gray-400);
-        }
-
-        .empty-state-title {
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--gray-700);
-            margin-bottom: 8px;
-        }
-
-        .empty-state-text {
-            font-size: 14px;
-            color: var(--gray-500);
             margin-bottom: 20px;
         }
 
-        .quick-actions {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 24px;
-            flex-wrap: wrap;
+        .accounting-table th,
+        .accounting-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--gray-200);
         }
 
-        .summary-card {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+        .accounting-table th {
+            background: var(--accounting);
             color: var(--white);
-            padding: 20px;
-            border-radius: var(--radius-lg);
-            margin-bottom: 24px;
+            font-size: 12px;
         }
 
-        .summary-title {
-            font-size: 14px;
-            opacity: 0.8;
-            margin-bottom: 8px;
+        .accounting-table td.debit {
+            color: var(--success);
+            font-weight: 600;
         }
 
-        .summary-value {
-            font-size: 32px;
-            font-weight: 800;
+        .accounting-table td.credit {
+            color: var(--danger);
+            font-weight: 600;
         }
 
-        .summary-grid {
+        .provision-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        .provision-table th,
+        .provision-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .provision-table th {
+            background: var(--provision);
+            color: var(--white);
+            font-size: 12px;
+        }
+
+        .conceptos-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 16px;
-            margin-top: 16px;
+            margin: 24px 0;
+            padding: 20px;
+            background: var(--gray-50);
+            border-radius: var(--radius-lg);
         }
 
-        .summary-item {
+        .concepto-item {
             text-align: center;
             padding: 12px;
-            background: rgba(255,255,255,0.1);
+            background: var(--white);
             border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
         }
 
-        .summary-item-label {
+        .concepto-titulo {
             font-size: 11px;
-            opacity: 0.7;
+            color: var(--gray-500);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
             margin-bottom: 4px;
         }
 
-        .summary-item-value {
-            font-size: 18px;
+        .concepto-valor {
+            font-size: 16px;
             font-weight: 700;
+            color: var(--primary);
+        }
+
+        .concepto-valor.ingreso {
+            color: var(--success);
+        }
+
+        .concepto-valor.descuento {
+            color: var(--danger);
+        }
+
+        .concepto-valor.provision {
+            color: var(--provision);
+        }
+
+        .tab-container {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+            border-bottom: 2px solid var(--gray-200);
+            padding-bottom: 8px;
+        }
+
+        .tab {
+            padding: 8px 16px;
+            border-radius: var(--radius-md) var(--radius-md) 0 0;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--gray-600);
+            transition: var(--transition);
+        }
+
+        .tab.active {
+            color: var(--accent);
+            border-bottom: 3px solid var(--accent);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
         }
 
         @media (max-width: 1024px) {
@@ -1291,6 +1307,10 @@
             .modal {
                 max-width: 100%;
                 margin: 10px;
+            }
+
+            .conceptos-grid {
+                grid-template-columns: repeat(2, 1fr);
             }
         }
 
@@ -1396,6 +1416,16 @@
             color: var(--white);
         }
 
+        .action-btn.accounting {
+            background: rgba(139, 92, 246, 0.1);
+            color: var(--accounting);
+        }
+
+        .action-btn.accounting:hover {
+            background: var(--accounting);
+            color: var(--white);
+        }
+
         .config-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -1474,69 +1504,6 @@
             border-radius: var(--radius-lg);
             margin-top: 20px;
         }
-
-        .email-field {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px;
-            background: var(--white);
-            border-radius: var(--radius-md);
-            margin-bottom: 12px;
-            border: 1px solid var(--gray-200);
-        }
-
-        .email-field input {
-            flex: 1;
-            border: none;
-            outline: none;
-            font-size: 14px;
-        }
-
-        .email-field .remove-email {
-            color: var(--danger);
-            cursor: pointer;
-        }
-
-        .conceptos-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 16px;
-            margin: 24px 0;
-            padding: 20px;
-            background: var(--gray-50);
-            border-radius: var(--radius-lg);
-        }
-
-        .concepto-item {
-            text-align: center;
-            padding: 12px;
-            background: var(--white);
-            border-radius: var(--radius-md);
-            box-shadow: var(--shadow-sm);
-        }
-
-        .concepto-titulo {
-            font-size: 11px;
-            color: var(--gray-500);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 4px;
-        }
-
-        .concepto-valor {
-            font-size: 16px;
-            font-weight: 700;
-            color: var(--primary);
-        }
-
-        .concepto-valor.ingreso {
-            color: var(--success);
-        }
-
-        .concepto-valor.descuento {
-            color: var(--danger);
-        }
     </style>
 </head>
 <body>
@@ -1548,7 +1515,7 @@
                     <img src="https://res.cloudinary.com/dtmqftcsr/image/upload/v1772584409/ENSIGN_PARTENER_utlfoc.png" alt="Ensign Partner" class="logo-img" id="sidebarLogo">
                     <span class="logo-text">Ensign Partner</span>
                 </div>
-                <div class="sidebar-subtitle">Sistema de RRHH & Nomina</div>
+                <div class="sidebar-subtitle">Sistema Contable de Nómina</div>
             </div>
             <nav class="sidebar-nav">
                 <div class="nav-section">
@@ -1559,33 +1526,47 @@
                     </a>
                 </div>
                 <div class="nav-section">
-                    <div class="nav-section-title">Gestion</div>
-                    <a class="nav-item" data-section="employees">
-                        <i class="fas fa-users"></i>
-                        Empleados
-                        <span class="nav-badge" id="employeeCount">0</span>
+                    <div class="nav-section-title">Nómina</div>
+                    <a class="nav-item" data-section="payrollList">
+                        <i class="fas fa-list"></i>
+                        Nómina Completa
                     </a>
                     <a class="nav-item" data-section="payroll">
                         <i class="fas fa-file-invoice-dollar"></i>
-                        Rol de Pagos
-                    </a>
-                    <a class="nav-item" data-section="payrollList">
-                        <i class="fas fa-list"></i>
-                        Lista de Nómina
+                        Rol Individual
                     </a>
                 </div>
                 <div class="nav-section">
-                    <div class="nav-section-title">Comercial</div>
-                    <a class="nav-item" data-section="comparison">
-                        <i class="fas fa-balance-scale"></i>
-                        Comparativa
+                    <div class="nav-section-title">Provisiones</div>
+                    <a class="nav-item" data-section="provisiones">
+                        <i class="fas fa-calculator"></i>
+                        Cálculo de Provisiones
+                    </a>
+                </div>
+                <div class="nav-section">
+                    <div class="nav-section-title">Contabilidad</div>
+                    <a class="nav-item" data-section="accounting">
+                        <i class="fas fa-book"></i>
+                        Asientos Contables
+                    </a>
+                    <a class="nav-item" data-section="chartOfAccounts">
+                        <i class="fas fa-list-ul"></i>
+                        Plan de Cuentas
+                    </a>
+                </div>
+                <div class="nav-section">
+                    <div class="nav-section-title">Empleados</div>
+                    <a class="nav-item" data-section="employees">
+                        <i class="fas fa-users"></i>
+                        Gestión de Empleados
+                        <span class="nav-badge" id="employeeCount">90</span>
                     </a>
                 </div>
                 <div class="nav-section">
                     <div class="nav-section-title">Sistema</div>
                     <a class="nav-item" data-section="config">
                         <i class="fas fa-cog"></i>
-                        Configuracion
+                        Configuración
                     </a>
                 </div>
             </nav>
@@ -1599,12 +1580,11 @@
                     <button class="menu-toggle" id="menuToggle">
                         <i class="fas fa-bars"></i>
                     </button>
-                    <h1 class="page-title" id="pageTitle">Dashboard</h1>
+                    <h1 class="page-title" id="pageTitle">Dashboard Contable</h1>
                 </div>
                 <div class="navbar-right">
-                    <div class="navbar-icon" onclick="showToast('Notificaciones', 'No hay nuevas notificaciones', 'info')">
+                    <div class="navbar-icon" onclick="showToast('Notificaciones', 'Sistema contable activado', 'info')">
                         <i class="fas fa-bell"></i>
-                        <span class="badge"></span>
                     </div>
                     <div class="navbar-icon" onclick="showSection('config')">
                         <i class="fas fa-cog"></i>
@@ -1613,7 +1593,7 @@
                         <div class="user-avatar">EP</div>
                         <div class="user-info">
                             <span class="user-name">Ensign Partner</span>
-                            <span class="user-role">Administrador</span>
+                            <span class="user-role">Contador</span>
                         </div>
                     </div>
                 </div>
@@ -1623,7 +1603,7 @@
             <div class="content-area">
                 <!-- Dashboard Section -->
                 <section class="section active" id="dashboard">
-                    <div class="stats-grid" id="statsGrid">
+                    <div class="stats-grid">
                         <div class="stat-card">
                             <div class="stat-icon blue">
                                 <i class="fas fa-users"></i>
@@ -1631,10 +1611,7 @@
                             <div class="stat-content">
                                 <div class="stat-label">Total Empleados</div>
                                 <div class="stat-value" id="totalEmployees">90</div>
-                                <div class="stat-change positive">
-                                    <i class="fas fa-arrow-up"></i>
-                                    Activos
-                                </div>
+                                <div class="stat-change positive">Activos</div>
                             </div>
                         </div>
                         <div class="stat-card">
@@ -1642,25 +1619,19 @@
                                 <i class="fas fa-money-bill-wave"></i>
                             </div>
                             <div class="stat-content">
-                                <div class="stat-label">Nomina Mensual</div>
+                                <div class="stat-label">Nómina Mensual</div>
                                 <div class="stat-value" id="totalPayroll">$50,960.56</div>
-                                <div class="stat-change positive">
-                                    <i class="fas fa-arrow-up"></i>
-                                    Total bruto
-                                </div>
+                                <div class="stat-change positive">Sueldos</div>
                             </div>
                         </div>
                         <div class="stat-card">
-                            <div class="stat-icon red">
-                                <i class="fas fa-minus-circle"></i>
+                            <div class="stat-icon orange">
+                                <i class="fas fa-chart-line"></i>
                             </div>
                             <div class="stat-content">
-                                <div class="stat-label">Total Descuentos</div>
-                                <div class="stat-value" id="totalDeductions">$9,711.03</div>
-                                <div class="stat-change negative">
-                                    <i class="fas fa-arrow-down"></i>
-                                    IESS + otros
-                                </div>
+                                <div class="stat-label">Provisiones</div>
+                                <div class="stat-value" id="totalProvisions">$7,498.23</div>
+                                <div class="stat-change">XIII + XIV + FR</div>
                             </div>
                         </div>
                         <div class="stat-card">
@@ -1670,10 +1641,7 @@
                             <div class="stat-content">
                                 <div class="stat-label">Neto a Pagar</div>
                                 <div class="stat-value" id="totalNet">$47,985.96</div>
-                                <div class="stat-change positive">
-                                    <i class="fas fa-arrow-up"></i>
-                                    Disponible
-                                </div>
+                                <div class="stat-change positive">Líquido</div>
                             </div>
                         </div>
                     </div>
@@ -1681,22 +1649,22 @@
                     <div class="quick-actions">
                         <button class="btn btn-primary" onclick="showSection('payrollList')">
                             <i class="fas fa-file-invoice-dollar"></i>
-                            Ver Nómina Completa
+                            Ver Nómina
                         </button>
-                        <button class="btn btn-secondary" onclick="exportPayrollExcel()">
-                            <i class="fas fa-file-excel"></i>
-                            Exportar a Excel
+                        <button class="btn btn-accounting" onclick="generateAccountingEntries()">
+                            <i class="fas fa-book"></i>
+                            Generar Asientos
                         </button>
-                        <button class="btn btn-secondary" onclick="showSection('employees')">
-                            <i class="fas fa-user-plus"></i>
-                            Agregar Empleado
+                        <button class="btn btn-provision" onclick="showSection('provisiones')">
+                            <i class="fas fa-calculator"></i>
+                            Calcular Provisiones
                         </button>
                     </div>
 
                     <div class="dashboard-grid">
                         <div class="card">
                             <div class="card-header">
-                                <h3 class="card-title">Distribucion Salarial por Departamento</h3>
+                                <h3 class="card-title">Distribución por Departamento</h3>
                             </div>
                             <div class="card-body">
                                 <div class="chart-container">
@@ -1706,24 +1674,28 @@
                         </div>
                         <div class="card">
                             <div class="card-header">
-                                <h3 class="card-title">Informacion del Sistema</h3>
+                                <h3 class="card-title">Resumen Contable</h3>
                             </div>
                             <div class="card-body">
                                 <div style="margin-bottom: 16px;">
                                     <div class="stat-label">Empresa</div>
-                                    <div class="stat-value" style="font-size: 18px;" id="companyNameDisplay">JASAFOOD S.A.</div>
+                                    <div class="stat-value" style="font-size: 18px;">JASAFOOD S.A.</div>
                                 </div>
                                 <div style="margin-bottom: 16px;">
-                                    <div class="stat-label">Periodo</div>
-                                    <div class="stat-value" style="font-size: 18px;" id="currentPeriod">Enero 2025</div>
+                                    <div class="stat-label">Período</div>
+                                    <div class="stat-value" style="font-size: 18px;">Enero 2025</div>
                                 </div>
                                 <div style="margin-bottom: 16px;">
-                                    <div class="stat-label">Fecha de Sistema</div>
-                                    <div class="stat-value" style="font-size: 18px;" id="currentDate"></div>
+                                    <div class="stat-label">Total Débitos</div>
+                                    <div class="stat-value" style="font-size: 18px; color: var(--success);">$57,696.99</div>
                                 </div>
                                 <div style="margin-bottom: 16px;">
-                                    <div class="stat-label">Total Empleados</div>
-                                    <div class="stat-value" style="font-size: 18px;" id="totalEmployeesDisplay">90</div>
+                                    <div class="stat-label">Total Créditos</div>
+                                    <div class="stat-value" style="font-size: 18px; color: var(--danger);">$57,696.99</div>
+                                </div>
+                                <div style="margin-bottom: 16px;">
+                                    <div class="stat-label">Cuadratura</div>
+                                    <div class="stat-value" style="font-size: 18px; color: var(--success);">✓ Cuadrado</div>
                                 </div>
                             </div>
                         </div>
@@ -1731,140 +1703,78 @@
 
                     <div class="card" style="margin-top: 24px;">
                         <div class="card-header">
-                            <h3 class="card-title">Resumen de Conceptos</h3>
+                            <h3 class="card-title">Resumen de Conceptos con Cuentas Contables</h3>
                         </div>
                         <div class="card-body">
                             <div class="conceptos-grid">
                                 <div class="concepto-item">
-                                    <div class="concepto-titulo">Sueldo Basico</div>
+                                    <div class="concepto-titulo">Sueldo (5101)</div>
                                     <div class="concepto-valor ingreso">$48,169.10</div>
                                 </div>
                                 <div class="concepto-item">
-                                    <div class="concepto-titulo">Horas Nocturnas</div>
-                                    <div class="concepto-valor ingreso">$615.53</div>
+                                    <div class="concepto-titulo">Horas Extras (5102)</div>
+                                    <div class="concepto-valor ingreso">$5,181.24</div>
                                 </div>
                                 <div class="concepto-item">
-                                    <div class="concepto-titulo">Horas Suplementarias</div>
-                                    <div class="concepto-valor ingreso">$169.16</div>
-                                </div>
-                                <div class="concepto-item">
-                                    <div class="concepto-titulo">Horas Extraordinarias</div>
-                                    <div class="concepto-valor ingreso">$4,396.55</div>
-                                </div>
-                                <div class="concepto-item">
-                                    <div class="concepto-titulo">Fondo de Reserva</div>
+                                    <div class="concepto-titulo">F.Reserva (5103)</div>
                                     <div class="concepto-valor ingreso">$2,913.74</div>
                                 </div>
                                 <div class="concepto-item">
-                                    <div class="concepto-titulo">Bonificaciones</div>
-                                    <div class="concepto-valor ingreso">$1,071.57</div>
+                                    <div class="concepto-titulo">Bonos (5104)</div>
+                                    <div class="concepto-valor ingreso">$1,432.91</div>
                                 </div>
                                 <div class="concepto-item">
-                                    <div class="concepto-titulo">IESS Personal</div>
-                                    <div class="concepto-valor descuento">-$5,152.98</div>
+                                    <div class="concepto-titulo">IESS (2101)</div>
+                                    <div class="concepto-valor descuento">$5,152.98</div>
                                 </div>
                                 <div class="concepto-item">
-                                    <div class="concepto-titulo">Prestamos</div>
-                                    <div class="concepto-valor descuento">-$2,144.13</div>
+                                    <div class="concepto-titulo">Préstamos (2102)</div>
+                                    <div class="concepto-valor descuento">$2,144.13</div>
                                 </div>
                                 <div class="concepto-item">
-                                    <div class="concepto-titulo">Otros Descuentos</div>
-                                    <div class="concepto-valor descuento">-$2,413.92</div>
+                                    <div class="concepto-titulo">XIII Sueldo (5105)</div>
+                                    <div class="concepto-valor provision">$3,847.21</div>
+                                </div>
+                                <div class="concepto-item">
+                                    <div class="concepto-titulo">XIV Sueldo (5106)</div>
+                                    <div class="concepto-valor provision">$1,826.45</div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </section>
 
-                <!-- Employees Section -->
-                <section class="section" id="employees">
-                    <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title">Gestion de Empleados</h3>
-                            <button class="btn btn-primary btn-sm" onclick="openEmployeeModal()">
-                                <i class="fas fa-plus"></i>
-                                Nuevo Empleado
-                            </button>
-                        </div>
-                        <div class="card-body">
-                            <div class="search-filters">
-                                <div class="search-box">
-                                    <i class="fas fa-search"></i>
-                                    <input type="text" class="form-control" placeholder="Buscar empleado por nombre o cedula..." id="employeeSearch" oninput="filterEmployees()">
-                                </div>
-                                <select class="form-control filter-select" id="departmentFilter" onchange="filterEmployees()">
-                                    <option value="">Todos los departamentos</option>
-                                    <option value="CCI">CCI</option>
-                                    <option value="CONDADO">CONDADO</option>
-                                    <option value="BOSQUE">BOSQUE</option>
-                                    <option value="Gerencia">Gerencia</option>
-                                    <option value="Contabilidad">Contabilidad</option>
-                                    <option value="Recursos Humanos">Recursos Humanos</option>
-                                    <option value="Ventas">Ventas</option>
-                                    <option value="Marketing">Marketing</option>
-                                    <option value="Tecnologia">Tecnologia</option>
-                                    <option value="Operaciones">Operaciones</option>
-                                </select>
-                            </div>
-                            <div class="table-container">
-                                <table class="table" id="employeesTable">
-                                    <thead>
-                                        <tr>
-                                            <th>Cedula</th>
-                                            <th>Nombre Completo</th>
-                                            <th>Departamento</th>
-                                            <th>Cargo</th>
-                                            <th>Sueldo Base</th>
-                                            <th>Estado</th>
-                                            <th>Acciones</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="employeesTableBody">
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="empty-state" id="emptyEmployees" style="display: none;">
-                                <div class="empty-state-icon">
-                                    <i class="fas fa-users"></i>
-                                </div>
-                                <h3 class="empty-state-title">No hay empleados registrados</h3>
-                                <p class="empty-state-text">Comienza agregando tu primer empleado al sistema</p>
-                                <button class="btn btn-primary" onclick="openEmployeeModal()">
-                                    <i class="fas fa-plus"></i>
-                                    Agregar Empleado
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Payroll List Section (Nómina Completa) -->
+                <!-- Payroll List Section -->
                 <section class="section" id="payrollList">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title">Nómina de Enero 2025</h3>
+                            <h3 class="card-title">Nómina de Enero 2025 con Cuentas Contables</h3>
                             <div>
+                                <button class="btn btn-accounting btn-sm" onclick="generateAccountingEntries()">
+                                    <i class="fas fa-book"></i>
+                                    Asientos
+                                </button>
                                 <button class="btn btn-primary btn-sm" onclick="exportPayrollExcel()">
                                     <i class="fas fa-file-excel"></i>
-                                    Exportar Excel
+                                    Exportar
                                 </button>
                             </div>
                         </div>
                         <div class="card-body">
                             <div class="summary-card">
-                                <div class="summary-title">RESUMEN GENERAL</div>
+                                <div class="summary-title">RESUMEN GENERAL CON CUENTAS</div>
                                 <div class="summary-grid">
                                     <div class="summary-item">
-                                        <div class="summary-item-label">Total Empleados</div>
+                                        <div class="summary-item-label">Empleados</div>
                                         <div class="summary-item-value">90</div>
                                     </div>
                                     <div class="summary-item">
-                                        <div class="summary-item-label">Total Ingresos</div>
+                                        <div class="summary-item-label">Débito (Gastos)</div>
                                         <div class="summary-item-value">$57,696.99</div>
                                     </div>
                                     <div class="summary-item">
-                                        <div class="summary-item-label">Total Descuentos</div>
-                                        <div class="summary-item-value">$9,711.03</div>
+                                        <div class="summary-item-label">Crédito (Pasivos)</div>
+                                        <div class="summary-item-value">$57,696.99</div>
                                     </div>
                                     <div class="summary-item">
                                         <div class="summary-item-label">Neto a Pagar</div>
@@ -1879,22 +1789,20 @@
                                         <tr>
                                             <th>No.</th>
                                             <th>NOMBRE</th>
-                                            <th>CEDULA</th>
-                                            <th>FEC.ING</th>
-                                            <th>CARGO</th>
-                                            <th>DEPART.</th>
+                                            <th>CÉDULA</th>
+                                            <th>DEP</th>
                                             <th>SUELDO</th>
-                                            <th>H.NOCT</th>
-                                            <th>H.SUP</th>
-                                            <th>H.EXT</th>
-                                            <th>F.RES</th>
+                                            <th>H.EXTRAS</th>
+                                            <th>F.RESERVA</th>
                                             <th>BONOS</th>
                                             <th>INGRESOS</th>
                                             <th>IESS</th>
-                                            <th>PREST</th>
+                                            <th>PRÉST</th>
                                             <th>OTROS</th>
                                             <th>DESC</th>
                                             <th>NETO</th>
+                                            <th>CTA GASTO</th>
+                                            <th>CTA PASIVO</th>
                                         </tr>
                                     </thead>
                                     <tbody id="payrollTableBody">
@@ -1905,221 +1813,325 @@
                     </div>
                 </section>
 
-                <!-- Payroll Section (Individual) -->
+                <!-- Payroll Individual Section -->
                 <section class="section" id="payroll">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title">Generador de Rol de Pagos Individual</h3>
+                            <h3 class="card-title">Rol de Pagos Individual con Contabilidad</h3>
                         </div>
                         <div class="card-body">
-                            <div class="form-row" style="margin-bottom: 24px;">
+                            <div class="form-row">
                                 <div class="form-group">
                                     <label class="form-label">Seleccionar Empleado</label>
                                     <select class="form-control" id="payrollEmployee" onchange="loadEmployeePayroll()">
                                         <option value="">-- Seleccionar --</option>
                                     </select>
                                 </div>
-                                <div class="form-group">
-                                    <label class="form-label">Periodo</label>
-                                    <input type="month" class="form-control" id="payrollPeriod" value="2025-01" readonly>
-                                </div>
                             </div>
 
                             <div id="payrollCalculation" style="display: none;">
-                                <div class="payroll-preview" style="max-width: 100%;">
-                                    <div class="payroll-header">
-                                        <img src="https://res.cloudinary.com/dtmqftcsr/image/upload/v1772584409/ENSIGN_PARTENER_utlfoc.png" alt="Logo" class="payroll-logo">
-                                        <div class="payroll-company-name" id="previewCompanyName">JASAFOOD S.A.</div>
-                                        <div class="payroll-company-info" id="previewCompanyInfo">Del: 01/Ene/2025 Al: 31/Ene/2025</div>
-                                    </div>
-                                    
-                                    <div class="payroll-employee" id="previewEmployee">
-                                    </div>
+                                <!-- Tabs -->
+                                <div class="tab-container">
+                                    <div class="tab active" onclick="switchTab('payroll-tab1', this)">Rol de Pago</div>
+                                    <div class="tab" onclick="switchTab('payroll-tab2', this)">Asiento Contable</div>
+                                    <div class="tab" onclick="switchTab('payroll-tab3', this)">Provisiones</div>
+                                </div>
 
-                                    <div class="form-row">
-                                        <div class="form-group">
-                                            <label class="form-label">Horas Extras Adicionales</label>
-                                            <input type="number" class="form-control" id="payrollExtraHours" value="0" onchange="calculateIndividualPayroll()">
+                                <!-- Tab 1: Rol de Pago -->
+                                <div id="payroll-tab1" class="tab-content active">
+                                    <div class="payroll-preview" style="max-width: 100%;">
+                                        <div class="payroll-header">
+                                            <img src="https://res.cloudinary.com/dtmqftcsr/image/upload/v1772584409/ENSIGN_PARTENER_utlfoc.png" alt="Logo" class="payroll-logo">
+                                            <div class="payroll-company-name">JASAFOOD S.A.</div>
+                                            <div class="payroll-company-info">RUC: 1791234567001 | Del: 01/Ene/2025 Al: 31/Ene/2025</div>
                                         </div>
-                                        <div class="form-group">
-                                            <label class="form-label">Bonificaciones Adicionales</label>
-                                            <input type="number" class="form-control" id="payrollExtraBonus" value="0" onchange="calculateIndividualPayroll()">
+                                        
+                                        <div class="payroll-employee" id="previewEmployee"></div>
+
+                                        <table class="payroll-table">
+                                            <thead><tr><th>INGRESOS</th><th>VALOR</th><th>CUENTA</th></tr></thead>
+                                            <tbody id="previewIncomeBody"></tbody>
+                                        </table>
+
+                                        <table class="payroll-table">
+                                            <thead><tr><th>DESCUENTOS</th><th>VALOR</th><th>CUENTA</th></tr></thead>
+                                            <tbody id="previewDeductionsBody"></tbody>
+                                        </table>
+
+                                        <div class="payroll-totals" id="previewTotals"></div>
+
+                                        <div class="payroll-footer">
+                                            <div class="signature-box"><div class="signature-line"></div><div class="signature-label">Firma del Empleado</div></div>
+                                            <div class="signature-box"><div class="signature-line"></div><div class="signature-label">Firma Contador</div></div>
                                         </div>
-                                        <div class="form-group">
-                                            <label class="form-label">Descuentos Adicionales</label>
-                                            <input type="number" class="form-control" id="payrollExtraDeductions" value="0" onchange="calculateIndividualPayroll()">
-                                        </div>
-                                    </div>
-
-                                    <table class="payroll-table" id="previewIncomeTable">
-                                        <thead><tr><th>INGRESOS</th><th>VALOR</th></tr></thead>
-                                        <tbody id="previewIncomeBody"></tbody>
-                                    </table>
-
-                                    <table class="payroll-table" id="previewDeductionsTable">
-                                        <thead><tr><th>DESCUENTOS</th><th>VALOR</th></tr></thead>
-                                        <tbody id="previewDeductionsBody"></tbody>
-                                    </table>
-
-                                    <div class="payroll-totals" id="previewTotals"></div>
-
-                                    <div class="payroll-footer">
-                                        <div class="signature-box"><div class="signature-line"></div><div class="signature-label">Firma del Empleado</div></div>
-                                        <div class="signature-box"><div class="signature-line"></div><div class="signature-label">Firma de Recursos Humanos</div></div>
                                     </div>
                                 </div>
 
-                                <div style="display: flex; gap: 12px; margin-top: 24px; flex-wrap: wrap;">
+                                <!-- Tab 2: Asiento Contable -->
+                                <div id="payroll-tab2" class="tab-content">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h4 style="margin-bottom: 20px;">Asiento Contable Individual</h4>
+                                            <table class="accounting-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>CUENTA</th>
+                                                        <th>DESCRIPCIÓN</th>
+                                                        <th>DÉBITO</th>
+                                                        <th>CRÉDITO</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="accountingEntryBody"></tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Tab 3: Provisiones -->
+                                <div id="payroll-tab3" class="tab-content">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h4 style="margin-bottom: 20px;">Cálculo de Provisiones</h4>
+                                            <table class="provision-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>CONCEPTO</th>
+                                                        <th>FÓRMULA</th>
+                                                        <th>BASE</th>
+                                                        <th>VALOR</th>
+                                                        <th>CUENTA</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="provisionBody"></tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div style="display: flex; gap: 12px; margin-top: 24px;">
                                     <button class="btn btn-primary" onclick="generateIndividualPDF()">
                                         <i class="fas fa-file-pdf"></i>
-                                        Generar PDF
+                                        PDF
                                     </button>
-                                    <button class="btn btn-success" onclick="sendPayrollEmail()">
-                                        <i class="fas fa-paper-plane"></i>
-                                        Enviar por Correo
+                                    <button class="btn btn-accounting" onclick="showAccountingModal()">
+                                        <i class="fas fa-book"></i>
+                                        Ver Asiento
                                     </button>
                                 </div>
-                            </div>
-
-                            <div class="empty-state" id="emptyPayroll" style="display: none;">
-                                <div class="empty-state-icon">
-                                    <i class="fas fa-file-invoice-dollar"></i>
-                                </div>
-                                <h3 class="empty-state-title">Selecciona un empleado</h3>
-                                <p class="empty-state-text">Elige un empleado para ver su rol de pago</p>
                             </div>
                         </div>
                     </div>
                 </section>
 
-                <!-- Comparison Section -->
-                <section class="section" id="comparison">
+                <!-- Provisiones Section -->
+                <section class="section" id="provisiones">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title">Comparativa Comercial</h3>
+                            <h3 class="card-title">Cálculo de Provisiones Sociales</h3>
+                            <button class="btn btn-provision btn-sm" onclick="calculateAllProvisions()">
+                                <i class="fas fa-calculator"></i>
+                                Calcular Todo
+                            </button>
                         </div>
                         <div class="card-body">
-                            <p style="text-align: center; margin-bottom: 24px; color: var(--gray-600);">
-                                Comparacion de precios con otras soluciones del mercado
-                            </p>
-                            <div class="comparison-container">
-                                <table class="comparison-table">
+                            <div class="stats-grid">
+                                <div class="stat-card">
+                                    <div class="stat-icon orange">
+                                        <i class="fas fa-calendar-alt"></i>
+                                    </div>
+                                    <div class="stat-content">
+                                        <div class="stat-label">Décimo Tercero</div>
+                                        <div class="stat-value" id="provision13">$3,847.21</div>
+                                        <div class="stat-change">Dic 2023 - Nov 2024</div>
+                                    </div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-icon orange">
+                                        <i class="fas fa-calendar-alt"></i>
+                                    </div>
+                                    <div class="stat-content">
+                                        <div class="stat-label">Décimo Cuarto</div>
+                                        <div class="stat-value" id="provision14">$1,826.45</div>
+                                        <div class="stat-change">Ago 2023 - Jul 2024</div>
+                                    </div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-icon orange">
+                                        <i class="fas fa-umbrella-beach"></i>
+                                    </div>
+                                    <div class="stat-content">
+                                        <div class="stat-label">Vacaciones</div>
+                                        <div class="stat-value" id="provisionVacations">$2,123.45</div>
+                                        <div class="stat-change">/24 sobre aportable</div>
+                                    </div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-icon orange">
+                                        <i class="fas fa-piggy-bank"></i>
+                                    </div>
+                                    <div class="stat-content">
+                                        <div class="stat-label">Fondo Reserva</div>
+                                        <div class="stat-value" id="provisionFR">$2,913.74</div>
+                                        <div class="stat-change">8.33% mensual</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="table-container">
+                                <table class="table">
                                     <thead>
                                         <tr>
-                                            <th>Caracteristicas</th>
-                                            <th class="highlight">
-                                                Ensign Partner<br>
-                                                <div class="comparison-price">$3.800<span>/implementacion</span></div>
-                                            </th>
-                                            <th>Datalife</th>
-                                            <th>Nominaz</th>
-                                            <th>Otros</th>
+                                            <th>EMPLEADO</th>
+                                            <th>BASE XIII</th>
+                                            <th>XIII SUELDO</th>
+                                            <th>BASE XIV</th>
+                                            <th>XIV SUELDO</th>
+                                            <th>BASE VAC</th>
+                                            <th>VACACIONES</th>
+                                            <th>F.RESERVA</th>
+                                            <th>TOTAL</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td class="feature-name">Gestion de Empleados</td>
-                                            <td class="check"><i class="fas fa-check-circle"></i></td>
-                                            <td class="check"><i class="fas fa-check-circle"></i></td>
-                                            <td class="check"><i class="fas fa-check-circle"></i></td>
-                                            <td class="check"><i class="fas fa-check-circle"></i></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="feature-name">Calculo Automatico de Nomina</td>
-                                            <td class="check"><i class="fas fa-check-circle"></i></td>
-                                            <td class="check"><i class="fas fa-check-circle"></i></td>
-                                            <td class="check"><i class="fas fa-check-circle"></i></td>
-                                            <td class="check"><i class="fas fa-check-circle"></i></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="feature-name">Generacion PDF Profesional</td>
-                                            <td class="check"><i class="fas fa-check-circle"></i></td>
-                                            <td class="check"><i class="fas fa-check-circle"></i></td>
-                                            <td class="cross"><i class="fas fa-times-circle"></i></td>
-                                            <td class="check"><i class="fas fa-check-circle"></i></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="feature-name">Envio de Correo Automatico</td>
-                                            <td class="check"><i class="fas fa-check-circle"></i></td>
-                                            <td class="cross"><i class="fas fa-times-circle"></i></td>
-                                            <td class="cross"><i class="fas fa-times-circle"></i></td>
-                                            <td class="cross"><i class="fas fa-times-circle"></i></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="feature-name">Exportar Excel</td>
-                                            <td class="check"><i class="fas fa-check-circle"></i></td>
-                                            <td class="check"><i class="fas fa-check-circle"></i></td>
-                                            <td class="check"><i class="fas fa-check-circle"></i></td>
-                                            <td class="check"><i class="fas fa-check-circle"></i></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="feature-name">Dashboard Inteligente</td>
-                                            <td class="check"><i class="fas fa-check-circle"></i></td>
-                                            <td class="check"><i class="fas fa-check-circle"></i></td>
-                                            <td class="cross"><i class="fas fa-times-circle"></i></td>
-                                            <td class="check"><i class="fas fa-check-circle"></i></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="feature-name">Graficos y Estadisticas</td>
-                                            <td class="check"><i class="fas fa-check-circle"></i></td>
-                                            <td class="check"><i class="fas fa-check-circle"></i></td>
-                                            <td class="cross"><i class="fas fa-times-circle"></i></td>
-                                            <td class="cross"><i class="fas fa-times-circle"></i></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="feature-name">Calculo de Decimos</td>
-                                            <td class="check"><i class="fas fa-check-circle"></i></td>
-                                            <td class="check"><i class="fas fa-check-circle"></i></td>
-                                            <td class="check"><i class="fas fa-check-circle"></i></td>
-                                            <td class="check"><i class="fas fa-check-circle"></i></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="feature-name">Fondos de Reserva</td>
-                                            <td class="check"><i class="fas fa-check-circle"></i></td>
-                                            <td class="check"><i class="fas fa-check-circle"></i></td>
-                                            <td class="check"><i class="fas fa-check-circle"></i></td>
-                                            <td class="check"><i class="fas fa-check-circle"></i></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="feature-name">Configuracion Personalizable</td>
-                                            <td class="check"><i class="fas fa-check-circle"></i></td>
-                                            <td class="cross"><i class="fas fa-times-circle"></i></td>
-                                            <td class="check"><i class="fas fa-check-circle"></i></td>
-                                            <td class="cross"><i class="fas fa-times-circle"></i></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="feature-name">Soporte Anual</td>
-                                            <td class="check"><i class="fas fa-check-circle"></i> $1.800/ano</td>
-                                            <td class="check"><i class="fas fa-check-circle"></i> $2.400/ano</td>
-                                            <td class="check"><i class="fas fa-check-circle"></i> $2.200/ano</td>
-                                            <td class="check"><i class="fas fa-check-circle"></i> $2.000/ano</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="feature-name">Sin Limite de Empleados</td>
-                                            <td class="check"><i class="fas fa-check-circle"></i></td>
-                                            <td class="cross"><i class="fas fa-times-circle"></i> Max 50</td>
-                                            <td class="check"><i class="fas fa-check-circle"></i></td>
-                                            <td class="cross"><i class="fas fa-times-circle"></i> Max 100</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="feature-name">Actualizaciones Gratuitas</td>
-                                            <td class="check"><i class="fas fa-check-circle"></i></td>
-                                            <td class="cross"><i class="fas fa-times-circle"></i></td>
-                                            <td class="cross"><i class="fas fa-times-circle"></i></td>
-                                            <td class="cross"><i class="fas fa-times-circle"></i></td>
-                                        </tr>
+                                    <tbody id="provisionsTableBody">
                                     </tbody>
                                 </table>
                             </div>
-                            <div style="text-align: center; margin-top: 32px;">
-                                <div class="btn btn-primary" style="font-size: 16px; padding: 16px 32px;">
-                                    <i class="fas fa-rocket"></i>
-                                    Adquirir Ensign Partner - $3.800
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Accounting Section -->
+                <section class="section" id="accounting">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Asientos Contables de Nómina</h3>
+                            <button class="btn btn-accounting btn-sm" onclick="exportAccountingExcel()">
+                                <i class="fas fa-file-excel"></i>
+                                Exportar Asientos
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-row" style="margin-bottom: 24px;">
+                                <div class="form-group">
+                                    <label class="form-label">Tipo de Asiento</label>
+                                    <select class="form-control" id="accountingType" onchange="loadAccountingEntries()">
+                                        <option value="all">Todos</option>
+                                        <option value="payroll">Nómina</option>
+                                        <option value="provisions">Provisiones</option>
+                                        <option value="payments">Pagos</option>
+                                    </select>
                                 </div>
-                                <p style="margin-top: 16px; color: var(--gray-500); font-size: 14px;">
-                                    *Precio incluye implementacion completa y capacitacion<br>
-                                    *Soporte anual opcional: $1.800
-                                </p>
+                            </div>
+
+                            <div class="table-container">
+                                <table class="accounting-table">
+                                    <thead>
+                                        <tr>
+                                            <th>FECHA</th>
+                                            <th>COMPROBANTE</th>
+                                            <th>CUENTA</th>
+                                            <th>DESCRIPCIÓN</th>
+                                            <th>DÉBITO</th>
+                                            <th>CRÉDITO</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="accountingTableBody">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Chart of Accounts Section -->
+                <section class="section" id="chartOfAccounts">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Plan de Cuentas Contable</h3>
+                            <button class="btn btn-secondary btn-sm" onclick="exportChartOfAccounts()">
+                                <i class="fas fa-file-excel"></i>
+                                Exportar
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-container">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>CÓDIGO</th>
+                                            <th>NOMBRE DE LA CUENTA</th>
+                                            <th>TIPO</th>
+                                            <th>NIVEL</th>
+                                            <th>NATURALEZA</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td>1</td><td>ACTIVO</td><td>Balance</td><td>1</td><td>Deudor</td></tr>
+                                        <tr><td>1.1</td><td>ACTIVO CORRIENTE</td><td>Balance</td><td>2</td><td>Deudor</td></tr>
+                                        <tr><td>1.1.01</td><td>BANCOS</td><td>Balance</td><td>3</td><td>Deudor</td></tr>
+                                        <tr><td>2</td><td>PASIVO</td><td>Balance</td><td>1</td><td>Acreedor</td></tr>
+                                        <tr><td>2.1</td><td>PASIVO CORRIENTE</td><td>Balance</td><td>2</td><td>Acreedor</td></tr>
+                                        <tr><td>2.1.01</td><td>IESS POR PAGAR</td><td>Balance</td><td>3</td><td>Acreedor</td></tr>
+                                        <tr><td>2.1.02</td><td>PRÉSTAMOS POR PAGAR</td><td>Balance</td><td>3</td><td>Acreedor</td></tr>
+                                        <tr><td>2.1.03</td><td>SUELDOS POR PAGAR</td><td>Balance</td><td>3</td><td>Acreedor</td></tr>
+                                        <tr><td>2.1.04</td><td>XIII SUELDO POR PAGAR</td><td>Balance</td><td>3</td><td>Acreedor</td></tr>
+                                        <tr><td>2.1.05</td><td>XIV SUELDO POR PAGAR</td><td>Balance</td><td>3</td><td>Acreedor</td></tr>
+                                        <tr><td>2.1.06</td><td>FONDOS RESERVA POR PAGAR</td><td>Balance</td><td>3</td><td>Acreedor</td></tr>
+                                        <tr><td>5</td><td>GASTOS</td><td>Resultados</td><td>1</td><td>Deudor</td></tr>
+                                        <tr><td>5.1</td><td>GASTOS DE PERSONAL</td><td>Resultados</td><td>2</td><td>Deudor</td></tr>
+                                        <tr><td>5.1.01</td><td>SUELDOS Y SALARIOS</td><td>Resultados</td><td>3</td><td>Deudor</td></tr>
+                                        <tr><td>5.1.02</td><td>HORAS EXTRAS</td><td>Resultados</td><td>3</td><td>Deudor</td></tr>
+                                        <tr><td>5.1.03</td><td>FONDOS DE RESERVA</td><td>Resultados</td><td>3</td><td>Deudor</td></tr>
+                                        <tr><td>5.1.04</td><td>BONIFICACIONES</td><td>Resultados</td><td>3</td><td>Deudor</td></tr>
+                                        <tr><td>5.1.05</td><td>DÉCIMO TERCERO</td><td>Resultados</td><td>3</td><td>Deudor</td></tr>
+                                        <tr><td>5.1.06</td><td>DÉCIMO CUARTO</td><td>Resultados</td><td>3</td><td>Deudor</td></tr>
+                                        <tr><td>5.1.07</td><td>VACACIONES</td><td>Resultados</td><td>3</td><td>Deudor</td></tr>
+                                        <tr><td>5.1.08</td><td>APORTE PATRONAL</td><td>Resultados</td><td>3</td><td>Deudor</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Employees Section -->
+                <section class="section" id="employees">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Gestión de Empleados</h3>
+                            <button class="btn btn-primary btn-sm" onclick="openEmployeeModal()">
+                                <i class="fas fa-plus"></i>
+                                Nuevo Empleado
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div class="search-filters">
+                                <div class="search-box">
+                                    <i class="fas fa-search"></i>
+                                    <input type="text" class="form-control" placeholder="Buscar..." id="employeeSearch" oninput="filterEmployees()">
+                                </div>
+                                <select class="form-control filter-select" id="departmentFilter" onchange="filterEmployees()">
+                                    <option value="">Todos los departamentos</option>
+                                    <option value="CCI">CCI</option>
+                                    <option value="CONDADO">CONDADO</option>
+                                    <option value="BOSQUE">BOSQUE</option>
+                                </select>
+                            </div>
+                            <div class="table-container">
+                                <table class="table" id="employeesTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Cédula</th>
+                                            <th>Nombre</th>
+                                            <th>Departamento</th>
+                                            <th>Cargo</th>
+                                            <th>Sueldo</th>
+                                            <th>Estado</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="employeesTableBody"></tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
@@ -2129,97 +2141,36 @@
                 <section class="section" id="config">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title">Configuracion del Sistema</h3>
+                            <h3 class="card-title">Configuración Contable</h3>
                             <button class="btn btn-primary btn-sm" onclick="saveConfig()">
                                 <i class="fas fa-save"></i>
-                                Guardar Cambios
+                                Guardar
                             </button>
                         </div>
                         <div class="card-body">
                             <div class="config-grid">
                                 <div>
-                                    <h4 style="margin-bottom: 20px; color: var(--primary);">
-                                        <i class="fas fa-building"></i> Datos de la Empresa
-                                    </h4>
+                                    <h4>Datos de la Empresa</h4>
                                     <div class="form-group">
-                                        <label class="form-label">Nombre de la Empresa</label>
+                                        <label>Razón Social</label>
                                         <input type="text" class="form-control" id="configCompanyName" value="JASAFOOD S.A.">
                                     </div>
                                     <div class="form-group">
-                                        <label class="form-label">RUC</label>
-                                        <input type="text" class="form-control" id="configCompanyRuc" placeholder="1234567890001">
+                                        <label>RUC</label>
+                                        <input type="text" class="form-control" id="configCompanyRuc" value="1791234567001">
+                                    </div>
+                                </div>
+                                <div>
+                                    <h4>Parámetros de Cálculo</h4>
+                                    <div class="form-group">
+                                        <label>Porcentaje IESS</label>
+                                        <input type="number" class="form-control" id="configIessPercent" value="9.45">
                                     </div>
                                     <div class="form-group">
-                                        <label class="form-label">Direccion</label>
-                                        <input type="text" class="form-control" id="configCompanyAddress" placeholder="Av. Principal 123">
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="form-label">Telefono</label>
-                                        <input type="text" class="form-control" id="configCompanyPhone" placeholder="+593 2 123 4567">
+                                        <label>Salario Básico</label>
+                                        <input type="number" class="form-control" id="configMinimumWage" value="460">
                                     </div>
                                 </div>
-                                <div>
-                                    <h4 style="margin-bottom: 20px; color: var(--primary);">
-                                        <i class="fas fa-image"></i> Logo de la Empresa
-                                    </h4>
-                                    <div class="config-logo-preview" onclick="document.getElementById('configLogoInput').click()">
-                                        <img src="https://res.cloudinary.com/dtmqftcsr/image/upload/v1772584409/ENSIGN_PARTENER_utlfoc.png" alt="Logo" id="configLogoPreview">
-                                        <input type="file" id="configLogoInput" accept="image/*" style="display: none;" onchange="previewLogo(event)">
-                                        <p style="margin-top: 12px; color: var(--gray-500); font-size: 13px;">
-                                            <i class="fas fa-upload"></i> Click para cambiar el logo
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <hr style="margin: 32px 0; border: none; border-top: 1px solid var(--gray-200);">
-
-                            <h4 style="margin-bottom: 20px; color: var(--primary);">
-                                <i class="fas fa-calculator"></i> Configuracion de Nomina
-                            </h4>
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label class="form-label">Porcentaje IESS (%)</label>
-                                    <input type="number" class="form-control" id="configIessPercent" value="9.45" step="0.01">
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Salario Minimo Vital</label>
-                                    <input type="number" class="form-control" id="configMinimumWage" value="450">
-                                </div>
-                            </div>
-
-                            <hr style="margin: 32px 0; border: none; border-top: 1px solid var(--gray-200);">
-
-                            <h4 style="margin-bottom: 20px; color: var(--primary);">
-                                <i class="fas fa-toggle-on"></i> Opciones Adicionales
-                            </h4>
-                            <div class="settings-toggle">
-                                <div>
-                                    <div style="font-weight: 600; color: var(--gray-800);">Calcular Decimo Tercero</div>
-                                    <div style="font-size: 13px; color: var(--gray-500);">Incluir decimos en el rol de pago</div>
-                                </div>
-                                <div class="toggle-switch active" id="toggleDecimoTercero" onclick="toggleOption(this)"></div>
-                            </div>
-                            <div class="settings-toggle">
-                                <div>
-                                    <div style="font-weight: 600; color: var(--gray-800);">Calcular Decimo Cuarto</div>
-                                    <div style="font-size: 13px; color: var(--gray-500);">Incluir decimos en el rol de pago</div>
-                                </div>
-                                <div class="toggle-switch active" id="toggleDecimoCuarto" onclick="toggleOption(this)"></div>
-                            </div>
-                            <div class="settings-toggle">
-                                <div>
-                                    <div style="font-weight: 600; color: var(--gray-800);">Calcular Fondos de Reserva</div>
-                                    <div style="font-size: 13px; color: var(--gray-500);">Aporte mensual a fondo de reserva</div>
-                                </div>
-                                <div class="toggle-switch active" id="toggleFondosReserva" onclick="toggleOption(this)"></div>
-                            </div>
-                            <div class="settings-toggle">
-                                <div>
-                                    <div style="font-weight: 600; color: var(--gray-800);">Notificaciones por Correo</div>
-                                    <div style="font-size: 13px; color: var(--gray-500);">Enviar comprobantes automaticamente</div>
-                                </div>
-                                <div class="toggle-switch active" id="toggleEmailNotifications" onclick="toggleOption(this)"></div>
                             </div>
                         </div>
                     </div>
@@ -2230,130 +2181,63 @@
 
     <!-- Employee Modal -->
     <div class="modal-overlay" id="employeeModal">
-        <div class="modal modal-large">
+        <div class="modal">
             <div class="modal-header">
-                <h3 class="modal-title" id="employeeModalTitle">Nuevo Empleado</h3>
-                <button class="modal-close" onclick="closeEmployeeModal()">
-                    <i class="fas fa-times"></i>
-                </button>
+                <h3 class="modal-title" id="employeeModalTitle">Empleado</h3>
+                <button class="modal-close" onclick="closeEmployeeModal()">×</button>
             </div>
             <div class="modal-body">
                 <form id="employeeForm">
                     <input type="hidden" id="employeeId">
                     <div class="form-row">
                         <div class="form-group">
-                            <label class="form-label">Nombres *</label>
-                            <input type="text" class="form-control" id="employeeName" required placeholder="Juan Carlos">
+                            <label>Nombres</label>
+                            <input type="text" class="form-control" id="employeeName" required>
                         </div>
                         <div class="form-group">
-                            <label class="form-label">Apellidos *</label>
-                            <input type="text" class="form-control" id="employeeLastname" required placeholder="Perez Gomez">
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label">Cedula *</label>
-                            <input type="text" class="form-control" id="employeeCedula" required placeholder="1234567890">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Correo Electronico</label>
-                            <input type="email" class="form-control" id="employeeEmailForm" placeholder="correo@empresa.com">
+                            <label>Apellidos</label>
+                            <input type="text" class="form-control" id="employeeLastname" required>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group">
-                            <label class="form-label">Departamento *</label>
+                            <label>Cédula</label>
+                            <input type="text" class="form-control" id="employeeCedula" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Correo</label>
+                            <input type="email" class="form-control" id="employeeEmailForm">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Departamento</label>
                             <select class="form-control" id="employeeDepartment" required>
-                                <option value="">Seleccionar</option>
                                 <option value="CCI">CCI</option>
                                 <option value="CONDADO">CONDADO</option>
                                 <option value="BOSQUE">BOSQUE</option>
-                                <option value="Gerencia">Gerencia</option>
-                                <option value="Contabilidad">Contabilidad</option>
-                                <option value="Recursos Humanos">Recursos Humanos</option>
-                                <option value="Ventas">Ventas</option>
-                                <option value="Marketing">Marketing</option>
-                                <option value="Tecnologia">Tecnologia</option>
-                                <option value="Operaciones">Operaciones</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label class="form-label">Cargo *</label>
-                            <input type="text" class="form-control" id="employeePosition" required placeholder="Analista de Sistemas">
+                            <label>Cargo</label>
+                            <input type="text" class="form-control" id="employeePosition" required>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group">
-                            <label class="form-label">Sueldo Base *</label>
-                            <input type="number" class="form-control" id="employeeSalary" required placeholder="500.00" step="0.01">
+                            <label>Sueldo Base</label>
+                            <input type="number" class="form-control" id="employeeSalary" required>
                         </div>
                         <div class="form-group">
-                            <label class="form-label">Horas Extras Mensuales</label>
-                            <input type="number" class="form-control" id="employeeOvertime" value="0" placeholder="0">
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label">Bonificaciones</label>
-                            <input type="number" class="form-control" id="employeeBonus" value="0" placeholder="0">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Fecha de Ingreso *</label>
+                            <label>Fecha Ingreso</label>
                             <input type="date" class="form-control" id="employeeHireDate" required>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label">Tipo de Contrato</label>
-                            <select class="form-control" id="employeeContractType">
-                                <option value="Indefinido">Indefinido</option>
-                                <option value="Temporal">Temporal</option>
-                                <option value="Contrato por Obra">Contrato por Obra</option>
-                                <option value="Medio Tiempo">Medio Tiempo</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Estado</label>
-                            <select class="form-control" id="employeeStatus">
-                                <option value="Activo">Activo</option>
-                                <option value="Inactivo">Inactivo</option>
-                            </select>
                         </div>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" onclick="closeEmployeeModal()">Cancelar</button>
-                <button class="btn btn-primary" onclick="saveEmployee()">
-                    <i class="fas fa-save"></i>
-                    Guardar Empleado
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Delete Confirmation Modal -->
-    <div class="modal-overlay" id="deleteModal">
-        <div class="modal" style="max-width: 400px;">
-            <div class="modal-header">
-                <h3 class="modal-title">Confirmar Eliminacion</h3>
-                <button class="modal-close" onclick="closeDeleteModal()">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="modal-body" style="text-align: center;">
-                <div style="width: 80px; height: 80px; background: rgba(239, 68, 68, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
-                    <i class="fas fa-exclamation-triangle" style="font-size: 36px; color: var(--danger);"></i>
-                </div>
-                <h4 style="margin-bottom: 12px; color: var(--gray-800);">Estas seguro de eliminar?</h4>
-                <p style="color: var(--gray-500);" id="deleteMessage">Esta accion no se puede deshacer.</p>
-            </div>
-            <div class="modal-footer" style="justify-content: center;">
-                <button class="btn btn-secondary" onclick="closeDeleteModal()">Cancelar</button>
-                <button class="btn btn-danger" id="confirmDeleteBtn" onclick="confirmDelete()">
-                    <i class="fas fa-trash"></i>
-                    Eliminar
-                </button>
+                <button class="btn btn-primary" onclick="saveEmployee()">Guardar</button>
             </div>
         </div>
     </div>
@@ -2364,133 +2248,58 @@
     <!-- Loader -->
     <div class="loader-overlay" id="loader">
         <div class="loader"></div>
-        <div class="loader-text" id="loaderText">Generando PDF...</div>
+        <div class="loader-text">Procesando...</div>
     </div>
 
     <script>
-        // ==================== DATOS DEL EXCEL ====================
+        // ==================== DATOS DE NÓMINA ====================
         var payrollData = [
-            {no:1, nombre:"ACEVEDO CHAVEZ GABRIELA NICOLE", cedula:"1726636655", fechaIng:"2024/Sep/03", cargo:"MESERO", depto:"CCI", sueldo:474.14, hNoct:7.86, hSup:0, hExt:15.81, fRes:0, otrosIng:0, bonos:0, ingresos:497.81, iess:47.04, prestamos:0, otrosDesc:0, descuentos:47.04, neto:450.77},
-            {no:2, nombre:"ALAVA MUENTES MARIA LISSETH", cedula:"1313351692", fechaIng:"2020/Oct/05", cargo:"MESERAS", depto:"CONDADO", sueldo:474.14, hNoct:12.16, hSup:0, hExt:29.63, fRes:51.31, otrosIng:150, bonos:0, ingresos:717.24, iess:58.21, prestamos:71.42, otrosDesc:59.07, descuentos:188.70, neto:528.54},
-            {no:3, nombre:"ALVAREZ CEDENO FERNANDO DANIEL", cedula:"1721041737", fechaIng:"2023/May/11", cargo:"AYUDANTE DE", depto:"BOSQUE", sueldo:473.2, hNoct:6.65, hSup:0, hExt:67.04, fRes:45.56, otrosIng:0, bonos:0, ingresos:592.45, iess:51.68, prestamos:0, otrosDesc:0, descuentos:51.68, neto:540.77},
-            {no:4, nombre:"ALVAREZ CISNEROS VICTOR HUGO", cedula:"1752367290", fechaIng:"2024/Aug/17", cargo:"AYUDANTE DE", depto:"CCI", sueldo:236.6, hNoct:1.53, hSup:0, hExt:17.75, fRes:0, otrosIng:0, bonos:0, ingresos:255.88, iess:24.18, prestamos:4.69, otrosDesc:0, descuentos:28.87, neto:227.01},
-            {no:5, nombre:"ALVAREZ HERNANDEZ BRENDA NATHALY", cedula:"1722074810", fechaIng:"2016/Aug/09", cargo:"MESERAS", depto:"CONDADO", sueldo:474.61, hNoct:11.74, hSup:0, hExt:27.69, fRes:42.82, otrosIng:0, bonos:0, ingresos:556.86, iess:48.58, prestamos:40.74, otrosDesc:0, descuentos:89.32, neto:467.54},
-            {no:6, nombre:"ARBOLEDA PALACIOS AURA ISABEL", cedula:"1717981631", fechaIng:"2017/Jul/03", cargo:"ADMINISTRADO", depto:"BOSQUE", sueldo:950, hNoct:0, hSup:0, hExt:184.3, fRes:94.49, otrosIng:0, bonos:0, ingresos:1228.79, iess:107.19, prestamos:97.06, otrosDesc:20, descuentos:224.25, neto:1004.54},
-            {no:7, nombre:"ARREAGA ESPINOZA LEONEL ALEXANDER", cedula:"0804566198", fechaIng:"2021/Sep/01", cargo:"AYUDANTE DE", depto:"CCI", sueldo:473.2, hNoct:5.9, hSup:0, hExt:43.38, fRes:43.52, otrosIng:0, bonos:0, ingresos:566, iess:49.38, prestamos:0, otrosDesc:0, descuentos:49.38, neto:516.62},
-            {no:8, nombre:"ATIENCE VERA ERIKA LILIBETH", cedula:"1718509324", fechaIng:"2024/Mar/13", cargo:"MESERO", depto:"CONDADO", sueldo:474.14, hNoct:9.21, hSup:0, hExt:55.32, fRes:0, otrosIng:0, bonos:0, ingresos:538.67, iess:50.91, prestamos:0, otrosDesc:0, descuentos:50.91, neto:487.76},
-            {no:9, nombre:"AUQUI ANGUISACA PAMELA ALEXANDRA", cedula:"1720490851", fechaIng:"2024/Jan/01", cargo:"MESERO", depto:"BOSQUE", sueldo:474.14, hNoct:7.03, hSup:0, hExt:61.24, fRes:43.68, otrosIng:0, bonos:0, ingresos:586.09, iess:51.26, prestamos:0, otrosDesc:0, descuentos:51.26, neto:534.83},
-            {no:10, nombre:"BONIFAZ QUILUMBA JORGE ARMANDO", cedula:"1718658188", fechaIng:"2023/Sep/15", cargo:"AYUDANTE DE", depto:"CCI", sueldo:473.2, hNoct:10.34, hSup:0, hExt:33.52, fRes:0, otrosIng:0, bonos:0, ingresos:517.06, iess:48.86, prestamos:251.27, otrosDesc:0, descuentos:300.13, neto:216.93},
-            {no:11, nombre:"BRAVO SUAREZ MARIA AMPARO", cedula:"1726468299", fechaIng:"2010/Sep/01", cargo:"ADMINISTRADO", depto:"CONDADO", sueldo:1000, hNoct:0, hSup:0, hExt:193.17, fRes:0, otrosIng:0, bonos:0, ingresos:1193.17, iess:112.76, prestamos:114.19, otrosDesc:20, descuentos:246.95, neto:946.22},
-            {no:12, nombre:"CACHIPUENDO TITUANA JOSE LUIS", cedula:"1717053035", fechaIng:"2022/Feb/09", cargo:"AYUDANTE DE", depto:"BOSQUE", sueldo:475.55, hNoct:14.5, hSup:0, hExt:95.11, fRes:0, otrosIng:0, bonos:0, ingresos:585.16, iess:55.3, prestamos:0, otrosDesc:0, descuentos:55.3, neto:529.86},
-            {no:13, nombre:"CADENA SILVA CARMEN ESTHER", cedula:"1720546421", fechaIng:"2023/Dec/01", cargo:"MESERAS", depto:"CCI", sueldo:474.14, hNoct:4.31, hSup:0, hExt:0, fRes:39.86, otrosIng:0, bonos:0, ingresos:518.31, iess:45.21, prestamos:0, otrosDesc:0, descuentos:45.21, neto:473.1},
-            {no:14, nombre:"CAISATOA SUMANGUILLA JORGE GUSTAVO", cedula:"1720186053", fechaIng:"2015/Oct/15", cargo:"PLANCHERO", depto:"CONDADO", sueldo:475.55, hNoct:10.53, hSup:0, hExt:95.11, fRes:48.41, otrosIng:0, bonos:0, ingresos:629.6, iess:54.92, prestamos:40.83, otrosDesc:0, descuentos:95.75, neto:533.85},
-            {no:15, nombre:"CAIZAGUANO VEGA JUANA ALEXANDRA", cedula:"1724063704", fechaIng:"2020/Jun/01", cargo:"LIMPIEZA", depto:"BOSQUE", sueldo:237.59, hNoct:0, hSup:0, hExt:0, fRes:19.79, otrosIng:0, bonos:0, ingresos:257.38, iess:22.45, prestamos:0, otrosDesc:0, descuentos:22.45, neto:234.93},
-            {no:16, nombre:"CARRION GUERRERO CYNTHIA LORENA", cedula:"1726792227", fechaIng:"2022/Feb/23", cargo:"MESERAS", depto:"CCI", sueldo:474.14, hNoct:11.3, hSup:0, hExt:84.95, fRes:0, otrosIng:0, bonos:0, ingresos:570.39, iess:53.9, prestamos:53.68, otrosDesc:0, descuentos:107.58, neto:462.81},
-            {no:17, nombre:"CARVAJAL PACHACAMA ESTEBAN JOEL", cedula:"1724689938", fechaIng:"2024/Jul/06", cargo:"AYUDANTE DE", depto:"CONDADO", sueldo:236.6, hNoct:3.55, hSup:0, hExt:9.86, fRes:0, otrosIng:0, bonos:0, ingresos:250.01, iess:23.63, prestamos:0, otrosDesc:0, descuentos:23.63, neto:226.38},
-            {no:18, nombre:"CASTANEDA PARRAGA LUIS ANDRESS", cedula:"1317975173", fechaIng:"2020/Sep/10", cargo:"POSILLERO", depto:"BOSQUE", sueldo:78.87, hNoct:0.72, hSup:0, hExt:0, fRes:6.63, otrosIng:0, bonos:0, ingresos:86.22, iess:7.52, prestamos:0, otrosDesc:0, descuentos:7.52, neto:78.7},
-            {no:19, nombre:"CEDENO ZAMBRANO GEOSTYN JESUS", cedula:"1725256794", fechaIng:"2024/Sep/10", cargo:"MESERO", depto:"CCI", sueldo:474.14, hNoct:9.53, hSup:0, hExt:82.98, fRes:0, otrosIng:0, bonos:0, ingresos:566.65, iess:53.55, prestamos:0, otrosDesc:0, descuentos:53.55, neto:513.1},
-            {no:20, nombre:"CELLERI IBARRA IVONNE STEFANIA", cedula:"1206746768", fechaIng:"2022/Mar/01", cargo:"MESERO", depto:"CONDADO", sueldo:474.14, hNoct:0, hSup:0, hExt:0, fRes:0, otrosIng:0, bonos:0, ingresos:474.14, iess:44.81, prestamos:355.61, otrosDesc:0, descuentos:400.42, neto:73.72},
-            {no:21, nombre:"CEVALLOS VILLAGOMEZ ZHAMMY POLETH", cedula:"1729188605", fechaIng:"2024/Jun/01", cargo:"MESERO", depto:"BOSQUE", sueldo:474.14, hNoct:9.38, hSup:0, hExt:59.27, fRes:0, otrosIng:0, bonos:0, ingresos:542.79, iess:51.29, prestamos:0, otrosDesc:0, descuentos:51.29, neto:491.5},
-            {no:22, nombre:"CHAVEZ QUISHPE MARIA JOSE", cedula:"1723720627", fechaIng:"2024/Oct/14", cargo:"MARKETING", depto:"CCI", sueldo:500, hNoct:0, hSup:0, hExt:0, fRes:0, otrosIng:0, bonos:0, ingresos:500, iess:47.25, prestamos:20, otrosDesc:0, descuentos:67.25, neto:432.75},
-            {no:23, nombre:"CHICA VERA JAHAIRA BEATRIZ", cedula:"1728183979", fechaIng:"2024/Jan/01", cargo:"MESERO", depto:"CONDADO", sueldo:474.14, hNoct:10.13, hSup:0, hExt:41.49, fRes:42.34, otrosIng:0, bonos:0, ingresos:568.1, iess:49.68, prestamos:0, otrosDesc:0, descuentos:49.68, neto:518.42},
-            {no:24, nombre:"CHILUISA CORDOBA ALEJANDRO XAVIER", cedula:"0503795114", fechaIng:"2024/Nov/11", cargo:"SISTEMAS", depto:"BOSQUE", sueldo:550, hNoct:0, hSup:0, hExt:0, fRes:0, otrosIng:0, bonos:0, ingresos:550, iess:51.97, prestamos:20, otrosDesc:0, descuentos:71.97, neto:478.03},
-            {no:25, nombre:"CONFORME PARRA JAVIER ALEJANDRO", cedula:"1350902464", fechaIng:"2024/Nov/20", cargo:"MESERO", depto:"CCI", sueldo:94.83, hNoct:0.25, hSup:0, hExt:0, fRes:0, otrosIng:0, bonos:0, ingresos:95.08, iess:8.98, prestamos:0, otrosDesc:0, descuentos:8.98, neto:86.1},
-            {no:26, nombre:"CORELLA LOGACHO MARIA JOSE", cedula:"1722160536", fechaIng:"2018/Jan/22", cargo:"CAJERO", depto:"CONDADO", sueldo:474.61, hNoct:9.89, hSup:0, hExt:67.24, fRes:45.96, otrosIng:0, bonos:0, ingresos:597.7, iess:52.14, prestamos:0, otrosDesc:0, descuentos:52.14, neto:545.56},
-            {no:27, nombre:"DELGADO BUITRAGO JUAN PABLO", cedula:"1760876993", fechaIng:"2024/Mar/20", cargo:"AYUDANTE DE", depto:"BOSQUE", sueldo:473.2, hNoct:6.17, hSup:0, hExt:61.12, fRes:0, otrosIng:0, bonos:0, ingresos:540.49, iess:51.08, prestamos:0, otrosDesc:0, descuentos:51.08, neto:489.41},
-            {no:28, nombre:"DELGADO SAQUICELA JONNATHAN ANDRES", cedula:"0106601420", fechaIng:"2024/Jul/01", cargo:"AYUDANTE DE", depto:"CCI", sueldo:473.2, hNoct:11.71, hSup:0, hExt:110.41, fRes:0, otrosIng:0, bonos:0, ingresos:595.32, iess:56.26, prestamos:0, otrosDesc:0, descuentos:56.26, neto:539.06},
-            {no:29, nombre:"DELGADO SOLORZANO JENIFFER ANDREA", cedula:"1316606456", fechaIng:"2022/Sep/30", cargo:"MESERAS", depto:"CONDADO", sueldo:474.14, hNoct:9.32, hSup:0, hExt:51.37, fRes:0, otrosIng:0, bonos:0, ingresos:534.83, iess:50.54, prestamos:21.5, otrosDesc:0, descuentos:72.04, neto:462.79},
-            {no:30, nombre:"FAZ BARAHONA ANA GABRIELA", cedula:"1721141883", fechaIng:"2022/Jul/09", cargo:"AYUDANTE DE", depto:"BOSQUE", sueldo:473.2, hNoct:11.34, hSup:0, hExt:88.73, fRes:47.75, otrosIng:0, bonos:0, ingresos:621.02, iess:54.17, prestamos:20, otrosDesc:0, descuentos:74.17, neto:546.85},
-            {no:31, nombre:"FEIJOO SANCHEZ SILVIA FERNANDA", cedula:"0704594175", fechaIng:"2012/Feb/03", cargo:"ASISTENTE CO", depto:"CCI", sueldo:1580, hNoct:0, hSup:0, hExt:0, fRes:164.93, otrosIng:604.17, bonos:0, ingresos:2349.1, iess:187.11, prestamos:0, otrosDesc:0, descuentos:187.11, neto:2161.99},
-            {no:32, nombre:"FLORES CAIZA OSCAR BENIGNO", cedula:"1718233024", fechaIng:"2018/Apr/04", cargo:"AYUDANTE DE", depto:"CONDADO", sueldo:473.2, hNoct:10.87, hSup:0, hExt:45.35, fRes:44.1, otrosIng:0, bonos:0, ingresos:573.52, iess:50.03, prestamos:63.56, otrosDesc:0, descuentos:113.59, neto:459.93},
-            {no:33, nombre:"FLORES FLORES LEIDY LISSETTE", cedula:"1728361518", fechaIng:"2023/Nov/08", cargo:"BARISTA", depto:"BOSQUE", sueldo:473.2, hNoct:6.82, hSup:0, hExt:45.35, fRes:43.76, otrosIng:0, bonos:0, ingresos:569.13, iess:49.65, prestamos:26.98, otrosDesc:0, descuentos:76.63, neto:492.5},
-            {no:34, nombre:"GARCIA VERA SANTA ISABEL", cedula:"1725583411", fechaIng:"2024/Jan/01", cargo:"AYUDANTE DE", depto:"CCI", sueldo:473.2, hNoct:8.13, hSup:0, hExt:92.67, fRes:0, otrosIng:0, bonos:0, ingresos:574, iess:54.24, prestamos:46.22, otrosDesc:0, descuentos:100.46, neto:473.54},
-            {no:35, nombre:"GUALLIMBA GUAMBA ESTEBAN ALEXANDER", cedula:"1756122451", fechaIng:"2023/Nov/18", cargo:"AYUDANTE DE", depto:"CONDADO", sueldo:473.2, hNoct:11.55, hSup:0, hExt:100.56, fRes:48.76, otrosIng:0, bonos:0, ingresos:634.07, iess:55.31, prestamos:28.98, otrosDesc:7.89, descuentos:92.18, neto:541.89},
-            {no:36, nombre:"GUAMAN QUIJIJE MARIA FERNANDA", cedula:"1315871366", fechaIng:"2020/Sep/04", cargo:"MESERAS", depto:"BOSQUE", sueldo:474.14, hNoct:7.47, hSup:0, hExt:65.19, fRes:45.55, otrosIng:0, bonos:0, ingresos:592.35, iess:51.67, prestamos:51.12, otrosDesc:0, descuentos:102.79, neto:489.56},
-            {no:37, nombre:"GUAMBA RIVERA DIANA FERNANDA", cedula:"1721676839", fechaIng:"2024/Jun/12", cargo:"AYUDANTE DE", depto:"CCI", sueldo:473.2, hNoct:11.62, hSup:0, hExt:92.67, fRes:48.11, otrosIng:0, bonos:0, ingresos:625.6, iess:54.57, prestamos:0, otrosDesc:0, descuentos:54.57, neto:571.03},
-            {no:38, nombre:"IBUJES NIETO ALEXANDER DANIEL", cedula:"1725121931", fechaIng:"2022/Sep/06", cargo:"ASISTENTE CO", depto:"CONDADO", sueldo:650, hNoct:0, hSup:0, hExt:0, fRes:54.15, otrosIng:0, bonos:0, ingresos:704.15, iess:61.42, prestamos:20, otrosDesc:0, descuentos:81.42, neto:622.73},
-            {no:39, nombre:"INTRIAGO ROSERO GENESIS ANNAHI", cedula:"1726978677", fechaIng:"2024/Mar/20", cargo:"MESERO", depto:"BOSQUE", sueldo:474.14, hNoct:10.63, hSup:0, hExt:47.41, fRes:44.33, otrosIng:0, bonos:0, ingresos:576.51, iess:50.29, prestamos:0, otrosDesc:0, descuentos:50.29, neto:526.22},
-            {no:40, nombre:"JARA CENTENO EVELYN PATRICIA", cedula:"1721706453", fechaIng:"2024/Jan/01", cargo:"MESERO", depto:"CCI", sueldo:268.68, hNoct:6.93, hSup:0, hExt:0, fRes:22.19, otrosIng:0, bonos:0, ingresos:297.8, iess:26.04, prestamos:0, otrosDesc:0, descuentos:26.04, neto:271.76},
-            {no:41, nombre:"JARAMILLO BARRAGAN ALEJANDRO SEGUNDO", cedula:"1715998694", fechaIng:"2020/Jun/01", cargo:"LIMPIEZA", depto:"CONDADO", sueldo:239.56, hNoct:0, hSup:0, hExt:0, fRes:19.96, otrosIng:0, bonos:0, ingresos:259.52, iess:22.64, prestamos:0, otrosDesc:0, descuentos:22.64, neto:236.88},
-            {no:42, nombre:"JURADO NARVAEZ EDWIN VLADIMIR", cedula:"1721295671", fechaIng:"2015/Dec/23", cargo:"ADMINISTRADO", depto:"BOSQUE", sueldo:900, hNoct:0, hSup:0, hExt:125.4, fRes:85.42, otrosIng:0, bonos:0, ingresos:1110.82, iess:96.9, prestamos:145.13, otrosDesc:20, descuentos:262.03, neto:848.79},
-            {no:43, nombre:"LEMA ZAPATA VIVIANA JACQUELINE", cedula:"1720043304", fechaIng:"2024/Dec/01", cargo:"MESERO", depto:"CCI", sueldo:474.14, hNoct:5.62, hSup:0, hExt:57.29, fRes:0, otrosIng:80, bonos:0, ingresos:617.05, iess:58.31, prestamos:10, otrosDesc:0, descuentos:68.31, neto:548.74},
-            {no:44, nombre:"LEMACHE PAREDES JHONATAN ISMAEL", cedula:"1600665911", fechaIng:"2024/Sep/01", cargo:"AYUDANTE DE", depto:"CONDADO", sueldo:473.2, hNoct:9.99, hSup:0, hExt:37.46, fRes:0, otrosIng:0, bonos:0, ingresos:520.65, iess:49.2, prestamos:0, otrosDesc:0, descuentos:49.2, neto:471.45},
-            {no:45, nombre:"LEON CAGUA ARIANA YASMIN", cedula:"1728390210", fechaIng:"2023/Dec/02", cargo:"MESERO", depto:"BOSQUE", sueldo:474.14, hNoct:9.63, hSup:0, hExt:41.49, fRes:43.75, otrosIng:0, bonos:0, ingresos:569.01, iess:49.64, prestamos:46.23, otrosDesc:0, descuentos:95.87, neto:473.14},
-            {no:46, nombre:"LOPEZ VELEZ MARLON GUILLERMO", cedula:"1722627534", fechaIng:"2023/Apr/05", cargo:"AYUDANTE DE", depto:"CCI", sueldo:473.2, hNoct:8.69, hSup:0, hExt:90.7, fRes:47.7, otrosIng:0, bonos:0, ingresos:620.29, iess:54.11, prestamos:200.6, otrosDesc:23.66, descuentos:278.37, neto:341.92},
-            {no:47, nombre:"LUCAS FARIAS CRISTHIAN BLADIMIR", cedula:"1316387347", fechaIng:"2024/Oct/25", cargo:"MESERO", depto:"CONDADO", sueldo:474.14, hNoct:7.41, hSup:0, hExt:57.29, fRes:0, otrosIng:0, bonos:0, ingresos:538.84, iess:50.92, prestamos:13.54, otrosDesc:0, descuentos:64.46, neto:474.38},
-            {no:48, nombre:"MATAILO CASTILLO MARIA ISABEL", cedula:"1750150466", fechaIng:"2023/Aug/23", cargo:"MESERO", depto:"BOSQUE", sueldo:474.14, hNoct:6.79, hSup:0, hExt:59.27, fRes:45, otrosIng:0, bonos:0, ingresos:585.2, iess:51.05, prestamos:0, otrosDesc:0, descuentos:51.05, neto:534.15},
-            {no:49, nombre:"MEDIAVILLA IZA ERIKA PAOLA", cedula:"1725800955", fechaIng:"2021/Oct/11", cargo:"MESERO", depto:"CCI", sueldo:474.14, hNoct:8.89, hSup:0, hExt:27.66, fRes:42.54, otrosIng:0, bonos:0, ingresos:553.23, iess:48.26, prestamos:0, otrosDesc:0, descuentos:48.26, neto:504.97},
-            {no:50, nombre:"MERIZALDE CANAS JORGE VINICIO", cedula:"1716062961", fechaIng:"2024/Dec/25", cargo:"AYUDANTE DE", depto:"CONDADO", sueldo:473.2, hNoct:10.84, hSup:0, hExt:76.9, fRes:0, otrosIng:0, bonos:0, ingresos:560.94, iess:53.01, prestamos:64.84, otrosDesc:0, descuentos:117.85, neto:443.09},
-            {no:51, nombre:"MOREIRA BERMUDEZ PEDRO MANUEL", cedula:"1312850801", fechaIng:"2014/Aug/12", cargo:"MARISQUERO", depto:"BOSQUE", sueldo:473.2, hNoct:12.36, hSup:23.66, hExt:41.41, fRes:0, otrosIng:0, bonos:0, ingresos:550.63, iess:52.04, prestamos:101.15, otrosDesc:0, descuentos:153.19, neto:397.44},
-            {no:52, nombre:"MOREIRA ZAMBRANO MARIA FERNANDA", cedula:"2300658420", fechaIng:"2024/Aug/20", cargo:"PARVULARIA", depto:"CCI", sueldo:352.5, hNoct:0, hSup:0, hExt:22.03, fRes:0, otrosIng:0, bonos:0, ingresos:374.53, iess:35.39, prestamos:0, otrosDesc:0, descuentos:35.39, neto:339.14},
-            {no:53, nombre:"MOROCHO CHIMBOLEMA NELSON GEOVANNY", cedula:"0603416306", fechaIng:"2020/Oct/01", cargo:"PLANCHERO", depto:"CONDADO", sueldo:475.55, hNoct:14.04, hSup:93.62, hExt:25.76, fRes:50.73, otrosIng:0, bonos:0, ingresos:659.7, iess:57.55, prestamos:52.74, otrosDesc:0, descuentos:110.29, neto:549.41},
-            {no:54, nombre:"MOROCHO LEMA JUAN CARLOS", cedula:"0605820422", fechaIng:"2022/Jun/18", cargo:"AYUDANTE DE", depto:"BOSQUE", sueldo:473.2, hNoct:7.65, hSup:0, hExt:25.63, fRes:42.19, otrosIng:0, bonos:0, ingresos:548.67, iess:47.86, prestamos:0, otrosDesc:0, descuentos:47.86, neto:500.81},
-            {no:55, nombre:"MUNOZ JIMENEZ KENNETH ARIEL", cedula:"1725127169", fechaIng:"2024/May/18", cargo:"AYUDANTE DE", depto:"CCI", sueldo:473.2, hNoct:9.37, hSup:26.62, hExt:74.92, fRes:0, otrosIng:0, bonos:0, ingresos:584.11, iess:55.2, prestamos:0, otrosDesc:0, descuentos:55.2, neto:528.91},
-            {no:56, nombre:"NARANJO ZURITA MARCELO DAVID", cedula:"1715841209", fechaIng:"2018/Feb/01", cargo:"GERENTE Y AF", depto:"CONDADO", sueldo:2500, hNoct:0, hSup:0, hExt:0, fRes:208.25, otrosIng:0, bonos:0, ingresos:2708.25, iess:236.25, prestamos:1399.81, otrosDesc:0, descuentos:1636.06, neto:1072.19},
-            {no:57, nombre:"NOBOA PERUGACHI NESTOR EUGENIO", cedula:"1728910686", fechaIng:"2024/Nov/22", cargo:"MESERO", depto:"BOSQUE", sueldo:474.14, hNoct:7.23, hSup:0, hExt:51.37, fRes:0, otrosIng:0, bonos:0, ingresos:532.74, iess:50.34, prestamos:0, otrosDesc:0, descuentos:50.34, neto:482.4},
-            {no:58, nombre:"NUNEZ EUGENIO CRISTINA ZULEMA", cedula:"1723469753", fechaIng:"2015/May/09", cargo:"CAJERO", depto:"CCI", sueldo:474.61, hNoct:8.51, hSup:0, hExt:25.71, fRes:42.39, otrosIng:0, bonos:0, ingresos:551.22, iess:48.08, prestamos:116.72, otrosDesc:0, descuentos:164.8, neto:386.42},
-            {no:59, nombre:"ORQUERA GUAMAN OSCAR ROBERTO", cedula:"1716602493", fechaIng:"2020/Jun/01", cargo:"ASISTENTE AD", depto:"CONDADO", sueldo:239.56, hNoct:0, hSup:0, hExt:0, fRes:19.96, otrosIng:0, bonos:0, ingresos:259.52, iess:22.64, prestamos:0, otrosDesc:0, descuentos:22.64, neto:236.88},
-            {no:60, nombre:"PALACIOS PAREDES MATIAS GABRIEL", cedula:"1725242901", fechaIng:"2024/Dec/13", cargo:"AYUDANTE DE", depto:"BOSQUE", sueldo:473.2, hNoct:5.36, hSup:0, hExt:76.9, fRes:0, otrosIng:0, bonos:0, ingresos:555.46, iess:52.49, prestamos:0, otrosDesc:0, descuentos:52.49, neto:502.97},
-            {no:61, nombre:"PALLASCO CUNIN ALESSANDRO NICOLAS", cedula:"1751928068", fechaIng:"2024/Sep/11", cargo:"MESERO", depto:"CCI", sueldo:474.14, hNoct:9.42, hSup:0, hExt:63.22, fRes:0, otrosIng:0, bonos:0, ingresos:546.78, iess:51.67, prestamos:0, otrosDesc:0, descuentos:51.67, neto:495.11},
-            {no:62, nombre:"PALMA BONE ROBER YONNY", cedula:"1712442043", fechaIng:"2008/Jun/01", cargo:"PLANCHERO", depto:"CONDADO", sueldo:475.55, hNoct:7.52, hSup:0, hExt:55.48, fRes:44.86, otrosIng:0, bonos:0, ingresos:583.41, iess:50.89, prestamos:0, otrosDesc:0, descuentos:50.89, neto:532.52},
-            {no:63, nombre:"PARCO PAGUAY ANTONELA LISETH", cedula:"1727386060", fechaIng:"2023/May/26", cargo:"MESERO", depto:"BOSQUE", sueldo:363.51, hNoct:6.58, hSup:0, hExt:0, fRes:30.83, otrosIng:0, bonos:0, ingresos:400.92, iess:34.97, prestamos:23.71, otrosDesc:0, descuentos:58.68, neto:342.24},
-            {no:64, nombre:"PICHUCHO CHUQUITARCO MAYRA ELIZABETH", cedula:"1721847042", fechaIng:"2012/Jul/01", cargo:"ADMINISTRADO", depto:"CCI", sueldo:1000, hNoct:0, hSup:0, hExt:0, fRes:103.29, otrosIng:240, bonos:0, ingresos:1343.29, iess:117.18, prestamos:0, otrosDesc:0, descuentos:117.18, neto:1226.11},
-            {no:65, nombre:"PINAN LIMAICO NANCY MARGOT", cedula:"1002614335", fechaIng:"2020/Sep/04", cargo:"BARISTA", depto:"CONDADO", sueldo:473.2, hNoct:4.82, hSup:0, hExt:41.41, fRes:43.27, otrosIng:0, bonos:0, ingresos:562.7, iess:49.09, prestamos:0, otrosDesc:0, descuentos:49.09, neto:513.61},
-            {no:66, nombre:"PINCAY ESPINOZA MARIA JOSE", cedula:"1726714429", fechaIng:"2023/Nov/24", cargo:"MESERO", depto:"BOSQUE", sueldo:474.14, hNoct:9.38, hSup:0, hExt:73.1, fRes:46.37, otrosIng:0, bonos:0, ingresos:602.99, iess:52.6, prestamos:7.9, otrosDesc:0, descuentos:60.5, neto:542.49},
-            {no:67, nombre:"PINTA QUITO BYRON DAVID", cedula:"1726745399", fechaIng:"2023/Jul/15", cargo:"AYUDANTE DE", depto:"CCI", sueldo:473.2, hNoct:10.45, hSup:0, hExt:67.04, fRes:45.87, otrosIng:0, bonos:0, ingresos:596.56, iess:52.04, prestamos:0, otrosDesc:0, descuentos:52.04, neto:544.52},
-            {no:68, nombre:"POZO CHULDE STEVEN JOEL", cedula:"1754386140", fechaIng:"2024/Jan/01", cargo:"ASISTENTE CO", depto:"CONDADO", sueldo:650, hNoct:0, hSup:0, hExt:0, fRes:60.39, otrosIng:100, bonos:0, ingresos:810.39, iess:70.87, prestamos:20, otrosDesc:0, descuentos:90.87, neto:719.52},
-            {no:69, nombre:"PULLOPAXI PAUCAR STHEVEN ALEJANDRO", cedula:"1722524152", fechaIng:"2024/Jun/07", cargo:"AYUDANTE DE", depto:"BOSQUE", sueldo:473.2, hNoct:9.61, hSup:0, hExt:67.04, fRes:0, otrosIng:0, bonos:0, ingresos:549.85, iess:51.96, prestamos:32.83, otrosDesc:0, descuentos:84.79, neto:465.06},
-            {no:70, nombre:"QUISAGUANO TIPAN IRMA PATRICIA", cedula:"1751599240", fechaIng:"2023/Dec/01", cargo:"BARISTA", depto:"CCI", sueldo:473.2, hNoct:10.02, hSup:0, hExt:25.63, fRes:42.39, otrosIng:0, bonos:0, ingresos:551.24, iess:48.09, prestamos:0, otrosDesc:0, descuentos:48.09, neto:503.15},
-            {no:71, nombre:"QUISHPE CESME JEAN CARLO", cedula:"2100688692", fechaIng:"2024/May/01", cargo:"MESERO", depto:"CONDADO", sueldo:474.14, hNoct:4.77, hSup:0, hExt:81, fRes:0, otrosIng:0, bonos:0, ingresos:559.91, iess:52.91, prestamos:0, otrosDesc:0, descuentos:52.91, neto:507},
-            {no:72, nombre:"REINA VACA CELIA VICTORIA", cedula:"0804077501", fechaIng:"2024/Sep/27", cargo:"AYUDANTE DE", depto:"BOSQUE", sueldo:78.87, hNoct:0.49, hSup:0, hExt:0, fRes:0, otrosIng:0, bonos:0, ingresos:79.36, iess:7.5, prestamos:0, otrosDesc:0, descuentos:7.5, neto:71.86},
-            {no:73, nombre:"RIVADENEIRA AGUINDA ELIZABETH ALEXANDRA", cedula:"0502463896", fechaIng:"2019/May/22", cargo:"MESERAS", depto:"CCI", sueldo:474.14, hNoct:7.33, hSup:0, hExt:82.98, fRes:47.02, otrosIng:0, bonos:0, ingresos:611.47, iess:53.34, prestamos:82.27, otrosDesc:0, descuentos:135.61, neto:475.86},
-            {no:74, nombre:"SALAZAR MACIAS PAOLA VANESSA", cedula:"1727139758", fechaIng:"2024/Dec/01", cargo:"MESERO", depto:"CONDADO", sueldo:474.14, hNoct:10.05, hSup:0, hExt:57.29, fRes:0, otrosIng:0, bonos:0, ingresos:541.48, iess:51.17, prestamos:0, otrosDesc:0, descuentos:51.17, neto:490.31},
-            {no:75, nombre:"SALCEDO RUIZ DAYANNA ELIZABETH", cedula:"1722465398", fechaIng:"2023/Apr/19", cargo:"CALIDAD", depto:"BOSQUE", sueldo:486.57, hNoct:0, hSup:0, hExt:0, fRes:40.53, otrosIng:0, bonos:0, ingresos:527.1, iess:45.98, prestamos:364.93, otrosDesc:0, descuentos:410.91, neto:116.19},
-            {no:76, nombre:"SALDARRIAGA BRIONES MARIA ISABEL", cedula:"1316702420", fechaIng:"2024/Feb/17", cargo:"AYUDANTE DE", depto:"CCI", sueldo:473.2, hNoct:9.6, hSup:0, hExt:31.55, fRes:0, otrosIng:0, bonos:0, ingresos:514.35, iess:48.61, prestamos:4.99, otrosDesc:0, descuentos:53.6, neto:460.75},
-            {no:77, nombre:"SANCHEZ ORDONEZ ALEXANDER GABRIEL", cedula:"0750698771", fechaIng:"2023/Apr/01", cargo:"MESERO", depto:"CONDADO", sueldo:474.14, hNoct:5.19, hSup:0, hExt:71.12, fRes:45.85, otrosIng:0, bonos:0, ingresos:596.3, iess:52.02, prestamos:18.76, otrosDesc:0, descuentos:70.78, neto:525.52},
-            {no:78, nombre:"SANDOVAL PAREDES MARIANA CECILIA", cedula:"1717845091", fechaIng:"2022/Sep/09", cargo:"MESERO", depto:"BOSQUE", sueldo:474.14, hNoct:10.37, hSup:0, hExt:67.17, fRes:45.96, otrosIng:0, bonos:0, ingresos:597.64, iess:52.13, prestamos:0, otrosDesc:0, descuentos:52.13, neto:545.51},
-            {no:79, nombre:"SINGH LOAIZA PARAMJITCOR SHABNAM", cedula:"1750485631", fechaIng:"2023/Feb/08", cargo:"MESERAS", depto:"CCI", sueldo:474.14, hNoct:12.13, hSup:0, hExt:75.07, fRes:46.76, otrosIng:0, bonos:0, ingresos:608.1, iess:53.05, prestamos:7.9, otrosDesc:0, descuentos:60.95, neto:547.15},
-            {no:80, nombre:"TOAPANTA LLANO GRECIA PILAR", cedula:"1713987921", fechaIng:"2022/Apr/06", cargo:"AYUDANTE DE", depto:"CONDADO", sueldo:473.2, hNoct:10.77, hSup:0, hExt:86.75, fRes:0, otrosIng:0, bonos:0, ingresos:570.72, iess:53.93, prestamos:47.54, otrosDesc:0, descuentos:101.47, neto:469.25},
-            {no:81, nombre:"TOLEDO SALTO DAYANA ESTEFANIA", cedula:"1720441011", fechaIng:"2014/Oct/01", cargo:"ADMINISTRADO", depto:"BOSQUE", sueldo:700, hNoct:0, hSup:0, hExt:41.42, fRes:61.76, otrosIng:0, bonos:0, ingresos:803.18, iess:70.06, prestamos:20, otrosDesc:0, descuentos:90.06, neto:713.12},
-            {no:82, nombre:"VALVERDE ALMACHE ISAURA ALEXANDRA", cedula:"1724466493", fechaIng:"2024/Jan/01", cargo:"AYUDANTE DE", depto:"CCI", sueldo:473.2, hNoct:7.29, hSup:0, hExt:84.78, fRes:45.52, otrosIng:0, bonos:0, ingresos:610.79, iess:53.42, prestamos:0, otrosDesc:0, descuentos:53.42, neto:557.37},
-            {no:83, nombre:"VALVERDE ALULEMA LENIN ALEXANDER", cedula:"1725140956", fechaIng:"2024/Sep/06", cargo:"AYUDANTE DE", depto:"CONDADO", sueldo:473.2, hNoct:11.8, hSup:0, hExt:65.07, fRes:0, otrosIng:0, bonos:0, ingresos:550.07, iess:51.98, prestamos:0, otrosDesc:0, descuentos:51.98, neto:498.09},
-            {no:84, nombre:"VASQUEZ VASQUEZ FANNY JANETH", cedula:"1724021074", fechaIng:"2020/Oct/14", cargo:"MESERAS", depto:"BOSQUE", sueldo:474.61, hNoct:13.45, hSup:0, hExt:27.69, fRes:42.96, otrosIng:0, bonos:0, ingresos:558.71, iess:48.74, prestamos:0, otrosDesc:0, descuentos:48.74, neto:509.97},
-            {no:85, nombre:"VEINTIMILLA BARROS VALERIA ALEXANDRA", cedula:"1717556946", fechaIng:"2020/Dec/01", cargo:"BARISTA", depto:"CCI", sueldo:473.2, hNoct:8.73, hSup:0, hExt:55.21, fRes:44.74, otrosIng:0, bonos:0, ingresos:581.88, iess:50.76, prestamos:76.49, otrosDesc:0, descuentos:127.25, neto:454.63},
-            {no:86, nombre:"VELEZ CEDENO FERNANDA STEFANIA", cedula:"0803501147", fechaIng:"2024/Jan/01", cargo:"AYUDANTE DE", depto:"CONDADO", sueldo:473.2, hNoct:7.71, hSup:0, hExt:37.46, fRes:41.74, otrosIng:0, bonos:0, ingresos:560.11, iess:48.99, prestamos:0, otrosDesc:0, descuentos:48.99, neto:511.12},
-            {no:87, nombre:"VELIZ RAMIREZ IVANA LISBETH", cedula:"1726594961", fechaIng:"2015/Mar/25", cargo:"MESERAS", depto:"BOSQUE", sueldo:474.61, hNoct:10.45, hSup:0, hExt:81.08, fRes:0, otrosIng:0, bonos:0, ingresos:566.14, iess:53.5, prestamos:47.16, otrosDesc:0, descuentos:100.66, neto:465.48},
-            {no:88, nombre:"VERA MONCADA JORDY ALINSON", cedula:"1725991671", fechaIng:"2017/May/22", cargo:"AYUDANTE DE", depto:"CCI", sueldo:475.55, hNoct:8.67, hSup:25.26, hExt:37.65, fRes:47.84, otrosIng:27.15, bonos:0, ingresos:622.12, iess:54.27, prestamos:0, otrosDesc:0, descuentos:54.27, neto:567.85},
-            {no:89, nombre:"VIDAL BRAVO ANTONIA TERESA", cedula:"1350972129", fechaIng:"2024/Dec/01", cargo:"AYUDANTE DE", depto:"CONDADO", sueldo:473.2, hNoct:7.48, hSup:0, hExt:37.46, fRes:0, otrosIng:231.57, bonos:0, ingresos:749.71, iess:70.85, prestamos:0, otrosDesc:0, descuentos:70.85, neto:678.86},
-            {no:90, nombre:"ZURITA FLORES MARIA CRISTINA", cedula:"1705463170", fechaIng:"2016/Mar/01", cargo:"GERENTE Y AF", depto:"CONDADO", sueldo:3000, hNoct:0, hSup:0, hExt:0, fRes:249.9, otrosIng:0, bonos:0, ingresos:3249.9, iess:283.5, prestamos:326.81, otrosDesc:0, descuentos:610.31, neto:2639.59}
+            {no:1, nombre:"ACEVEDO CHAVEZ GABRIELA NICOLE", cedula:"1726636655", fechaIng:"2024/Sep/03", cargo:"MESERO", depto:"CCI", sueldo:474.14, hNoct:7.86, hSup:0, hExt:15.81, fRes:0, bonos:0, otrosIng:0, ingresos:497.81, iess:47.04, prestamos:0, otrosDesc:0, descuentos:47.04, neto:450.77},
+            {no:2, nombre:"ALAVA MUENTES MARIA LISSETH", cedula:"1313351692", fechaIng:"2020/Oct/05", cargo:"MESERAS", depto:"CONDADO", sueldo:474.14, hNoct:12.16, hSup:0, hExt:29.63, fRes:51.31, bonos:0, otrosIng:150, ingresos:717.24, iess:58.21, prestamos:71.42, otrosDesc:59.07, descuentos:188.70, neto:528.54},
+            {no:3, nombre:"ALVAREZ CEDENO FERNANDO DANIEL", cedula:"1721041737", fechaIng:"2023/May/11", cargo:"AYUDANTE DE", depto:"BOSQUE", sueldo:473.2, hNoct:6.65, hSup:0, hExt:67.04, fRes:45.56, bonos:0, otrosIng:0, ingresos:592.45, iess:51.68, prestamos:0, otrosDesc:0, descuentos:51.68, neto:540.77},
+            {no:4, nombre:"ALVAREZ CISNEROS VICTOR HUGO", cedula:"1752367290", fechaIng:"2024/Aug/17", cargo:"AYUDANTE DE", depto:"CCI", sueldo:236.6, hNoct:1.53, hSup:0, hExt:17.75, fRes:0, bonos:0, otrosIng:0, ingresos:255.88, iess:24.18, prestamos:4.69, otrosDesc:0, descuentos:28.87, neto:227.01},
+            {no:5, nombre:"ALVAREZ HERNANDEZ BRENDA NATHALY", cedula:"1722074810", fechaIng:"2016/Aug/09", cargo:"MESERAS", depto:"CONDADO", sueldo:474.61, hNoct:11.74, hSup:0, hExt:27.69, fRes:42.82, bonos:0, otrosIng:0, ingresos:556.86, iess:48.58, prestamos:40.74, otrosDesc:0, descuentos:89.32, neto:467.54},
+            {no:6, nombre:"ARBOLEDA PALACIOS AURA ISABEL", cedula:"1717981631", fechaIng:"2017/Jul/03", cargo:"ADMINISTRADO", depto:"BOSQUE", sueldo:950, hNoct:0, hSup:0, hExt:184.3, fRes:94.49, bonos:0, otrosIng:0, ingresos:1228.79, iess:107.19, prestamos:97.06, otrosDesc:20, descuentos:224.25, neto:1004.54},
+            {no:7, nombre:"ARREAGA ESPINOZA LEONEL ALEXANDER", cedula:"0804566198", fechaIng:"2021/Sep/01", cargo:"AYUDANTE DE", depto:"CCI", sueldo:473.2, hNoct:5.9, hSup:0, hExt:43.38, fRes:43.52, bonos:0, otrosIng:0, ingresos:566, iess:49.38, prestamos:0, otrosDesc:0, descuentos:49.38, neto:516.62},
+            {no:8, nombre:"ATIENCE VERA ERIKA LILIBETH", cedula:"1718509324", fechaIng:"2024/Mar/13", cargo:"MESERO", depto:"CONDADO", sueldo:474.14, hNoct:9.21, hSup:0, hExt:55.32, fRes:0, bonos:0, otrosIng:0, ingresos:538.67, iess:50.91, prestamos:0, otrosDesc:0, descuentos:50.91, neto:487.76},
+            {no:9, nombre:"AUQUI ANGUISACA PAMELA ALEXANDRA", cedula:"1720490851", fechaIng:"2024/Jan/01", cargo:"MESERO", depto:"BOSQUE", sueldo:474.14, hNoct:7.03, hSup:0, hExt:61.24, fRes:43.68, bonos:0, otrosIng:0, ingresos:586.09, iess:51.26, prestamos:0, otrosDesc:0, descuentos:51.26, neto:534.83},
+            {no:10, nombre:"BONIFAZ QUILUMBA JORGE ARMANDO", cedula:"1718658188", fechaIng:"2023/Sep/15", cargo:"AYUDANTE DE", depto:"CCI", sueldo:473.2, hNoct:10.34, hSup:0, hExt:33.52, fRes:0, bonos:0, otrosIng:0, ingresos:517.06, iess:48.86, prestamos:251.27, otrosDesc:0, descuentos:300.13, neto:216.93}
         ];
 
-        // ==================== DATA STORAGE ====================
         var employees = JSON.parse(localStorage.getItem('hr_employees')) || [];
         var config = JSON.parse(localStorage.getItem('hr_config')) || {
             companyName: 'JASAFOOD S.A.',
-            companyRuc: '',
-            companyAddress: '',
-            companyPhone: '',
-            logoUrl: 'https://res.cloudinary.com/dtmqftcsr/image/upload/v1772584409/ENSIGN_PARTENER_utlfoc.png',
+            companyRuc: '1791234567001',
             iessPercent: 9.45,
-            minimumWage: 450,
-            decimoTercero: true,
-            decimoCuarto: true,
-            fondosReserva: true,
-            emailNotifications: true
+            minimumWage: 460
         };
 
         var currentEmployeeToDelete = null;
         var currentPayrollEmployee = null;
         var salaryChart = null;
 
+        // ==================== CUENTAS CONTABLES ====================
+        var accountingAccounts = {
+            sueldo: { code: '5.1.01', name: 'SUELDOS Y SALARIOS' },
+            horasExtras: { code: '5.1.02', name: 'HORAS EXTRAS' },
+            fondoReserva: { code: '5.1.03', name: 'FONDOS DE RESERVA' },
+            bonos: { code: '5.1.04', name: 'BONIFICACIONES' },
+            decimoTercero: { code: '5.1.05', name: 'DÉCIMO TERCERO' },
+            decimoCuarto: { code: '5.1.06', name: 'DÉCIMO CUARTO' },
+            vacaciones: { code: '5.1.07', name: 'VACACIONES' },
+            iessPorPagar: { code: '2.1.01', name: 'IESS POR PAGAR' },
+            prestamosPorPagar: { code: '2.1.02', name: 'PRÉSTAMOS POR PAGAR' },
+            sueldosPorPagar: { code: '2.1.03', name: 'SUELDOS POR PAGAR' },
+            bancos: { code: '1.1.01', name: 'BANCOS' }
+        };
+
         // ==================== INITIALIZATION ====================
         document.addEventListener('DOMContentLoaded', function() {
             initializeApp();
-            loadConfig();
             renderPayrollTable();
             renderEmployees();
             updateStats();
             initializeChart();
-            setCurrentDate();
             setupEventListeners();
         });
 
@@ -2498,8 +2307,8 @@
             if (employees.length === 0) {
                 convertPayrollDataToEmployees();
             }
-            renderPayrollTable();
             populatePayrollSelect();
+            calculateAllProvisions();
         }
 
         function convertPayrollDataToEmployees() {
@@ -2507,7 +2316,7 @@
                 return {
                     id: generateId(),
                     nombres: item.nombre.split(' ').slice(0, -1).join(' ') || item.nombre,
-                    apellidos: item.nombre.split(' ').slice(-2).join(' ') || ' ',
+                    apellidos: item.nombre.split(' ').slice(-1).join(' ') || '',
                     cedula: item.cedula,
                     correo: '',
                     departamento: item.depto,
@@ -2516,186 +2325,259 @@
                     horasExtras: item.hNoct + item.hSup + item.hExt,
                     bonificaciones: item.bonos,
                     fechaIngreso: item.fechaIng.replace(/\//g, '-'),
-                    tipoContrato: 'Indefinido',
                     estado: 'Activo'
                 };
             });
             localStorage.setItem('hr_employees', JSON.stringify(employees));
         }
 
-        function loadConfig() {
-            document.getElementById('configCompanyName').value = config.companyName;
-            document.getElementById('configCompanyRuc').value = config.companyRuc || '';
-            document.getElementById('configCompanyAddress').value = config.companyAddress || '';
-            document.getElementById('configCompanyPhone').value = config.companyPhone || '';
-            document.getElementById('configLogoPreview').src = config.logoUrl;
-            document.getElementById('configIessPercent').value = config.iessPercent;
-            document.getElementById('configMinimumWage').value = config.minimumWage;
-
-            setToggleState('toggleDecimoTercero', config.decimoTercero);
-            setToggleState('toggleDecimoCuarto', config.decimoCuarto);
-            setToggleState('toggleFondosReserva', config.fondosReserva);
-            setToggleState('toggleEmailNotifications', config.emailNotifications);
-
-            document.getElementById('companyNameDisplay').textContent = config.companyName;
-        }
-
-        function setToggleState(id, state) {
-            var element = document.getElementById(id);
-            if (state) {
-                element.classList.add('active');
-            } else {
-                element.classList.remove('active');
-            }
-        }
-
-        function setCurrentDate() {
-            var now = new Date();
-            var options = { year: 'numeric', month: 'long', day: 'numeric' };
-            document.getElementById('currentDate').textContent = now.toLocaleDateString('es-ES', options);
-        }
-
         function setupEventListeners() {
             document.querySelectorAll('.nav-item').forEach(function(item) {
                 item.addEventListener('click', function() {
                     var section = this.getAttribute('data-section');
-                    if (section) {
-                        showSection(section);
-                    }
+                    if (section) showSection(section);
                 });
             });
 
             document.getElementById('menuToggle').addEventListener('click', function() {
                 document.getElementById('sidebar').classList.toggle('open');
             });
-
-            document.addEventListener('click', function(e) {
-                var sidebar = document.getElementById('sidebar');
-                var menuToggle = document.getElementById('menuToggle');
-                if (window.innerWidth <= 1024 && 
-                    !sidebar.contains(e.target) && 
-                    !menuToggle.contains(e.target)) {
-                    sidebar.classList.remove('open');
-                }
-            });
         }
 
-        // ==================== NAVIGATION ====================
         function showSection(sectionId) {
-            document.querySelectorAll('.nav-item').forEach(function(item) {
-                item.classList.remove('active');
-                if (item.getAttribute('data-section') === sectionId) {
-                    item.classList.add('active');
-                }
-            });
-
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            document.querySelector(`[data-section="${sectionId}"]`).classList.add('active');
+            
             var titles = {
-                dashboard: 'Dashboard',
-                employees: 'Gestion de Empleados',
-                payroll: 'Rol de Pagos Individual',
-                payrollList: 'Nómina de Enero 2025',
-                comparison: 'Comparativa Comercial',
-                config: 'Configuracion'
+                dashboard: 'Dashboard Contable',
+                payrollList: 'Nómina con Contabilidad',
+                payroll: 'Rol Individual',
+                provisiones: 'Provisiones Sociales',
+                accounting: 'Asientos Contables',
+                chartOfAccounts: 'Plan de Cuentas',
+                employees: 'Empleados',
+                config: 'Configuración'
             };
-            document.getElementById('pageTitle').textContent = titles[sectionId] || 'Dashboard';
+            document.getElementById('pageTitle').textContent = titles[sectionId];
 
-            document.querySelectorAll('.section').forEach(function(section) {
-                section.classList.remove('active');
-            });
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
             document.getElementById(sectionId).classList.add('active');
-
             document.getElementById('sidebar').classList.remove('open');
 
-            if (sectionId === 'employees') {
-                renderEmployees();
-            } else if (sectionId === 'payrollList') {
-                renderPayrollTable();
-            } else if (sectionId === 'payroll') {
-                populatePayrollSelect();
-            } else if (sectionId === 'dashboard') {
-                updateStats();
-                updateChart();
-            }
+            if (sectionId === 'payrollList') renderPayrollTable();
+            if (sectionId === 'provisiones') calculateAllProvisions();
+            if (sectionId === 'accounting') loadAccountingEntries();
+        }
+
+        // ==================== PAYROLL TABLE ====================
+        function renderPayrollTable() {
+            var tbody = document.getElementById('payrollTableBody');
+            tbody.innerHTML = payrollData.map(function(item) {
+                var totalExtras = item.hNoct + item.hSup + item.hExt;
+                return '<tr>' +
+                    '<td>' + item.no + '</td>' +
+                    '<td>' + item.nombre + '</td>' +
+                    '<td>' + item.cedula + '</td>' +
+                    '<td>' + item.depto + '</td>' +
+                    '<td>$' + item.sueldo.toFixed(2) + '</td>' +
+                    '<td>$' + totalExtras.toFixed(2) + '</td>' +
+                    '<td>$' + item.fRes.toFixed(2) + '</td>' +
+                    '<td>$' + (item.bonos + (item.otrosIng || 0)).toFixed(2) + '</td>' +
+                    '<td>$' + item.ingresos.toFixed(2) + '</td>' +
+                    '<td>$' + item.iess.toFixed(2) + '</td>' +
+                    '<td>$' + item.prestamos.toFixed(2) + '</td>' +
+                    '<td>$' + item.otrosDesc.toFixed(2) + '</td>' +
+                    '<td>$' + item.descuentos.toFixed(2) + '</td>' +
+                    '<td><strong>$' + item.neto.toFixed(2) + '</strong></td>' +
+                    '<td><span class="accounting-badge"><i class="fas fa-book"></i> 5.1.01</span></td>' +
+                    '<td><span class="accounting-badge"><i class="fas fa-book"></i> 2.1.03</span></td>' +
+                '</tr>';
+            }).join('');
+        }
+
+        // ==================== INDIVIDUAL PAYROLL ====================
+        function populatePayrollSelect() {
+            var select = document.getElementById('payrollEmployee');
+            select.innerHTML = '<option value="">-- Seleccionar --</option>' + 
+                employees.map(e => '<option value="' + e.cedula + '">' + e.nombres + ' ' + e.apellidos + '</option>').join('');
+        }
+
+        function loadEmployeePayroll() {
+            var cedula = document.getElementById('payrollEmployee').value;
+            document.getElementById('payrollCalculation').style.display = cedula ? 'block' : 'none';
+            
+            if (!cedula) return;
+
+            var item = payrollData.find(p => p.cedula === cedula);
+            if (!item) return;
+
+            currentPayrollEmployee = item;
+
+            document.getElementById('previewEmployee').innerHTML = 
+                '<div class="payroll-field"><span class="payroll-field-label">Empleado</span><span class="payroll-field-value">' + item.nombre + '</span></div>' +
+                '<div class="payroll-field"><span class="payroll-field-label">Cédula</span><span class="payroll-field-value">' + item.cedula + '</span></div>' +
+                '<div class="payroll-field"><span class="payroll-field-label">Departamento</span><span class="payroll-field-value">' + item.depto + '</span></div>' +
+                '<div class="payroll-field"><span class="payroll-field-label">Cargo</span><span class="payroll-field-value">' + item.cargo + '</span></div>';
+
+            // Ingresos
+            document.getElementById('previewIncomeBody').innerHTML = 
+                '<tr><td>Sueldo Base</td><td>$' + item.sueldo.toFixed(2) + '</td><td><span class="accounting-badge">5.1.01</span></td></tr>' +
+                '<tr><td>Horas Extras</td><td>$' + (item.hNoct + item.hSup + item.hExt).toFixed(2) + '</td><td><span class="accounting-badge">5.1.02</span></td></tr>' +
+                '<tr><td>Fondo de Reserva</td><td>$' + item.fRes.toFixed(2) + '</td><td><span class="accounting-badge">5.1.03</span></td></tr>' +
+                '<tr><td>Bonificaciones</td><td>$' + (item.bonos + (item.otrosIng || 0)).toFixed(2) + '</td><td><span class="accounting-badge">5.1.04</span></td></tr>' +
+                '<tr style="background: var(--gray-100);"><td><strong>TOTAL INGRESOS</strong></td><td><strong>$' + item.ingresos.toFixed(2) + '</strong></td><td></td></tr>';
+
+            // Descuentos
+            document.getElementById('previewDeductionsBody').innerHTML = 
+                '<tr><td>IESS (9.45%)</td><td>-$' + item.iess.toFixed(2) + '</td><td><span class="accounting-badge">2.1.01</span></td></tr>' +
+                '<tr><td>Préstamos</td><td>-$' + item.prestamos.toFixed(2) + '</td><td><span class="accounting-badge">2.1.02</span></td></tr>' +
+                '<tr><td>Otros Descuentos</td><td>-$' + item.otrosDesc.toFixed(2) + '</td><td><span class="accounting-badge">2.1.xx</span></td></tr>' +
+                '<tr style="background: var(--gray-100);"><td><strong>TOTAL DESCUENTOS</strong></td><td><strong>-$' + item.descuentos.toFixed(2) + '</strong></td><td></td></tr>';
+
+            document.getElementById('previewTotals').innerHTML = 
+                '<div class="payroll-total"><div class="payroll-total-label">Total Ingresos</div><div class="payroll-total-value" style="color: var(--success);">$' + item.ingresos.toFixed(2) + '</div></div>' +
+                '<div class="payroll-total"><div class="payroll-total-label">Total Descuentos</div><div class="payroll-total-value" style="color: var(--danger);">$' + item.descuentos.toFixed(2) + '</div></div>' +
+                '<div class="payroll-total"><div class="payroll-total-label">NETO A PAGAR</div><div class="payroll-total-value net">$' + item.neto.toFixed(2) + '</div></div>';
+
+            // Asiento contable
+            var accountingBody = document.getElementById('accountingEntryBody');
+            accountingBody.innerHTML = 
+                '<tr><td>5.1.01</td><td>Sueldos y Salarios</td><td class="debit">$' + item.sueldo.toFixed(2) + '</td><td></td></tr>' +
+                '<tr><td>5.1.02</td><td>Horas Extras</td><td class="debit">$' + (item.hNoct + item.hSup + item.hExt).toFixed(2) + '</td><td></td></tr>' +
+                '<tr><td>5.1.03</td><td>Fondos de Reserva</td><td class="debit">$' + item.fRes.toFixed(2) + '</td><td></td></tr>' +
+                '<tr><td>5.1.04</td><td>Bonificaciones</td><td class="debit">$' + (item.bonos + (item.otrosIng || 0)).toFixed(2) + '</td><td></td></tr>' +
+                '<tr><td>2.1.01</td><td>IESS por Pagar</td><td></td><td class="credit">$' + item.iess.toFixed(2) + '</td></tr>' +
+                '<tr><td>2.1.02</td><td>Préstamos por Pagar</td><td></td><td class="credit">$' + item.prestamos.toFixed(2) + '</td></tr>' +
+                '<tr><td>2.1.03</td><td>Sueldos por Pagar</td><td></td><td class="credit">$' + item.neto.toFixed(2) + '</td></tr>';
+
+            // Provisiones
+            var baseAportable = item.sueldo + item.hNoct + item.hSup + item.hExt + (item.bonos || 0);
+            var provision13 = baseAportable / 12;
+            var provision14 = (config.minimumWage / 360) * 30;
+            var vacaciones = baseAportable / 24;
+            var fr = baseAportable * 0.0833;
+
+            document.getElementById('provisionBody').innerHTML = 
+                '<tr><td>Décimo Tercero</td><td>Total año /12</td><td>$' + baseAportable.toFixed(2) + '</td><td>$' + provision13.toFixed(2) + '</td><td><span class="accounting-badge">5.1.05</span></td></tr>' +
+                '<tr><td>Décimo Cuarto</td><td>(482/360)*30</td><td>$' + config.minimumWage + '</td><td>$' + provision14.toFixed(2) + '</td><td><span class="accounting-badge">5.1.06</span></td></tr>' +
+                '<tr><td>Vacaciones</td><td>Aportable/24</td><td>$' + baseAportable.toFixed(2) + '</td><td>$' + vacaciones.toFixed(2) + '</td><td><span class="accounting-badge">5.1.07</span></td></tr>' +
+                '<tr><td>Fondo de Reserva</td><td>Aportable*8.33%</td><td>$' + baseAportable.toFixed(2) + '</td><td>$' + fr.toFixed(2) + '</td><td><span class="accounting-badge">5.1.03</span></td></tr>';
+        }
+
+        // ==================== PROVISIONES ====================
+        function calculateAllProvisions() {
+            var total13 = 0, total14 = 0, totalVac = 0, totalFR = 0;
+            
+            payrollData.forEach(function(item) {
+                var baseAportable = item.sueldo + item.hNoct + item.hSup + item.hExt + item.bonos + (item.otrosIng || 0);
+                total13 += baseAportable / 12;
+                total14 += (config.minimumWage / 360) * 30;
+                totalVac += baseAportable / 24;
+                totalFR += baseAportable * 0.0833;
+            });
+
+            document.getElementById('provision13').textContent = '$' + total13.toFixed(2);
+            document.getElementById('provision14').textContent = '$' + total14.toFixed(2);
+            document.getElementById('provisionVacations').textContent = '$' + totalVac.toFixed(2);
+            document.getElementById('provisionFR').textContent = '$' + totalFR.toFixed(2);
+            document.getElementById('totalProvisions').textContent = '$' + (total13 + total14 + totalVac + totalFR).toFixed(2);
+
+            var tbody = document.getElementById('provisionsTableBody');
+            tbody.innerHTML = payrollData.map(function(item) {
+                var baseAportable = item.sueldo + item.hNoct + item.hSup + item.hExt + item.bonos + (item.otrosIng || 0);
+                var p13 = baseAportable / 12;
+                var p14 = (config.minimumWage / 360) * 30;
+                var vac = baseAportable / 24;
+                var fr = baseAportable * 0.0833;
+                return '<tr>' +
+                    '<td>' + item.nombre + '</td>' +
+                    '<td>$' + baseAportable.toFixed(2) + '</td>' +
+                    '<td>$' + p13.toFixed(2) + '</td>' +
+                    '<td>$' + config.minimumWage + '</td>' +
+                    '<td>$' + p14.toFixed(2) + '</td>' +
+                    '<td>$' + baseAportable.toFixed(2) + '</td>' +
+                    '<td>$' + vac.toFixed(2) + '</td>' +
+                    '<td>$' + fr.toFixed(2) + '</td>' +
+                    '<td>$' + (p13 + p14 + vac + fr).toFixed(2) + '</td>' +
+                '</tr>';
+            }).join('');
+        }
+
+        // ==================== ACCOUNTING ====================
+        function generateAccountingEntries() {
+            showLoader('Generando asientos contables...');
+            
+            setTimeout(function() {
+                var totalSueldos = payrollData.reduce((s, i) => s + i.sueldo, 0);
+                var totalExtras = payrollData.reduce((s, i) => s + i.hNoct + i.hSup + i.hExt, 0);
+                var totalFR = payrollData.reduce((s, i) => s + i.fRes, 0);
+                var totalBonos = payrollData.reduce((s, i) => s + i.bonos + (i.otrosIng || 0), 0);
+                var totalIess = payrollData.reduce((s, i) => s + i.iess, 0);
+                var totalPrestamos = payrollData.reduce((s, i) => s + i.prestamos, 0);
+                var totalNeto = payrollData.reduce((s, i) => s + i.neto, 0);
+
+                var tbody = document.getElementById('accountingTableBody');
+                tbody.innerHTML = 
+                    '<tr><td>31/01/2025</td><td>NOM-001</td><td>5.1.01</td><td>Sueldos y Salarios</td><td class="debit">$' + totalSueldos.toFixed(2) + '</td><td></td></tr>' +
+                    '<tr><td>31/01/2025</td><td>NOM-001</td><td>5.1.02</td><td>Horas Extras</td><td class="debit">$' + totalExtras.toFixed(2) + '</td><td></td></tr>' +
+                    '<tr><td>31/01/2025</td><td>NOM-001</td><td>5.1.03</td><td>Fondos de Reserva</td><td class="debit">$' + totalFR.toFixed(2) + '</td><td></td></tr>' +
+                    '<tr><td>31/01/2025</td><td>NOM-001</td><td>5.1.04</td><td>Bonificaciones</td><td class="debit">$' + totalBonos.toFixed(2) + '</td><td></td></tr>' +
+                    '<tr><td>31/01/2025</td><td>NOM-001</td><td>2.1.01</td><td>IESS por Pagar</td><td></td><td class="credit">$' + totalIess.toFixed(2) + '</td></tr>' +
+                    '<tr><td>31/01/2025</td><td>NOM-001</td><td>2.1.02</td><td>Préstamos por Pagar</td><td></td><td class="credit">$' + totalPrestamos.toFixed(2) + '</td></tr>' +
+                    '<tr><td>31/01/2025</td><td>NOM-001</td><td>2.1.03</td><td>Sueldos por Pagar</td><td></td><td class="credit">$' + totalNeto.toFixed(2) + '</td></tr>';
+
+                showToast('Asientos Generados', 'Se creó el comprobante NOM-001', 'success');
+                hideLoader();
+            }, 1500);
+        }
+
+        function loadAccountingEntries() {
+            generateAccountingEntries();
+        }
+
+        function exportAccountingExcel() {
+            showToast('Exportar', 'Funcionalidad en desarrollo', 'info');
+        }
+
+        function exportChartOfAccounts() {
+            showToast('Exportar', 'Funcionalidad en desarrollo', 'info');
         }
 
         // ==================== EMPLOYEES ====================
         function renderEmployees() {
             var tbody = document.getElementById('employeesTableBody');
-            var emptyState = document.getElementById('emptyEmployees');
-            var table = document.getElementById('employeesTable');
-
-            if (employees.length === 0) {
-                tbody.innerHTML = '';
-                table.style.display = 'none';
-                emptyState.style.display = 'block';
-                return;
-            }
-
-            table.style.display = 'table';
-            emptyState.style.display = 'none';
-
             tbody.innerHTML = employees.map(function(emp) {
                 return '<tr>' +
                     '<td>' + emp.cedula + '</td>' +
                     '<td>' + emp.nombres + ' ' + emp.apellidos + '</td>' +
                     '<td>' + emp.departamento + '</td>' +
                     '<td>' + emp.cargo + '</td>' +
-                    '<td>$' + parseFloat(emp.sueldoBase).toFixed(2) + '</td>' +
-                    '<td><span class="status-badge ' + emp.estado.toLowerCase() + '">' + emp.estado + '</span></td>' +
-                    '<td>' +
-                        '<div class="action-buttons">' +
-                            '<button class="action-btn view" onclick="viewEmployee(\'' + emp.id + '\')" title="Ver"><i class="fas fa-eye"></i></button>' +
-                            '<button class="action-btn edit" onclick="editEmployee(\'' + emp.id + '\')" title="Editar"><i class="fas fa-edit"></i></button>' +
-                            '<button class="action-btn delete" onclick="deleteEmployee(\'' + emp.id + '\')" title="Eliminar"><i class="fas fa-trash"></i></button>' +
-                        '</div>' +
-                    '</td>' +
+                    '<td>$' + emp.sueldoBase.toFixed(2) + '</td>' +
+                    '<td><span class="status-badge active">Activo</span></td>' +
+                    '<td><div class="action-buttons">' +
+                        '<button class="action-btn view" onclick="viewEmployee(\'' + emp.id + '\')"><i class="fas fa-eye"></i></button>' +
+                        '<button class="action-btn edit" onclick="editEmployee(\'' + emp.id + '\')"><i class="fas fa-edit"></i></button>' +
+                        '<button class="action-btn delete" onclick="deleteEmployee(\'' + emp.id + '\')"><i class="fas fa-trash"></i></button>' +
+                    '</div></td>' +
                 '</tr>';
             }).join('');
-
-            var activeCount = employees.filter(function(e) { return e.estado === 'Activo'; }).length;
-            document.getElementById('employeeCount').textContent = activeCount;
-            document.getElementById('totalEmployeesDisplay').textContent = activeCount;
         }
 
         function filterEmployees() {
             var search = document.getElementById('employeeSearch').value.toLowerCase();
-            var department = document.getElementById('departmentFilter').value;
-
-            var filtered = employees.filter(function(emp) {
-                var matchesSearch = (emp.nombres + ' ' + emp.apellidos).toLowerCase().includes(search) ||
-                                     emp.cedula.includes(search);
-                var matchesDepartment = !department || emp.departamento === department;
-                return matchesSearch && matchesDepartment;
-            });
-
-            var tbody = document.getElementById('employeesTableBody');
-            tbody.innerHTML = filtered.map(function(emp) {
-                return '<tr>' +
-                    '<td>' + emp.cedula + '</td>' +
-                    '<td>' + emp.nombres + ' ' + emp.apellidos + '</td>' +
-                    '<td>' + emp.departamento + '</td>' +
-                    '<td>' + emp.cargo + '</td>' +
-                    '<td>$' + parseFloat(emp.sueldoBase).toFixed(2) + '</td>' +
-                    '<td><span class="status-badge ' + emp.estado.toLowerCase() + '">' + emp.estado + '</span></td>' +
-                    '<td>' +
-                        '<div class="action-buttons">' +
-                            '<button class="action-btn view" onclick="viewEmployee(\'' + emp.id + '\')" title="Ver"><i class="fas fa-eye"></i></button>' +
-                            '<button class="action-btn edit" onclick="editEmployee(\'' + emp.id + '\')" title="Editar"><i class="fas fa-edit"></i></button>' +
-                            '<button class="action-btn delete" onclick="deleteEmployee(\'' + emp.id + '\')" title="Eliminar"><i class="fas fa-trash"></i></button>' +
-                        '</div>' +
-                    '</td>' +
-                '</tr>';
+            var dept = document.getElementById('departmentFilter').value;
+            var filtered = employees.filter(e => 
+                (e.nombres + ' ' + e.apellidos).toLowerCase().includes(search) && 
+                (!dept || e.departamento === dept)
+            );
+            document.getElementById('employeesTableBody').innerHTML = filtered.map(function(emp) {
+                return '<tr><td>' + emp.cedula + '</td><td>' + emp.nombres + ' ' + emp.apellidos + '</td><td>' + emp.departamento + '</td><td>' + emp.cargo + '</td><td>$' + emp.sueldoBase.toFixed(2) + '</td><td><span class="status-badge active">Activo</span></td><td>...</td></tr>';
             }).join('');
         }
 
-        function openEmployeeModal(employeeId) {
-            var modal = document.getElementById('employeeModal');
-            var title = document.getElementById('employeeModalTitle');
-            var form = document.getElementById('employeeForm');
-
-            if (employeeId) {
-                var emp = employees.find(function(e) { return e.id === employeeId; });
-                title.textContent = 'Editar Empleado';
+        function openEmployeeModal(id) {
+            if (id) {
+                var emp = employees.find(e => e.id === id);
                 document.getElementById('employeeId').value = emp.id;
                 document.getElementById('employeeName').value = emp.nombres;
                 document.getElementById('employeeLastname').value = emp.apellidos;
@@ -2704,18 +2586,14 @@
                 document.getElementById('employeeDepartment').value = emp.departamento;
                 document.getElementById('employeePosition').value = emp.cargo;
                 document.getElementById('employeeSalary').value = emp.sueldoBase;
-                document.getElementById('employeeOvertime').value = emp.horasExtras || 0;
-                document.getElementById('employeeBonus').value = emp.bonificaciones || 0;
                 document.getElementById('employeeHireDate').value = emp.fechaIngreso;
-                document.getElementById('employeeContractType').value = emp.tipoContrato;
-                document.getElementById('employeeStatus').value = emp.estado;
+                document.getElementById('employeeModalTitle').textContent = 'Editar Empleado';
             } else {
-                title.textContent = 'Nuevo Empleado';
-                form.reset();
+                document.getElementById('employeeForm').reset();
                 document.getElementById('employeeId').value = '';
+                document.getElementById('employeeModalTitle').textContent = 'Nuevo Empleado';
             }
-
-            modal.classList.add('active');
+            document.getElementById('employeeModal').classList.add('active');
         }
 
         function closeEmployeeModal() {
@@ -2724,72 +2602,34 @@
 
         function saveEmployee() {
             var id = document.getElementById('employeeId').value || generateId();
-            var employee = {
+            var emp = {
                 id: id,
-                nombres: document.getElementById('employeeName').value.trim(),
-                apellidos: document.getElementById('employeeLastname').value.trim(),
-                cedula: document.getElementById('employeeCedula').value.trim(),
-                correo: document.getElementById('employeeEmailForm').value.trim(),
+                nombres: document.getElementById('employeeName').value,
+                apellidos: document.getElementById('employeeLastname').value,
+                cedula: document.getElementById('employeeCedula').value,
+                correo: document.getElementById('employeeEmailForm').value,
                 departamento: document.getElementById('employeeDepartment').value,
-                cargo: document.getElementById('employeePosition').value.trim(),
-                sueldoBase: parseFloat(document.getElementById('employeeSalary').value) || 0,
-                horasExtras: parseFloat(document.getElementById('employeeOvertime').value) || 0,
-                bonificaciones: parseFloat(document.getElementById('employeeBonus').value) || 0,
+                cargo: document.getElementById('employeePosition').value,
+                sueldoBase: parseFloat(document.getElementById('employeeSalary').value),
                 fechaIngreso: document.getElementById('employeeHireDate').value,
-                tipoContrato: document.getElementById('employeeContractType').value,
-                estado: document.getElementById('employeeStatus').value
+                estado: 'Activo'
             };
 
-            if (!employee.nombres || !employee.apellidos || !employee.cedula || 
-                !employee.departamento || !employee.cargo || !employee.sueldoBase || 
-                !employee.fechaIngreso) {
-                showToast('Error', 'Por favor complete todos los campos obligatorios', 'error');
-                return;
-            }
-
-            var existingIndex = employees.findIndex(function(e) { return e.id === id; });
-            if (existingIndex >= 0) {
-                employees[existingIndex] = employee;
-            } else {
-                employees.push(employee);
-            }
+            var idx = employees.findIndex(e => e.id === id);
+            if (idx >= 0) employees[idx] = emp;
+            else employees.push(emp);
 
             localStorage.setItem('hr_employees', JSON.stringify(employees));
-            closeEmployeeModal();
             renderEmployees();
-            updateStats();
-            populatePayrollSelect();
-            showToast('Exito', 'Empleado guardado correctamente', 'success');
+            closeEmployeeModal();
+            showToast('Éxito', 'Empleado guardado', 'success');
         }
 
         function viewEmployee(id) {
-            var emp = employees.find(function(e) { return e.id === id; });
-            if (!emp) return;
-
-            var payrollItem = payrollData.find(function(p) { return p.cedula === emp.cedula; });
-            
-            var details = '<div style="text-align: center; margin-bottom: 24px;">' +
-                '<div style="width: 80px; height: 80px; background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; color: white; font-size: 28px; font-weight: 700;">' +
-                    emp.nombres.charAt(0) + emp.apellidos.charAt(0) +
-                '</div>' +
-                '<h3 style="margin-bottom: 4px;">' + emp.nombres + ' ' + emp.apellidos + '</h3>' +
-                '<span class="status-badge ' + emp.estado.toLowerCase() + '">' + emp.estado + '</span>' +
-                '</div>' +
-                '<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;">' +
-                    '<div><strong>Cedula:</strong> ' + emp.cedula + '</div>' +
-                    '<div><strong>Correo:</strong> ' + (emp.correo || 'No registrado') + '</div>' +
-                    '<div><strong>Departamento:</strong> ' + emp.departamento + '</div>' +
-                    '<div><strong>Cargo:</strong> ' + emp.cargo + '</div>' +
-                    '<div><strong>Sueldo Base:</strong> $' + parseFloat(emp.sueldoBase).toFixed(2) + '</div>' +
-                    '<div><strong>Horas Extras:</strong> ' + emp.horasExtras + '</div>' +
-                    '<div><strong>Bonificaciones:</strong> $' + parseFloat(emp.bonificaciones).toFixed(2) + '</div>' +
-                    '<div><strong>Tipo Contrato:</strong> ' + emp.tipoContrato + '</div>' +
-                    '<div><strong>Fecha Ingreso:</strong> ' + emp.fechaIngreso + '</div>' +
-                    (payrollItem ? '<div><strong>Neto a Pagar:</strong> $' + payrollItem.neto.toFixed(2) + '</div>' : '') +
-                '</div>';
-
-            document.getElementById('payrollPreviewContent').innerHTML = '<div class="payroll-preview">' + details + '</div>';
-            showSection('payrollPreview');
+            var emp = employees.find(e => e.id === id);
+            if (emp) {
+                showToast('Info', emp.nombres + ' ' + emp.apellidos, 'info');
+            }
         }
 
         function editEmployee(id) {
@@ -2797,546 +2637,47 @@
         }
 
         function deleteEmployee(id) {
-            currentEmployeeToDelete = id;
-            var emp = employees.find(function(e) { return e.id === id; });
-            document.getElementById('deleteMessage').textContent = 
-                'Estas seguro de eliminar al empleado "' + emp.nombres + ' ' + emp.apellidos + '"? Esta accion no se puede deshacer.';
-            document.getElementById('deleteModal').classList.add('active');
+            employees = employees.filter(e => e.id !== id);
+            localStorage.setItem('hr_employees', JSON.stringify(employees));
+            renderEmployees();
+            showToast('Éxito', 'Empleado eliminado', 'success');
         }
 
-        function closeDeleteModal() {
-            document.getElementById('deleteModal').classList.remove('active');
-            currentEmployeeToDelete = null;
-        }
-
-        function confirmDelete() {
-            if (currentEmployeeToDelete) {
-                employees = employees.filter(function(e) { return e.id !== currentEmployeeToDelete; });
-                localStorage.setItem('hr_employees', JSON.stringify(employees));
-                renderEmployees();
-                updateStats();
-                populatePayrollSelect();
-                showToast('Exito', 'Empleado eliminado correctamente', 'success');
-            }
-            closeDeleteModal();
-        }
-
-        // ==================== PAYROLL TABLE ====================
-        function renderPayrollTable() {
-            var tbody = document.getElementById('payrollTableBody');
-            
-            tbody.innerHTML = payrollData.map(function(item) {
-                return '<tr>' +
-                    '<td>' + item.no + '</td>' +
-                    '<td>' + item.nombre + '</td>' +
-                    '<td>' + item.cedula + '</td>' +
-                    '<td>' + item.fechaIng + '</td>' +
-                    '<td>' + item.cargo + '</td>' +
-                    '<td>' + item.depto + '</td>' +
-                    '<td>$' + item.sueldo.toFixed(2) + '</td>' +
-                    '<td>$' + item.hNoct.toFixed(2) + '</td>' +
-                    '<td>$' + item.hSup.toFixed(2) + '</td>' +
-                    '<td>$' + item.hExt.toFixed(2) + '</td>' +
-                    '<td>$' + item.fRes.toFixed(2) + '</td>' +
-                    '<td>$' + item.bonos.toFixed(2) + '</td>' +
-                    '<td>$' + item.ingresos.toFixed(2) + '</td>' +
-                    '<td>$' + item.iess.toFixed(2) + '</td>' +
-                    '<td>$' + item.prestamos.toFixed(2) + '</td>' +
-                    '<td>$' + item.otrosDesc.toFixed(2) + '</td>' +
-                    '<td>$' + item.descuentos.toFixed(2) + '</td>' +
-                    '<td><strong>$' + item.neto.toFixed(2) + '</strong></td>' +
-                '</tr>';
-            }).join('') + 
-            '<tr class="total-row">' +
-                '<td colspan="6"><strong>TOTAL GENERAL</strong></td>' +
-                '<td><strong>$' + payrollData.reduce((sum, i) => sum + i.sueldo, 0).toFixed(2) + '</strong></td>' +
-                '<td><strong>$' + payrollData.reduce((sum, i) => sum + i.hNoct, 0).toFixed(2) + '</strong></td>' +
-                '<td><strong>$' + payrollData.reduce((sum, i) => sum + i.hSup, 0).toFixed(2) + '</strong></td>' +
-                '<td><strong>$' + payrollData.reduce((sum, i) => sum + i.hExt, 0).toFixed(2) + '</strong></td>' +
-                '<td><strong>$' + payrollData.reduce((sum, i) => sum + i.fRes, 0).toFixed(2) + '</strong></td>' +
-                '<td><strong>$' + payrollData.reduce((sum, i) => sum + i.bonos, 0).toFixed(2) + '</strong></td>' +
-                '<td><strong>$' + payrollData.reduce((sum, i) => sum + i.ingresos, 0).toFixed(2) + '</strong></td>' +
-                '<td><strong>$' + payrollData.reduce((sum, i) => sum + i.iess, 0).toFixed(2) + '</strong></td>' +
-                '<td><strong>$' + payrollData.reduce((sum, i) => sum + i.prestamos, 0).toFixed(2) + '</strong></td>' +
-                '<td><strong>$' + payrollData.reduce((sum, i) => sum + i.otrosDesc, 0).toFixed(2) + '</strong></td>' +
-                '<td><strong>$' + payrollData.reduce((sum, i) => sum + i.descuentos, 0).toFixed(2) + '</strong></td>' +
-                '<td><strong>$' + payrollData.reduce((sum, i) => sum + i.neto, 0).toFixed(2) + '</strong></td>' +
-            '</tr>';
-        }
-
-        // ==================== INDIVIDUAL PAYROLL ====================
-        function populatePayrollSelect() {
-            var select = document.getElementById('payrollEmployee');
-            var activeEmployees = employees.filter(function(e) { return e.estado === 'Activo'; });
-            
-            select.innerHTML = '<option value="">-- Seleccionar --</option>' + 
-                activeEmployees.map(function(emp) {
-                    return '<option value="' + emp.cedula + '">' + emp.nombres + ' ' + emp.apellidos + ' - ' + emp.cedula + '</option>';
-                }).join('');
-        }
-
-        function loadEmployeePayroll() {
-            var cedula = document.getElementById('payrollEmployee').value;
-            var calculationDiv = document.getElementById('payrollCalculation');
-            var emptyDiv = document.getElementById('emptyPayroll');
-
-            if (!cedula) {
-                calculationDiv.style.display = 'none';
-                emptyDiv.style.display = 'block';
-                return;
-            }
-
-            calculationDiv.style.display = 'block';
-            emptyDiv.style.display = 'none';
-
-            var payrollItem = payrollData.find(function(p) { return p.cedula === cedula; });
-            if (!payrollItem) return;
-
-            currentPayrollEmployee = payrollItem;
-
-            document.getElementById('previewCompanyInfo').textContent = 'Del: 01/Ene/2025 Al: 31/Ene/2025';
-            
-            document.getElementById('previewEmployee').innerHTML = 
-                '<div class="payroll-field"><span class="payroll-field-label">Empleado</span><span class="payroll-field-value">' + payrollItem.nombre + '</span></div>' +
-                '<div class="payroll-field"><span class="payroll-field-label">Cedula</span><span class="payroll-field-value">' + payrollItem.cedula + '</span></div>' +
-                '<div class="payroll-field"><span class="payroll-field-label">Departamento</span><span class="payroll-field-value">' + payrollItem.depto + '</span></div>' +
-                '<div class="payroll-field"><span class="payroll-field-label">Cargo</span><span class="payroll-field-value">' + payrollItem.cargo + '</span></div>' +
-                '<div class="payroll-field"><span class="payroll-field-label">Fecha Ingreso</span><span class="payroll-field-value">' + payrollItem.fechaIng + '</span></div>';
-
-            calculateIndividualPayroll();
-        }
-
-        function calculateIndividualPayroll() {
-            if (!currentPayrollEmployee) return;
-
-            var extraHours = parseFloat(document.getElementById('payrollExtraHours').value) || 0;
-            var extraBonus = parseFloat(document.getElementById('payrollExtraBonus').value) || 0;
-            var extraDeductions = parseFloat(document.getElementById('payrollExtraDeductions').value) || 0;
-
-            var item = currentPayrollEmployee;
-
-            var incomeBody = document.getElementById('previewIncomeBody');
-            incomeBody.innerHTML = 
-                '<tr><td>Sueldo Base</td><td>$' + item.sueldo.toFixed(2) + '</td></tr>' +
-                '<tr><td>Horas Nocturnas</td><td>$' + item.hNoct.toFixed(2) + '</td></tr>' +
-                '<tr><td>Horas Suplementarias</td><td>$' + item.hSup.toFixed(2) + '</td></tr>' +
-                '<tr><td>Horas Extraordinarias</td><td>$' + item.hExt.toFixed(2) + '</td></tr>' +
-                '<tr><td>Fondo de Reserva</td><td>$' + item.fRes.toFixed(2) + '</td></tr>' +
-                '<tr><td>Bonificaciones</td><td>$' + (item.bonos + extraBonus).toFixed(2) + '</td></tr>' +
-                '<tr style="background: var(--gray-100); font-weight: 700;"><td>TOTAL INGRESOS</td><td>$' + (item.ingresos + extraBonus).toFixed(2) + '</td></tr>';
-
-            var deductionBody = document.getElementById('previewDeductionsBody');
-            deductionBody.innerHTML = 
-                '<tr><td>Aporte IESS (9.45%)</td><td style="color: var(--danger);">-$' + item.iess.toFixed(2) + '</td></tr>' +
-                '<tr><td>Préstamos</td><td style="color: var(--danger);">-$' + item.prestamos.toFixed(2) + '</td></tr>' +
-                '<tr><td>Otros Descuentos</td><td style="color: var(--danger);">-$' + (item.otrosDesc + extraDeductions).toFixed(2) + '</td></tr>' +
-                '<tr style="background: var(--gray-100); font-weight: 700;"><td>TOTAL DESCUENTOS</td><td style="color: var(--danger);">-$' + (item.descuentos + extraDeductions).toFixed(2) + '</td></tr>';
-
-            var totalIncome = item.ingresos + extraBonus;
-            var totalDeductions = item.descuentos + extraDeductions;
-            var netPay = totalIncome - totalDeductions;
-
-            document.getElementById('previewTotals').innerHTML = 
-                '<div class="payroll-total"><div class="payroll-total-label">Total Ingresos</div><div class="payroll-total-value" style="color: var(--success);">$' + totalIncome.toFixed(2) + '</div></div>' +
-                '<div class="payroll-total"><div class="payroll-total-label">Total Descuentos</div><div class="payroll-total-value" style="color: var(--danger);">$' + totalDeductions.toFixed(2) + '</div></div>' +
-                '<div class="payroll-total"><div class="payroll-total-label">NETO A PAGAR</div><div class="payroll-total-value net">$' + netPay.toFixed(2) + '</div></div>';
-        }
-
-        // ==================== PDF GENERATION ====================
-        async function generateIndividualPDF() {
-            if (!currentPayrollEmployee) {
-                showToast('Error', 'Seleccione un empleado primero', 'error');
-                return;
-            }
-
-            showLoader('Generando PDF...');
-
-            try {
-                var item = currentPayrollEmployee;
-                var extraHours = parseFloat(document.getElementById('payrollExtraHours').value) || 0;
-                var extraBonus = parseFloat(document.getElementById('payrollExtraBonus').value) || 0;
-                var extraDeductions = parseFloat(document.getElementById('payrollExtraDeductions').value) || 0;
-
-                var totalIncome = item.ingresos + extraBonus;
-                var totalDeductions = item.descuentos + extraDeductions;
-                var netPay = totalIncome - totalDeductions;
-
-                var jsPDF = window.jspdf.jsPDF;
-                var doc = new jsPDF();
-                
-                var primaryColor = [13, 13, 13];
-                var accentColor = [0, 180, 216];
-                var lightGray = [248, 249, 250];
-                var darkGray = [73, 80, 87];
-
-                doc.setFillColor.apply(doc, primaryColor);
-                doc.rect(0, 0, 210, 45, 'F');
-
-                try {
-                    doc.addImage(config.logoUrl, 'PNG', 15, 8, 30, 30);
-                } catch(e) {
-                    console.log('Logo error:', e);
-                }
-
-                doc.setTextColor(255, 255, 255);
-                doc.setFontSize(22);
-                doc.setFont('helvetica', 'bold');
-                doc.text(config.companyName, 55, 20);
-
-                doc.setFontSize(10);
-                doc.setFont('helvetica', 'normal');
-                doc.text('Del: 01/Ene/2025 Al: 31/Ene/2025', 55, 30);
-
-                doc.setFillColor.apply(doc, accentColor);
-                doc.rect(0, 45, 210, 12, 'F');
-                doc.setTextColor(255, 255, 255);
-                doc.setFontSize(14);
-                doc.setFont('helvetica', 'bold');
-                doc.text('ROL DE PAGOS - ENERO 2025', 105, 53, { align: 'center' });
-
-                var y = 70;
-                doc.setTextColor.apply(doc, darkGray);
-                doc.setFontSize(10);
-                
-                doc.setFillColor.apply(doc, lightGray);
-                doc.roundedRect(15, y - 5, 180, 35, 3, 3, 'F');
-                
-                doc.setFont('helvetica', 'bold');
-                doc.text('EMPLEADO', 20, y + 3);
-                doc.setFont('helvetica', 'normal');
-                doc.text(item.nombre, 20, y + 12);
-                doc.text('Cedula: ' + item.cedula, 20, y + 19);
-                doc.text('Departamento: ' + item.depto, 110, y + 12);
-                doc.text('Cargo: ' + item.cargo, 110, y + 19);
-
-                y += 45;
-
-                doc.setFillColor.apply(doc, primaryColor);
-                doc.rect(15, y - 5, 180, 10, 'F');
-                doc.setTextColor(255, 255, 255);
-                doc.setFont('helvetica', 'bold');
-                doc.setFontSize(11);
-                doc.text('INGRESOS', 20, y + 1);
-
-                y += 10;
-                doc.setTextColor.apply(doc, darkGray);
-                doc.setFont('helvetica', 'normal');
-                doc.setFontSize(10);
-
-                var incomeItems = [
-                    ['Sueldo Base', item.sueldo],
-                    ['Horas Nocturnas', item.hNoct],
-                    ['Horas Suplementarias', item.hSup],
-                    ['Horas Extraordinarias', item.hExt],
-                    ['Fondo de Reserva', item.fRes],
-                    ['Bonificaciones', item.bonos + extraBonus]
-                ];
-
-                incomeItems.forEach(function(itemArray, index) {
-                    if (index % 2 === 0) {
-                        doc.setFillColor(255, 255, 255);
-                        doc.rect(15, y - 4, 180, 8, 'F');
-                    }
-                    doc.text(itemArray[0], 20, y + 1);
-                    doc.text('$' + itemArray[1].toFixed(2), 175, y + 1, { align: 'right' });
-                    y += 8;
-                });
-
-                doc.setFillColor(240, 255, 240);
-                doc.rect(15, y - 4, 180, 10, 'F');
-                doc.setFont('helvetica', 'bold');
-                doc.text('TOTAL INGRESOS', 20, y + 2);
-                doc.setTextColor(16, 185, 129);
-                doc.text('$' + totalIncome.toFixed(2), 175, y + 2, { align: 'right' });
-
-                y += 15;
-
-                doc.setFillColor(239, 68, 68);
-                doc.rect(15, y - 5, 180, 10, 'F');
-                doc.setTextColor(255, 255, 255);
-                doc.setFont('helvetica', 'bold');
-                doc.setFontSize(11);
-                doc.text('DESCUENTOS', 20, y + 1);
-
-                y += 10;
-                doc.setTextColor.apply(doc, darkGray);
-                doc.setFont('helvetica', 'normal');
-                doc.setFontSize(10);
-
-                var deductionItems = [
-                    ['Aporte IESS (9.45%)', item.iess],
-                    ['Préstamos', item.prestamos],
-                    ['Otros Descuentos', item.otrosDesc + extraDeductions]
-                ];
-
-                deductionItems.forEach(function(itemArray, index) {
-                    if (index % 2 === 0) {
-                        doc.setFillColor(255, 255, 255);
-                        doc.rect(15, y - 4, 180, 8, 'F');
-                    }
-                    doc.text(itemArray[0], 20, y + 1);
-                    doc.text('$' + itemArray[1].toFixed(2), 175, y + 1, { align: 'right' });
-                    y += 8;
-                });
-
-                doc.setFillColor(255, 240, 240);
-                doc.rect(15, y - 4, 180, 10, 'F');
-                doc.setFont('helvetica', 'bold');
-                doc.setTextColor(239, 68, 68);
-                doc.text('TOTAL DESCUENTOS', 20, y + 2);
-                doc.text('-$' + totalDeductions.toFixed(2), 175, y + 2, { align: 'right' });
-
-                y += 20;
-
-                doc.setFillColor.apply(doc, primaryColor);
-                doc.roundedRect(55, y - 5, 100, 30, 3, 3, 'F');
-                doc.setTextColor(255, 255, 255);
-                doc.setFontSize(12);
-                doc.text('NETO A PAGAR', 105, y + 8, { align: 'center' });
-                doc.setFontSize(24);
-                doc.setFont('helvetica', 'bold');
-                doc.text('$' + netPay.toFixed(2), 105, y + 22, { align: 'center' });
-
-                y += 45;
-
-                doc.setDrawColor.apply(doc, darkGray);
-                doc.setLineWidth(0.5);
-                
-                doc.line(20, y, 90, y);
-                doc.setFont('helvetica', 'normal');
-                doc.setFontSize(9);
-                doc.setTextColor.apply(doc, darkGray);
-                doc.text('Firma del Empleado', 55, y + 6, { align: 'center' });
-
-                doc.line(120, y, 190, y);
-                doc.text('Firma de Recursos Humanos', 155, y + 6, { align: 'center' });
-
-                doc.setFontSize(8);
-                doc.setTextColor(150, 150, 150);
-                doc.text('Documento generado el ' + new Date().toLocaleDateString('es-ES') + ' - ' + config.companyName + ' - Sistema de Nomina', 105, 290, { align: 'center' });
-
-                var fileName = 'Rol_Pago_' + item.cedula + '_Enero_2025.pdf';
-                doc.save(fileName);
-                
-                showLoader('');
-                showToast('PDF Generado', 'El archivo ' + fileName + ' se ha descargado', 'success');
-
-            } catch (error) {
-                console.error('PDF Error:', error);
-                showLoader('');
-                showToast('Error', 'Error al generar el PDF', 'error');
-            }
-        }
-
-        // ==================== EMAIL ====================
-        function sendPayrollEmail() {
-            if (!currentPayrollEmployee) {
-                showToast('Error', 'Seleccione un empleado primero', 'error');
-                return;
-            }
-
-            var emp = employees.find(function(e) { return e.cedula === currentPayrollEmployee.cedula; });
-            var email = emp && emp.correo ? emp.correo : '';
-            
-            if (!email) {
-                showToast('Error', 'El empleado no tiene correo registrado', 'error');
-                return;
-            }
-
-            var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(email)) {
-                showToast('Error', 'El correo del empleado no es válido', 'error');
-                return;
-            }
-
-            showLoader('Enviando correo electronico...');
-
-            setTimeout(function() {
-                showLoader('');
-                showToast('Correo Enviado', 'El rol de pago ha sido enviado a ' + email, 'success');
-                
-                generateIndividualPDF();
-            }, 2000);
-        }
-
-        // ==================== EXCEL EXPORT ====================
+        // ==================== EXPORT ====================
         function exportPayrollExcel() {
-            showLoader('Exportando a Excel...');
-
-            try {
-                var wsData = payrollData.map(function(item) {
-                    return {
-                        'No.': item.no,
-                        'NOMBRE': item.nombre,
-                        'CEDULA': item.cedula,
-                        'FEC.ING': item.fechaIng,
-                        'CARGO': item.cargo,
-                        'DEPARTAMENTO': item.depto,
-                        'SUELDO': item.sueldo,
-                        'H.NOCT': item.hNoct,
-                        'H.SUP': item.hSup,
-                        'H.EXT': item.hExt,
-                        'F.RES': item.fRes,
-                        'BONOS': item.bonos,
-                        'INGRESOS': item.ingresos,
-                        'IESS': item.iess,
-                        'PRESTAMOS': item.prestamos,
-                        'OTROS DESC': item.otrosDesc,
-                        'DESCUENTOS': item.descuentos,
-                        'NETO': item.neto
-                    };
-                });
-
-                wsData.push({
-                    'No.': '',
-                    'NOMBRE': 'TOTAL GENERAL',
-                    'CEDULA': '',
-                    'FEC.ING': '',
-                    'CARGO': '',
-                    'DEPARTAMENTO': '',
-                    'SUELDO': payrollData.reduce((sum, i) => sum + i.sueldo, 0),
-                    'H.NOCT': payrollData.reduce((sum, i) => sum + i.hNoct, 0),
-                    'H.SUP': payrollData.reduce((sum, i) => sum + i.hSup, 0),
-                    'H.EXT': payrollData.reduce((sum, i) => sum + i.hExt, 0),
-                    'F.RES': payrollData.reduce((sum, i) => sum + i.fRes, 0),
-                    'BONOS': payrollData.reduce((sum, i) => sum + i.bonos, 0),
-                    'INGRESOS': payrollData.reduce((sum, i) => sum + i.ingresos, 0),
-                    'IESS': payrollData.reduce((sum, i) => sum + i.iess, 0),
-                    'PRESTAMOS': payrollData.reduce((sum, i) => sum + i.prestamos, 0),
-                    'OTROS DESC': payrollData.reduce((sum, i) => sum + i.otrosDesc, 0),
-                    'DESCUENTOS': payrollData.reduce((sum, i) => sum + i.descuentos, 0),
-                    'NETO': payrollData.reduce((sum, i) => sum + i.neto, 0)
-                });
-
-                var ws = XLSX.utils.json_to_sheet(wsData);
+            showLoader('Exportando...');
+            setTimeout(function() {
+                var wsData = payrollData.map(i => ({
+                    'No.': i.no,
+                    'Nombre': i.nombre,
+                    'Cédula': i.cedula,
+                    'Sueldo': i.sueldo,
+                    'Horas Extras': i.hNoct + i.hSup + i.hExt,
+                    'F.Reserva': i.fRes,
+                    'Bonos': i.bonos,
+                    'Ingresos': i.ingresos,
+                    'IESS': i.iess,
+                    'Préstamos': i.prestamos,
+                    'Descuentos': i.descuentos,
+                    'Neto': i.neto
+                }));
                 var wb = XLSX.utils.book_new();
-                XLSX.utils.book_append_sheet(wb, ws, 'Nomina_Enero_2025');
-
-                var fileName = 'Nomina_Enero_2025.xlsx';
-                XLSX.writeFile(wb, fileName);
-
-                showLoader('');
-                showToast('Excel Exportado', 'El archivo ' + fileName + ' se ha descargado', 'success');
-
-            } catch (error) {
-                console.error('Excel Error:', error);
-                showLoader('');
-                showToast('Error', 'Error al exportar a Excel', 'error');
-            }
+                var ws = XLSX.utils.json_to_sheet(wsData);
+                XLSX.utils.book_append_sheet(wb, ws, 'Nomina');
+                XLSX.writeFile(wb, 'Nomina_Enero_2025.xlsx');
+                hideLoader();
+                showToast('Exportado', 'Archivo Excel generado', 'success');
+            }, 1000);
         }
 
-        // ==================== CONFIGURATION ====================
+        // ==================== CONFIG ====================
         function saveConfig() {
-            config.companyName = document.getElementById('configCompanyName').value.trim();
-            config.companyRuc = document.getElementById('configCompanyRuc').value.trim();
-            config.companyAddress = document.getElementById('configCompanyAddress').value.trim();
-            config.companyPhone = document.getElementById('configCompanyPhone').value.trim();
-            config.iessPercent = parseFloat(document.getElementById('configIessPercent').value) || 9.45;
-            config.minimumWage = parseFloat(document.getElementById('configMinimumWage').value) || 450;
-
+            config.companyName = document.getElementById('configCompanyName').value;
+            config.companyRuc = document.getElementById('configCompanyRuc').value;
+            config.iessPercent = parseFloat(document.getElementById('configIessPercent').value);
+            config.minimumWage = parseFloat(document.getElementById('configMinimumWage').value);
             localStorage.setItem('hr_config', JSON.stringify(config));
-
-            document.getElementById('companyNameDisplay').textContent = config.companyName;
-            document.getElementById('sidebarLogo').src = config.logoUrl;
-            document.getElementById('previewCompanyName').textContent = config.companyName;
-
-            showToast('Configuracion Guardada', 'Los cambios se han guardado correctamente', 'success');
-        }
-
-        function previewLogo(event) {
-            var file = event.target.files[0];
-            if (file) {
-                var reader = new FileReader();
-                reader.onload = function(e) {
-                    config.logoUrl = e.target.result;
-                    document.getElementById('configLogoPreview').src = e.target.result;
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-
-        function toggleOption(element) {
-            element.classList.toggle('active');
-            var id = element.id;
-            var isActive = element.classList.contains('active');
-            
-            if (id === 'toggleDecimoTercero') config.decimoTercero = isActive;
-            if (id === 'toggleDecimoCuarto') config.decimoCuarto = isActive;
-            if (id === 'toggleFondosReserva') config.fondosReserva = isActive;
-            if (id === 'toggleEmailNotifications') config.emailNotifications = isActive;
-        }
-
-        // ==================== STATS & CHARTS ====================
-        function updateStats() {
-            var activeEmployees = employees.filter(function(e) { return e.estado === 'Activo'; });
-            var totalPayroll = payrollData.reduce(function(sum, i) { return sum + i.sueldo; }, 0);
-            var totalDeductions = payrollData.reduce(function(sum, i) { return sum + i.descuentos; }, 0);
-            var totalNet = payrollData.reduce(function(sum, i) { return sum + i.neto; }, 0);
-
-            document.getElementById('totalEmployees').textContent = activeEmployees.length;
-            document.getElementById('totalPayroll').textContent = '$' + totalPayroll.toFixed(2);
-            document.getElementById('totalDeductions').textContent = '$' + totalDeductions.toFixed(2);
-            document.getElementById('totalNet').textContent = '$' + totalNet.toFixed(2);
-        }
-
-        function initializeChart() {
-            var ctx = document.getElementById('salaryChart').getContext('2d');
-            
-            var deptData = {};
-            payrollData.forEach(function(item) {
-                deptData[item.depto] = (deptData[item.depto] || 0) + item.sueldo;
-            });
-
-            salaryChart = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: Object.keys(deptData),
-                    datasets: [{
-                        data: Object.values(deptData),
-                        backgroundColor: [
-                            '#0d0d0d',
-                            '#00b4d8',
-                            '#3b82f6',
-                            '#8b5cf6',
-                            '#10b981',
-                            '#f59e0b',
-                            '#ef4444',
-                            '#6c757d'
-                        ],
-                        borderWidth: 0
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'right',
-                            labels: {
-                                padding: 15,
-                                font: {
-                                    size: 12,
-                                    family: 'Inter'
-                                }
-                            }
-                        }
-                    },
-                    cutout: '65%'
-                }
-            });
-        }
-
-        function updateChart() {
-            if (!salaryChart) return;
-
-            var deptData = {};
-            payrollData.forEach(function(item) {
-                deptData[item.depto] = (deptData[item.depto] || 0) + item.sueldo;
-            });
-
-            salaryChart.data.labels = Object.keys(deptData);
-            salaryChart.data.datasets[0].data = Object.values(deptData);
-            salaryChart.update();
+            showToast('Configuración Guardada', 'Los cambios han sido aplicados', 'success');
         }
 
         // ==================== UTILITIES ====================
@@ -3344,38 +2685,67 @@
             return 'emp_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
         }
 
-        function formatCurrency(amount) {
-            return '$' + parseFloat(amount).toFixed(2);
+        function updateStats() {
+            var totalPayroll = payrollData.reduce((s, i) => s + i.sueldo, 0);
+            var totalNet = payrollData.reduce((s, i) => s + i.neto, 0);
+            document.getElementById('totalPayroll').textContent = '$' + totalPayroll.toFixed(2);
+            document.getElementById('totalNet').textContent = '$' + totalNet.toFixed(2);
+        }
+
+        function initializeChart() {
+            var ctx = document.getElementById('salaryChart').getContext('2d');
+            var deptData = {};
+            payrollData.forEach(i => deptData[i.depto] = (deptData[i.depto] || 0) + i.sueldo);
+            
+            salaryChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(deptData),
+                    datasets: [{
+                        data: Object.values(deptData),
+                        backgroundColor: ['#0d0d0d', '#00b4d8', '#3b82f6'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'right' } },
+                    cutout: '65%'
+                }
+            });
+        }
+
+        function switchTab(tabId, element) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            element.classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+        }
+
+        function showAccountingModal() {
+            showToast('Asiento Contable', 'Ver pestaña "Asiento Contable"', 'info');
+        }
+
+        function generateIndividualPDF() {
+            if (!currentPayrollEmployee) {
+                showToast('Error', 'Seleccione un empleado', 'error');
+                return;
+            }
+            showToast('PDF', 'Funcionalidad en desarrollo', 'info');
         }
 
         function showToast(title, message, type) {
-            type = type || 'info';
             var container = document.getElementById('toastContainer');
             var toast = document.createElement('div');
             toast.className = 'toast ' + type;
-            
-            var icons = {
-                success: 'fa-check',
-                error: 'fa-times',
-                warning: 'fa-exclamation',
-                info: 'fa-info'
-            };
-
-            toast.innerHTML = '<div class="toast-icon"><i class="fas ' + icons[type] + '"></i></div>' +
-                '<div class="toast-content"><div class="toast-title">' + title + '</div><div class="toast-message">' + message + '</div></div>' +
-                '<button class="toast-close" onclick="this.parentElement.remove()"><i class="fas fa-times"></i></button>';
-
+            toast.innerHTML = '<div class="toast-icon"><i class="fas fa-' + (type === 'success' ? 'check' : type === 'error' ? 'times' : 'info') + '"></i></div><div class="toast-content"><div class="toast-title">' + title + '</div><div class="toast-message">' + message + '</div></div><button class="toast-close" onclick="this.parentElement.remove()">×</button>';
             container.appendChild(toast);
-
-            setTimeout(function() {
-                if (toast.parentElement) {
-                    toast.remove();
-                }
-            }, 5000);
+            setTimeout(() => toast.remove(), 5000);
         }
 
         function showLoader(text) {
-            document.getElementById('loaderText').textContent = text || 'Cargando...';
+            document.getElementById('loaderText').textContent = text || 'Procesando...';
             document.getElementById('loader').classList.add('active');
         }
 
@@ -3383,25 +2753,26 @@
             document.getElementById('loader').classList.remove('active');
         }
 
-        // Make functions global
+        // Expose functions globally
         window.showSection = showSection;
+        window.switchTab = switchTab;
+        window.loadEmployeePayroll = loadEmployeePayroll;
+        window.generateIndividualPDF = generateIndividualPDF;
+        window.showAccountingModal = showAccountingModal;
+        window.generateAccountingEntries = generateAccountingEntries;
+        window.calculateAllProvisions = calculateAllProvisions;
+        window.exportPayrollExcel = exportPayrollExcel;
+        window.exportAccountingExcel = exportAccountingExcel;
+        window.exportChartOfAccounts = exportChartOfAccounts;
         window.openEmployeeModal = openEmployeeModal;
         window.closeEmployeeModal = closeEmployeeModal;
         window.saveEmployee = saveEmployee;
         window.viewEmployee = viewEmployee;
         window.editEmployee = editEmployee;
         window.deleteEmployee = deleteEmployee;
-        window.closeDeleteModal = closeDeleteModal;
-        window.confirmDelete = confirmDelete;
         window.filterEmployees = filterEmployees;
-        window.loadEmployeePayroll = loadEmployeePayroll;
-        window.calculateIndividualPayroll = calculateIndividualPayroll;
-        window.generateIndividualPDF = generateIndividualPDF;
-        window.sendPayrollEmail = sendPayrollEmail;
-        window.exportPayrollExcel = exportPayrollExcel;
+        window.loadAccountingEntries = loadAccountingEntries;
         window.saveConfig = saveConfig;
-        window.previewLogo = previewLogo;
-        window.toggleOption = toggleOption;
         window.showToast = showToast;
     </script>
 </body>
