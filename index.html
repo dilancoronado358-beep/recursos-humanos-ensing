@@ -1429,6 +1429,12 @@
         }
 
         .action-btn {
+        }
+        .clickable {
+            cursor: pointer;
+            color: #007bff;
+            text-decoration: underline;
+        }
             width: 32px;
             height: 32px;
             border-radius: var(--radius-sm);
@@ -2219,6 +2225,10 @@
                                         <tr>
                                             <th>Cédula</th>
                                             <th>Nombre</th>
+                                            <th>Email</th>
+                                            <th>Dirección</th>
+                                            <th>Cantón</th>
+                                            <th>Teléfono</th>
                                             <th>Departamento</th>
                                             <th>Cargo</th>
                                             <th>Sueldo</th>
@@ -2294,7 +2304,10 @@
             <div class="modal-body">
                 <form id="employeeForm">
                     <input type="hidden" id="employeeId">
-                    <div class="form-row">
+                    <!-- Personal info section -->
+                    <details open>
+                      <summary><strong>Datos Personales</strong></summary>
+                      <div class="form-row">
                         <div class="form-group">
                             <label>Nombres *</label>
                             <input type="text" class="form-control" id="employeeName" required>
@@ -2303,15 +2316,75 @@
                             <label>Apellidos *</label>
                             <input type="text" class="form-control" id="employeeLastname" required>
                         </div>
-                    </div>
-                    <div class="form-row">
+                      </div>
+                      <div class="form-row">
                         <div class="form-group">
                             <label>Cédula *</label>
                             <input type="text" class="form-control" id="employeeCedula" required>
                         </div>
                         <div class="form-group">
+                            <label>Dirección</label>
+                            <input type="text" class="form-control" id="employeeAddress">
+                        </div>
+                      </div>
+                      <div class="form-row">
+                        <div class="form-group">
+                            <label>Cantón</label>
+                            <input type="text" class="form-control" id="employeeCanton">
+                        </div>
+                        <div class="form-group">
+                            <label>Teléfono</label>
+                            <input type="text" class="form-control" id="employeePhone">
+                        </div>
+                        <div class="form-group">
                             <label>Email</label>
                             <input type="email" class="form-control" id="employeeEmail">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Fecha Nacimiento</label>
+                            <input type="date" class="form-control" id="employeeBirthDate">
+                        </div>
+                        <div class="form-group">
+                            <label>Estado Civil</label>
+                            <input type="text" class="form-control" id="employeeMaritalStatus">
+                        </div>
+                        <div class="form-group">
+                            <label>Número Hijos</label>
+                            <input type="number" class="form-control" id="employeeChildren" min="0">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Nacionalidad</label>
+                            <input type="text" class="form-control" id="employeeNationality">
+                        </div>
+                        <div class="form-group">
+                            <label>Sexo</label>
+                            <select class="form-control" id="employeeSex">
+                                <option value="">--</option>
+                                <option value="M">Masculino</option>
+                                <option value="F">Femenino</option>
+                            </select>
+                        </div>
+                    </div>
+                    </details>
+                    <!-- Laborales data -->
+                    <details>
+                      <summary><strong>Datos Laborales</strong></summary>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Fecha Ingreso</label>
+                            <input type="date" class="form-control" id="employeeHireDate">
+                        </div>
+                        <div class="form-group">
+                            <label>Estado</label>
+                            <input type="text" class="form-control" id="employeeWorkState">
+                        </div>
+                        <div class="form-group">
+                            <label>División</label>
+                            <input type="text" class="form-control" id="employeeDivision">
                         </div>
                     </div>
                     <div class="form-row">
@@ -2324,20 +2397,114 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label>Cargo</label>
-                            <input type="text" class="form-control" id="employeePosition">
+                            <label>Sección</label>
+                            <input type="text" class="form-control" id="employeeSection">
+                        </div>
+                        <div class="form-group">
+                            <label>Turno</label>
+                            <input type="text" class="form-control" id="employeeShift">
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group">
-                            <label>Sueldo Base</label>
-                            <input type="number" class="form-control" id="employeeSalary" step="0.01">
+                            <label>Profesión</label>
+                            <input type="text" class="form-control" id="employeeProfession">
                         </div>
                         <div class="form-group">
-                            <label>Fecha Ingreso</label>
-                            <input type="date" class="form-control" id="employeeHireDate">
+                            <label>Cargo</label>
+                            <input type="text" class="form-control" id="employeePosition">
+                        </div>
+                        <div class="form-group">
+                            <label>Código Sectorial</label>
+                            <input type="text" class="form-control" id="employeeSectorCode">
                         </div>
                     </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Ocupación</label>
+                            <input type="text" class="form-control" id="employeeOccupation">
+                        </div>
+                        <div class="form-group">
+                            <label>Jornada Parcial</label>
+                            <select class="form-control" id="employeePartial"><option value="SI">SI</option><option value="NO">NO</option></select>
+                        </div>
+                        <div class="form-group">
+                            <label>Sueldo</label>
+                            <input type="number" step="0.01" class="form-control" id="employeeSalary">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Forma de Pago</label>
+                            <select class="form-control" id="employeePayForm"><option value="transferencia">Transferencia</option><option value="efectivo">Efectivo</option><option value="cheque">Cheque</option></select>
+                        </div>
+                        <div class="form-group">
+                            <label>Banco</label>
+                            <select class="form-control" id="employeeBank"><option>Banco Guayaquil</option><option>Banco Pichincha</option><option>Banco Internacional</option><option>Banco Bolivariano</option><option>Produbanco</option><option>Solidario</option></select>
+                        </div>
+                        <div class="form-group">
+                            <label>Número de Cuenta</label>
+                            <input type="text" class="form-control" id="employeeAccountNumber">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Tipo Cuenta</label>
+                            <select class="form-control" id="employeeAccountType"><option value="ahorros">Ahorros</option><option value="corriente">Corriente</option></select>
+                        </div>
+                        <div class="form-group">
+                            <label>Recibe Fondo Reserva desde el ingreso</label>
+                            <select class="form-control" id="employeeFundFromEntry"><option>SI</option><option>NO</option></select>
+                        </div>
+                        <div class="form-group">
+                            <label>Mensualización Fondo Reserva en el rol</label>
+                            <select class="form-control" id="employeeFundMonthly"><option>SI</option><option>NO</option></select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Mensualización Décimo Tercero</label>
+                            <select class="form-control" id="employee13th"><option>SI</option><option>NO</option></select>
+                        </div>
+                        <div class="form-group">
+                            <label>Mensualización Décimo Cuarto</label>
+                            <select class="form-control" id="employee14th"><option>SI</option><option>NO</option></select>
+                        </div>
+                        <div class="form-group">
+                            <label>Extensión IESS Cónyuge</label>
+                            <select class="form-control" id="employeeIessSpouse"><option>SI</option><option>NO</option></select>
+                        </div>
+                    </div>
+                    </details>
+                    <!-- RDEP data -->
+                    <details>
+                      <summary><strong>Datos RDEP</strong></summary>
+                      <div class="form-row">
+                        <div class="form-group"><label>Tipo Identificación Trabajador</label>
+                           <select class="form-control" id="employeeIdType"><option value="cedula">Cédula</option><option value="pasaporte">Pasaporte</option></select>
+                        </div>
+                        <div class="form-group"><label>Residencia del Trabajador</label>
+                           <select class="form-control" id="employeeResidence"><option value="Local">Local</option><option value="Exterior">Exterior</option></select>
+                        </div>
+                        <div class="form-group"><label>País (residencia en el exterior)</label>
+                           <select class="form-control" id="employeeResidenceCountry"></select>
+                        </div>
+                      </div>
+                      <div class="form-row">
+                        <div class="form-group"><label>Aplica Convenio Doble Imposición</label><select class="form-control" id="employeeDoubleTax"><option>SI</option><option>NO</option></select></div>
+                        <div class="form-group"><label>Discapacidad</label><select class="form-control" id="employeeDisability"><option>No aplica</option><option>Si aplica</option></select></div>
+                        <div class="form-group"><label>Trabajador Sustituto</label><select class="form-control" id="employeeSubstitute"><option>SI</option><option>NO</option></select></div>
+                      </div>
+                      <div class="form-row">
+                        <div class="form-group"><label>Enfermedad Catastrófica</label><select class="form-control" id="employeeCatastrophic"><option>SI</option><option>NO</option></select></div>
+                        <div class="form-group"><label>Condición del trabajador respecto a discapacidades</label><select class="form-control" id="employeeDisabilityCondition"><option>No aplica</option><option>Si aplica</option></select></div>
+                      </div>
+                      <div class="form-row">
+                        <div class="form-group"><label>Tipo de identificación de la persona con discapacidad</label><select class="form-control" id="employeeDisabilityIdType"><option value="cedula">Cédula</option><option value="pasaporte">Pasaporte</option></select></div>
+                        <div class="form-group"><label>Número de identificación de la persona con discapacidad</label><input type="text" class="form-control" id="employeeDisabilityIdNumber"></div>
+                        <div class="form-group"><label>Cargas RDEP</label><input type="text" class="form-control" id="employeeRdepCharges"></div>
+                      </div>
+                    </details>
                     <div class="form-row">
                         <div class="form-group">
                             <label>Horas Extras</label>
@@ -2523,6 +2690,15 @@
             var stored = localStorage.getItem('hr_employees');
             if (stored) {
                 employees = JSON.parse(stored);
+                // make sure every record has an id (legacy data may lack it)
+                if (Array.isArray(employees)) {
+                    employees.forEach(function(e) {
+                        if (!e.id) e.id = generateId();
+                    });
+                    localStorage.setItem('hr_employees', JSON.stringify(employees));
+                } else {
+                    employees = [];
+                }
             } else {
                 convertPayrollDataToEmployees();
             }
@@ -2540,6 +2716,7 @@
                     apellidos: apellidos,
                     cedula: item.cedula,
                     email: '',
+                    direccion: '',
                     departamento: item.depto,
                     cargo: item.cargo,
                     sueldoBase: item.sueldo,
@@ -2548,6 +2725,41 @@
                     prestamos: item.prestamos || 0,
                     otrosDescuentos: item.otrosDesc || 0,
                     fechaIngreso: item.fechaIng.replace(/\//g, '-'),
+                    canton: '',
+                    telefono: '',
+                    fechaNacimiento: '',
+                    estadoCivil: '',
+                    numeroHijos: '',
+                    tipoSangre: '',
+                    nacionalidad: '',
+                    sexo: '',
+                    division: '',
+                    seccion: '',
+                    turno: '',
+                    profesion: '',
+                    codigoSectorial: '',
+                    ocupacion: '',
+                    jornadaParcial: 'NO',
+                    formaPago: '',
+                    banco: '',
+                    numeroCuenta: '',
+                    tipoCuenta: '',
+                    recibeFondoDesde: 'NO',
+                    mensualizaFondo: 'NO',
+                    mensualiza13: 'NO',
+                    mensualiza14: 'NO',
+                    extensionIess: 'NO',
+                    tipoIdTrabajador: '',
+                    residenciaTrabajador: '',
+                    paisExterior: '',
+                    convenioDoble: 'NO',
+                    discapacidad: 'NO',
+                    sustituto: 'NO',
+                    enfermedadCatas: 'NO',
+                    condicionDiscapacidades: '',
+                    tipoIdDiscapacidad: '',
+                    numIdDiscapacidad: '',
+                    cargasRdep: '',
                     estado: 'Activo'
                 };
             });
@@ -2571,6 +2783,13 @@
             document.getElementById('companyRucDisplay').textContent = config.companyRuc;
             document.getElementById('payrollCompanyName').textContent = config.companyName;
             document.getElementById('payrollCompanyInfo').innerHTML = `RUC: ${config.companyRuc} | Del: 01/Ene/2025 Al: 31/Ene/2025`;
+        }
+
+        function populateCountrySelect() {
+            var countries = ["Afghanistan","Albania","Algeria","Andorra","Angola","Argentina","Armenia","Australia","Austria","Azerbaijan","Bahamas","Bahrain","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bhutan","Bolivia","Bosnia and Herzegovina","Botswana","Brazil","Brunei","Bulgaria","Burkina Faso","Burundi","Cabo Verde","Cambodia","Cameroon","Canada","Central African Republic","Chad","Chile","China","Colombia","Comoros","Congo","Costa Rica","Côte d'Ivoire","Croatia","Cuba","Cyprus","Czech Republic","Democratic Republic of the Congo","Denmark","Djibouti","Dominica","Dominican Republic","Ecuador","Egypt","El Salvador","Equatorial Guinea","Eritrea","Estonia","Eswatini","Ethiopia","Fiji","Finland","France","Gabon","Gambia","Georgia","Germany","Ghana","Greece","Grenada","Guatemala","Guinea","Guinea-Bissau","Guyana","Haiti","Honduras","Hungary","Iceland","India","Indonesia","Iran","Iraq","Ireland","Israel","Italy","Jamaica","Japan","Jordan","Kazakhstan","Kenya","Kiribati","Kosovo","Kuwait","Kyrgyzstan","Laos","Latvia","Lebanon","Lesotho","Liberia","Libya","Liechtenstein","Lithuania","Luxembourg","Madagascar","Malawi","Malaysia","Maldives","Mali","Malta","Marshall Islands","Mauritania","Mauritius","Mexico","Micronesia","Moldova","Monaco","Mongolia","Montenegro","Morocco","Mozambique","Myanmar","Namibia","Nauru","Nepal","Netherlands","New Zealand","Nicaragua","Niger","Nigeria","North Korea","North Macedonia","Norway","Oman","Pakistan","Palau","Panama","Papua New Guinea","Paraguay","Peru","Philippines","Poland","Portugal","Qatar","Romania","Russia","Rwanda","Saint Kitts and Nevis","Saint Lucia","Saint Vincent and the Grenadines","Samoa","San Marino","São Tomé and Príncipe","Saudi Arabia","Senegal","Serbia","Seychelles","Sierra Leone","Singapore","Slovakia","Slovenia","Solomon Islands","Somalia","South Africa","South Korea","South Sudan","Spain","Sri Lanka","Sudan","Suriname","Sweden","Switzerland","Syria","Taiwan","Tajikistan","Tanzania","Thailand","Timor-Leste","Togo","Tonga","Trinidad and Tobago","Tunisia","Turkey","Turkmenistan","Tuvalu","Uganda","Ukraine","United Arab Emirates","United Kingdom","United States","Uruguay","Uzbekistan","Vanuatu","Vatican City","Venezuela","Vietnam","Yemen","Zambia","Zimbabwe"];
+            var sel = document.getElementById('employeeResidenceCountry');
+            if (!sel) return;
+            sel.innerHTML = countries.map(c => '<option>' + c + '</option>').join('');
         }
 
         function saveConfig() {
@@ -2681,7 +2900,11 @@
             tbody.innerHTML = employees.map(function(emp) {
                 return '<tr>' +
                     '<td>' + emp.cedula + '</td>' +
-                    '<td>' + emp.nombres + ' ' + emp.apellidos + '</td>' +
+                    '<td class="clickable" data-id="' + emp.id + '">' + emp.nombres + ' ' + emp.apellidos + '</td>' +
+                    '<td>' + (emp.email || '') + '</td>' +
+                    '<td>' + (emp.direccion || '') + '</td>' +
+                    '<td>' + (emp.canton || '') + '</td>' +
+                    '<td>' + (emp.telefono || '') + '</td>' +
                     '<td>' + emp.departamento + '</td>' +
                     '<td>' + emp.cargo + '</td>' +
                     '<td>$' + (emp.sueldoBase || 0).toFixed(2) + '</td>' +
@@ -2695,6 +2918,10 @@
             }).join('');
 
             document.getElementById('employeeCountNav').textContent = employees.length;
+            // attach click handlers
+            tbody.querySelectorAll('.clickable').forEach(td => {
+                td.addEventListener('click', () => editEmployee(td.dataset.id));
+            });
         }
 
         function filterEmployees() {
@@ -2702,38 +2929,105 @@
             var dept = document.getElementById('departmentFilter').value;
             var filtered = employees.filter(e => 
                 (e.nombres + ' ' + e.apellidos).toLowerCase().includes(search) || 
-                e.cedula.includes(search)
+                e.cedula.includes(search) ||
+                (e.email || '').toLowerCase().includes(search) ||
+                (e.direccion || '').toLowerCase().includes(search) ||
+                (e.canton || '').toLowerCase().includes(search) ||
+                (e.telefono || '').toLowerCase().includes(search)
             );
             if (dept) filtered = filtered.filter(e => e.departamento === dept);
             
             var tbody = document.getElementById('employeesTableBody');
             tbody.innerHTML = filtered.map(function(emp) {
-                return '<tr><td>' + emp.cedula + '</td><td>' + emp.nombres + ' ' + emp.apellidos + '</td><td>' + emp.departamento + '</td><td>' + emp.cargo + '</td><td>$' + (emp.sueldoBase || 0).toFixed(2) + '</td><td>' + emp.fechaIngreso + '</td><td><span class="status-badge active">' + (emp.estado || 'Activo') + '</span></td><td><div class="action-buttons"><button class="action-btn edit" onclick="editEmployee(\'' + emp.id + '\')"><i class="fas fa-edit"></i></button><button class="action-btn delete" onclick="deleteEmployee(\'' + emp.id + '\')"><i class="fas fa-trash"></i></button></div></td></tr>';
+                return '<tr><td>' + emp.cedula + '</td><td class="clickable" data-id="' + emp.id + '">' + emp.nombres + ' ' + emp.apellidos + '</td><td>' + (emp.email||'') + '</td><td>' + (emp.direccion||'') + '</td><td>' + (emp.canton||'') + '</td><td>' + (emp.telefono||'') + '</td><td>' + emp.departamento + '</td><td>' + emp.cargo + '</td><td>$' + (emp.sueldoBase || 0).toFixed(2) + '</td><td>' + emp.fechaIngreso + '</td><td><span class="status-badge active">' + (emp.estado || 'Activo') + '</span></td><td><div class="action-buttons"><button class="action-btn edit" onclick="editEmployee(\'' + emp.id + '\')"><i class="fas fa-edit"></i></button><button class="action-btn delete" onclick="deleteEmployee(\'' + emp.id + '\')"><i class="fas fa-trash"></i></button></div></td></tr>';
             }).join('');
+            // bind click on filtered rows
+            tbody.querySelectorAll('.clickable').forEach(td => {
+                td.addEventListener('click', () => editEmployee(td.dataset.id));
+            });
         }
 
         function openEmployeeModal(id) {
-            console.log('openEmployeeModal called id=', id);
-            var modal = document.getElementById('employeeModal');
-            var title = document.getElementById('employeeModalTitle');
+            try {
+                populateCountrySelect();
+                // ensure all sections are visible when editing/creating
+                document.querySelectorAll('#employeeForm details').forEach(d => d.open = true);
+                console.log('openEmployeeModal called id=', id);
+                if (!Array.isArray(employees)) {
+                    console.error('employees is not an array', employees);
+                    showToast('Error', 'Datos de empleados corruptos', 'error');
+                    employees = [];
+                }
+                var modal = document.getElementById('employeeModal');
+                var title = document.getElementById('employeeModalTitle');
 
-            if (id) {
-                var emp = employees.find(e => e.id === id);
-                document.getElementById('employeeId').value = emp.id;
-                document.getElementById('employeeName').value = emp.nombres;
-                document.getElementById('employeeLastname').value = emp.apellidos;
-                document.getElementById('employeeCedula').value = emp.cedula;
-                document.getElementById('employeeEmail').value = emp.email || '';
-                document.getElementById('employeeDepartment').value = emp.departamento;
-                document.getElementById('employeePosition').value = emp.cargo;
-                document.getElementById('employeeSalary').value = emp.sueldoBase;
-                document.getElementById('employeeHireDate').value = emp.fechaIngreso;
-                document.getElementById('employeeOvertime').value = emp.horasExtras || 0;
-                document.getElementById('employeeBonus').value = emp.bonificaciones || 0;
-                document.getElementById('employeeLoan').value = emp.prestamos || 0;
-                document.getElementById('employeeOtherDeductions').value = emp.otrosDescuentos || 0;
-                document.getElementById('employeeStatus').value = emp.estado || 'Activo';
-                title.textContent = 'Editar Empleado';
+                if (id) {
+                    var emp = employees.find(e => e.id === id);
+                    if (!emp) {
+                        console.error('employee not found for id', id);
+                        showToast('Error', 'Empleado no encontrado', 'error');
+                        return;
+                    }
+                    console.log('editing employee', emp);
+                    function setVal(elId, val) {
+                        var el = document.getElementById(elId);
+                        if (el) el.value = val;
+                        else console.warn('missing element', elId);
+                    }
+                    var fieldMap = {
+                        'employeeId': emp.id,
+                        'employeeName': emp.nombres,
+                        'employeeLastname': emp.apellidos,
+                        'employeeCedula': emp.cedula,
+                        'employeeEmail': emp.email || '',
+                        'employeeAddress': emp.direccion || '',
+                        'employeeCanton': emp.canton || '',
+                        'employeePhone': emp.telefono || '',
+                        'employeeBirthDate': emp.fechaNacimiento || '',
+                        'employeeMaritalStatus': emp.estadoCivil || '',
+                        'employeeChildren': emp.numeroHijos || '',
+                        'employeeBloodType': emp.tipoSangre || '',
+                        'employeeNationality': emp.nacionalidad || '',
+                        'employeeSex': emp.sexo || '',
+                        'employeeDepartment': emp.departamento,
+                        'employeeDivision': emp.division || '',
+                        'employeeSection': emp.seccion || '',
+                        'employeeShift': emp.turno || '',
+                        'employeeProfession': emp.profesion || '',
+                        'employeePosition': emp.cargo,
+                        'employeeSectorCode': emp.codigoSectorial || '',
+                        'employeeOccupation': emp.ocupacion || '',
+                        'employeePartial': emp.jornadaParcial || 'NO',
+                        'employeePayForm': emp.formaPago || '',
+                        'employeeBank': emp.banco || '',
+                        'employeeAccountNumber': emp.numeroCuenta || '',
+                        'employeeAccountType': emp.tipoCuenta || '',
+                        'employeeFundFromEntry': emp.recibeFondoDesde || 'NO',
+                        'employeeFundMonthly': emp.mensualizaFondo || 'NO',
+                        'employee13th': emp.mensualiza13 || 'NO',
+                        'employee14th': emp.mensualiza14 || 'NO',
+                        'employeeIessSpouse': emp.extensionIess || 'NO',
+                        'employeeHireDate': emp.fechaIngreso,
+                        'employeeIdType': emp.tipoIdTrabajador || '',
+                        'employeeResidence': emp.residenciaTrabajador || '',
+                        'employeeResidenceCountry': emp.paisExterior || '',
+                        'employeeDoubleTax': emp.convenioDoble || 'NO',
+                        'employeeDisability': emp.discapacidad || 'NO',
+                        'employeeSubstitute': emp.sustituto || 'NO',
+                        'employeeCatastrophic': emp.enfermedadCatas || 'NO',
+                        'employeeDisabilityCondition': emp.condicionDiscapacidades || '',
+                        'employeeDisabilityIdType': emp.tipoIdDiscapacidad || '',
+                        'employeeDisabilityIdNumber': emp.numIdDiscapacidad || '',
+                        'employeeRdepCharges': emp.cargasRdep || '',
+                        'employeeSalary': emp.sueldoBase,
+                        'employeeOvertime': emp.horasExtras || 0,
+                        'employeeBonus': emp.bonificaciones || 0,
+                        'employeeLoan': emp.prestamos || 0,
+                        'employeeOtherDeductions': emp.otrosDescuentos || 0,
+                        'employeeStatus': emp.estado || 'Activo'
+                    };
+                    Object.entries(fieldMap).forEach(([fid, val]) => setVal(fid, val));
+                    title.textContent = 'Editar Empleado';
             } else {
                 document.getElementById('employeeForm').reset();
                 document.getElementById('employeeId').value = '';
@@ -2746,6 +3040,10 @@
             }
 
             modal.classList.add('active');
+        } catch(err) {
+            console.error('error in openEmployeeModal', err);
+            showToast('Error', 'Ocurrió un problema al abrir el empleado: ' + (err.message || err), 'error');
+        }
         }
 
         function closeEmployeeModal() {
@@ -2761,27 +3059,65 @@
                 apellidos: document.getElementById('employeeLastname').value.toUpperCase(),
                 cedula: document.getElementById('employeeCedula').value,
                 email: document.getElementById('employeeEmail').value,
-                departamento: document.getElementById('employeeDepartment').value,
-                cargo: document.getElementById('employeePosition').value.toUpperCase(),
+                direccion: document.getElementById('employeeAddress').value,
+                canton: document.getElementById('employeeCanton').value,
+                telefono: document.getElementById('employeePhone').value,
                 sueldoBase: parseFloat(document.getElementById('employeeSalary').value) || 0,
-                horasExtras: parseFloat(document.getElementById('employeeOvertime').value) || 0,
-                bonificaciones: parseFloat(document.getElementById('employeeBonus').value) || 0,
-                prestamos: parseFloat(document.getElementById('employeeLoan').value) || 0,
-                otrosDescuentos: parseFloat(document.getElementById('employeeOtherDeductions').value) || 0,
+                fechaNacimiento: document.getElementById('employeeBirthDate').value,
+                estadoCivil: document.getElementById('employeeMaritalStatus').value,
+                numeroHijos: document.getElementById('employeeChildren').value,
+                tipoSangre: document.getElementById('employeeBloodType').value,
+                nacionalidad: document.getElementById('employeeNationality').value,
+                sexo: document.getElementById('employeeSex').value,
+                departamento: document.getElementById('employeeDepartment').value,
+                division: document.getElementById('employeeDivision').value,
+                seccion: document.getElementById('employeeSection').value,
+                turno: document.getElementById('employeeShift').value,
+                profesion: document.getElementById('employeeProfession').value,
+                cargo: document.getElementById('employeePosition').value,
+                codigoSectorial: document.getElementById('employeeSectorCode').value,
+                ocupacion: document.getElementById('employeeOccupation').value,
+                jornadaParcial: document.getElementById('employeePartial').value,
+                formaPago: document.getElementById('employeePayForm').value,
+                banco: document.getElementById('employeeBank').value,
+                numeroCuenta: document.getElementById('employeeAccountNumber').value,
+                tipoCuenta: document.getElementById('employeeAccountType').value,
+                recibeFondoDesde: document.getElementById('employeeFundFromEntry').value,
+                mensualizaFondo: document.getElementById('employeeFundMonthly').value,
+                mensualiza13: document.getElementById('employee13th').value,
+                mensualiza14: document.getElementById('employee14th').value,
+                extensionIess: document.getElementById('employeeIessSpouse').value,
                 fechaIngreso: document.getElementById('employeeHireDate').value,
-                estado: document.getElementById('employeeStatus').value
+                estado: document.getElementById('employeeStatus').value,
+                tipoIdTrabajador: document.getElementById('employeeIdType').value,
+                residenciaTrabajador: document.getElementById('employeeResidence').value,
+                paisExterior: document.getElementById('employeeResidenceCountry').value,
+                convenioDoble: document.getElementById('employeeDoubleTax').value,
+                discapacidad: document.getElementById('employeeDisability').value,
+                sustituto: document.getElementById('employeeSubstitute').value,
+                enfermedadCatas: document.getElementById('employeeCatastrophic').value,
+                condicionDiscapacidades: document.getElementById('employeeDisabilityCondition').value,
+                tipoIdDiscapacidad: document.getElementById('employeeDisabilityIdType').value,
+                numIdDiscapacidad: document.getElementById('employeeDisabilityIdNumber').value,
+                cargasRdep: document.getElementById('employeeRdepCharges').value,
+                otrosDescuentos: parseFloat(document.getElementById('employeeOtherDeductions').value) || 0
             };
 
-            if (!emp.nombres || !emp.apellidos || !emp.cedula || !emp.departamento || !emp.cargo || !emp.sueldoBase || !emp.fechaIngreso) {
-                showToast('Error', 'Complete todos los campos obligatorios', 'error');
+            // basic required validation (allow missing laborales info to avoid lockout)
+            if (!emp.nombres || !emp.apellidos || !emp.cedula) {
+                showToast('Error', 'Nombres, apellidos y cédula son obligatorios', 'error');
+                console.warn('missing required fields', emp);
                 return;
             }
+            console.log('validated employee data', emp);
 
             var idx = employees.findIndex(e => e.id === id);
             if (idx >= 0) {
+                console.log('updating existing employee', emp);
                 employees[idx] = emp;
                 updatePayrollFromEmployee(emp, idx);
             } else {
+                console.log('adding new employee', emp);
                 employees.push(emp);
                 addEmployeeToPayroll(emp);
             }
@@ -2845,6 +3181,11 @@
         }
 
         function editEmployee(id) {
+            console.log('editEmployee invoked with id=', id);
+            if (!id) {
+                showToast('Error', 'Id de empleado inválido', 'error');
+                return;
+            }
             openEmployeeModal(id);
         }
 
@@ -3259,6 +3600,32 @@
         }
 
         // ==================== EXPORTS ====================
+        function exportEmployeesExcel() {
+            showLoader('Exportando empleados...');
+            setTimeout(function() {
+                var wsData = employees.map(e => ({
+                    'Cédula': e.cedula,
+                    'Nombres': e.nombres,
+                    'Apellidos': e.apellidos,
+                    'Email': e.email || '',
+                    'Dirección': e.direccion,
+                    'Cantón': e.canton,
+                    'Teléfono': e.telefono,
+                    'Departamento': e.departamento,
+                    'Cargo': e.cargo,
+                    'Sueldo': e.sueldoBase,
+                    'F.Ingreso': e.fechaIngreso,
+                    'Estado': e.estado
+                }));
+                var wb = XLSX.utils.book_new();
+                var ws = XLSX.utils.json_to_sheet(wsData);
+                XLSX.utils.book_append_sheet(wb, ws, 'Empleados');
+                XLSX.writeFile(wb, 'empleados.xlsx');
+                hideLoader();
+                showToast('Exportado', 'Listado de empleados generado', 'success');
+            }, 300);
+        }
+
         function exportPayrollExcel() {
             showLoader('Exportando a Excel...');
 
