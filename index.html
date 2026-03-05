@@ -58,7 +58,7 @@
         }
         .app-container { display: flex; min-height: 100vh; }
 
-        /* ====== SIDEBAR OVERLAY (mobile backdrop) ====== */
+        /* ====== SIDEBAR OVERLAY (backdrop for mobile) ====== */
         .sidebar-overlay {
             display: none;
             position: fixed;
@@ -75,28 +75,27 @@
             background: linear-gradient(180deg, var(--primary) 0%, var(--primary-light) 100%);
             color: var(--white);
             position: fixed;
-            top: 0;
-            left: 0;
+            top: 0; left: 0;
             height: 100vh;
             z-index: 1000;
             display: flex;
             flex-direction: column;
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             box-shadow: 4px 0 20px rgba(0,0,0,0.15);
             overflow-y: auto;
+            overflow-x: hidden;
         }
 
-        /* Mobile: hidden by default, slide in when open */
+        /* Desktop collapsed: slide out completely */
+        .sidebar.collapsed {
+            transform: translateX(-100%);
+        }
+
+        /* Mobile: always hidden by default, slide in when .open */
         @media (max-width: 1024px) {
-            .sidebar {
-                transform: translateX(-100%);
-            }
-            .sidebar.open {
-                transform: translateX(0);
-            }
-            .main-content {
-                margin-left: 0 !important;
-            }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+            .sidebar.collapsed { transform: translateX(-100%); }
         }
 
         .sidebar-header {
@@ -154,6 +153,12 @@
             background: var(--gray-50);
             overflow-y: auto;
             position: relative;
+            transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        /* Desktop: content expands when sidebar is collapsed */
+        .main-content.expanded { margin-left: 0; }
+        @media (max-width: 1024px) {
+            .main-content { margin-left: 0 !important; }
         }
 
         /* ====== TOP NAVBAR ====== */
@@ -1092,28 +1097,48 @@ function saveConfig() {
 }
 
 // ==================== NAVIGATION ====================
+function isMobile() { return window.innerWidth <= 1024; }
+
 function setupEventListeners() {
     document.querySelectorAll('.nav-item').forEach(function(item) {
         item.addEventListener('click', function() {
             var section = this.getAttribute('data-section');
-            if (section) { showSection(section); closeSidebar(); }
+            if (section) {
+                showSection(section);
+                // On mobile, close sidebar after selecting
+                if (isMobile()) closeSidebar();
+            }
         });
     });
 
     var toggle = document.getElementById('menuToggle');
     var overlay = document.getElementById('sidebarOverlay');
     var sidebar = document.getElementById('sidebar');
+    var mainContent = document.querySelector('.main-content');
 
     toggle.addEventListener('click', function() {
-        sidebar.classList.toggle('open');
-        overlay.classList.toggle('active');
+        if (isMobile()) {
+            // Mobile: slide in/out with overlay
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('active');
+        } else {
+            // Desktop: collapse/expand pushing content
+            sidebar.classList.toggle('collapsed');
+            mainContent.classList.toggle('expanded');
+        }
     });
+
     overlay.addEventListener('click', function() { closeSidebar(); });
 }
 
 function closeSidebar() {
-    document.getElementById('sidebar').classList.remove('open');
-    document.getElementById('sidebarOverlay').classList.remove('active');
+    var sidebar = document.getElementById('sidebar');
+    var overlay = document.getElementById('sidebarOverlay');
+    var mainContent = document.querySelector('.main-content');
+    sidebar.classList.remove('open');
+    overlay.classList.remove('active');
+    // On desktop, also un-collapse if called externally
+    // (we don't force re-open on desktop, that's user-controlled)
 }
 
 function showSection(sectionId) {
