@@ -1170,7 +1170,7 @@ function saveEmployeesToStorage() {
 }
 
 function convertPayrollDataToEmployees() {
-    employees = payrollData.map(function(item, index) {
+    employees = jasafoodPayrollData.map(function(item, index) {
         var parts = item.nombre.trim().split(' ');
         var apellidos = parts.slice(0,2).join(' ');
         var nombres = parts.slice(2).join(' ') || apellidos;
@@ -1536,7 +1536,7 @@ function loadEmployeePayroll() {
     var calcDiv = document.getElementById('payrollCalculation');
     var emptyDiv = document.getElementById('emptyPayroll');
     if (!cedula) { calcDiv.style.display='none'; emptyDiv.style.display='block'; return; }
-    var item = payrollData.find(function(p){ return p.cedula===cedula; });
+    var item = currentPayrollData.find(function(p){ return p.cedula===cedula; });
     if (!item) return;
     currentPayrollEmployee = item;
     calcDiv.style.display='block'; emptyDiv.style.display='none';
@@ -1692,12 +1692,12 @@ function calculateAllProvisions() {
 function generateFullAccountingEntries() {
     showLoader('Generando asientos...');
     setTimeout(function(){
-        var s=function(f){return payrollData.reduce(function(a,i){return a+(i[f]||0);},0);};
-        var tSueldos=s('sueldo'),tExtras=payrollData.reduce(function(a,i){return a+(i.hNoct||0)+(i.hSup||0)+(i.hExt||0);},0);
-        var tFR=s('fRes'),tBonos=payrollData.reduce(function(a,i){return a+(i.bonos||0)+(i.otrosIng||0);},0);
+        var s=function(f){return currentPayrollData.reduce(function(a,i){return a+(i[f]||0);},0);};
+        var tSueldos=s('sueldo'),tExtras=currentPayrollData.reduce(function(a,i){return a+(i.hNoct||0)+(i.hSup||0)+(i.hExt||0);},0);
+        var tFR=s('fRes'),tBonos=currentPayrollData.reduce(function(a,i){return a+(i.bonos||0)+(i.otrosIng||0);},0);
         var tIngresos=s('ingresos'),tIess=s('iess'),tPrestamos=s('prestamos'),tNeto=s('neto');
-        var baseP=payrollData.reduce(function(a,i){return a+(i.sueldo||0)+(i.hNoct||0)+(i.hSup||0)+(i.hExt||0)+(i.bonos||0);},0);
-        var t13=baseP/12, t14=payrollData.length*(config.minimumWage/360)*30;
+        var baseP=currentPayrollData.reduce(function(a,i){return a+(i.sueldo||0)+(i.hNoct||0)+(i.hSup||0)+(i.hExt||0)+(i.bonos||0);},0);
+        var t13=baseP/12, t14=currentPayrollData.length*(config.minimumWage/360)*30;
         var tVac=baseP/24, tFRProv=baseP*(config.frPercent/100), iessP=tIngresos*(config.iessPatronalPercent/100);
         var type=document.getElementById('accountingType').value;
         var html='';
@@ -1738,7 +1738,7 @@ function loadAccountingEntries(){ generateFullAccountingEntries(); }
 function exportPayrollExcel() {
     showLoader('Exportando...');
     setTimeout(function(){
-        var wsData=payrollData.map(function(i){return{'No.':i.no,'Nombre':i.nombre,'Cédula':i.cedula,'F.Ingreso':i.fechaIng,'Cargo':i.cargo,'Depto':i.depto,'Sueldo':i.sueldo,'H.Noct':i.hNoct||0,'H.Sup':i.hSup||0,'H.Ext':i.hExt||0,'F.Reserva':i.fRes||0,'Bonos':i.bonos||0,'Otros Ing':i.otrosIng||0,'Ingresos':i.ingresos,'IESS':i.iess,'Préstamos':i.prestamos||0,'Otros Desc':i.otrosDesc||0,'Descuentos':i.descuentos,'Neto':i.neto};});
+        var wsData=currentPayrollData.map(function(i){return{'No.':i.no,'Nombre':i.nombre,'Cédula':i.cedula,'F.Ingreso':i.fechaIng,'Cargo':i.cargo,'Depto':i.depto,'Sueldo':i.sueldo,'H.Noct':i.hNoct||0,'H.Sup':i.hSup||0,'H.Ext':i.hExt||0,'F.Reserva':i.fRes||0,'Bonos':i.bonos||0,'Otros Ing':i.otrosIng||0,'Ingresos':i.ingresos,'IESS':i.iess,'Préstamos':i.prestamos||0,'Otros Desc':i.otrosDesc||0,'Descuentos':i.descuentos,'Neto':i.neto};});
         var wb=XLSX.utils.book_new(); var ws=XLSX.utils.json_to_sheet(wsData);
         XLSX.utils.book_append_sheet(wb,ws,'Nomina_Enero_2025'); XLSX.writeFile(wb,'Nomina_Enero_2025.xlsx');
         hideLoader(); showToast('Exportado','Archivo Excel generado','success');
@@ -1748,10 +1748,10 @@ function exportPayrollExcel() {
 function exportAccountingExcel() {
     showLoader('Exportando...');
     setTimeout(function(){
-        var s=function(f){return payrollData.reduce(function(a,i){return a+(i[f]||0);},0);};
+        var s=function(f){return currentPayrollData.reduce(function(a,i){return a+(i[f]||0);},0);};
         var wsData=[['COMPROBANTE','FECHA','CÓDIGO','CUENTA','DÉBITO','CRÉDITO'],
             ['NOM-001','31/01/2025','5.1.01','SUELDOS Y SALARIOS',s('sueldo'),''],
-            ['NOM-001','31/01/2025','5.1.02','HORAS EXTRAS',payrollData.reduce(function(a,i){return a+(i.hNoct||0)+(i.hSup||0)+(i.hExt||0);},0),''],
+            ['NOM-001','31/01/2025','5.1.02','HORAS EXTRAS',currentPayrollData.reduce(function(a,i){return a+(i.hNoct||0)+(i.hSup||0)+(i.hExt||0);},0),''],
             ['NOM-001','31/01/2025','5.1.03','FONDOS DE RESERVA',s('fRes'),''],
             ['NOM-001','31/01/2025','2.1.01','IESS POR PAGAR','',s('iess')],
             ['NOM-001','31/01/2025','2.1.02','PRÉSTAMOS POR PAGAR','',s('prestamos')],
@@ -1809,7 +1809,7 @@ function initializeChart() {
     var ctx=document.getElementById('salaryChart');
     if(!ctx) return;
     var deptData={};
-    payrollData.forEach(function(i){ if(i.depto) deptData[i.depto]=(deptData[i.depto]||0)+(i.sueldo||0); });
+    currentPayrollData.forEach(function(i){ if(i.depto) deptData[i.depto]=(deptData[i.depto]||0)+(i.sueldo||0); });
     salaryChart=new Chart(ctx.getContext('2d'),{
         type:'doughnut',
         data:{labels:Object.keys(deptData),datasets:[{data:Object.values(deptData),backgroundColor:['#0d0d0d','#00b4d8','#3b82f6','#8b5cf6','#10b981'],borderWidth:0}]},
