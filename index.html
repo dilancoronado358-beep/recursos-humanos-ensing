@@ -2217,6 +2217,8 @@
                                         class="fas fa-file-excel"></i>Plantilla</button>
                                 <button class="btn btn-success btn-sm" onclick="openBulkUploadModal()"><i
                                         class="fas fa-upload"></i>Carga Masiva</button>
+                                <button class="btn btn-danger btn-sm" onclick="deleteSelectedEmployees()"><i 
+                                        class="fas fa-trash"></i>Eliminar Seleccionados</button>
                                 <button class="btn btn-primary btn-sm" onclick="openEmployeeModal()"><i
                                         class="fas fa-plus"></i>Nuevo Empleado</button>
                             </div>
@@ -2235,9 +2237,10 @@
                                 </select>
                             </div>
                             <div class="table-container">
-                                <table class="table" style="min-width:1200px">
+                                <table class="table" style="min-width:1250px">
                                     <thead>
                                         <tr>
+                                            <th style="width: 40px; text-align: center;"><input type="checkbox" id="selectAllEmployees" onclick="toggleSelectAllEmployees()"></th>
                                             <th>Cédula</th>
                                             <th>Nombre</th>
                                             <th>Email</th>
@@ -3090,6 +3093,7 @@
             tbody.innerHTML = employees.map(function (emp) {
                 var statusClass = (emp.estado || 'Activo').toLowerCase();
                 return '<tr>' +
+                    '<td style="text-align:center;"><input type="checkbox" class="employee-checkbox" value="' + emp.id + '"></td>' +
                     '<td>' + emp.cedula + '</td>' +
                     '<td>' + emp.nombres + ' ' + emp.apellidos + '</td>' +
                     '<td>' + (emp.email || '') + '</td>' +
@@ -3124,6 +3128,7 @@
             tbody.innerHTML = filtered.map(function (emp) {
                 var statusClass = (emp.estado || 'Activo').toLowerCase();
                 return '<tr>' +
+                    '<td style="text-align:center;"><input type="checkbox" class="employee-checkbox" value="' + emp.id + '"></td>' +
                     '<td>' + emp.cedula + '</td>' +
                     '<td>' + emp.nombres + ' ' + emp.apellidos + '</td>' +
                     '<td>' + (emp.email || '') + '</td>' +
@@ -3262,22 +3267,51 @@
 
         function deleteEmployee(id) {
             if (confirm('¿Está seguro de eliminar este empleado?')) {
-                employees = employees.filter(function (e) { return e.id !== id; });
-                // Borrar localStorage
-                try {
-                    var comp = companiesConfig[currentCompany];
-                    localStorage.setItem(comp.storageKey, JSON.stringify(employees));
-                } catch (e) { }
-                // Borrar en Supabase
-                if (sbClient) {
-                    sbClient.from('empleados').delete().eq('id', id)
-                        .then(function (result) {
-                            if (result.error) console.warn('[Supabase] Error al eliminar:', result.error.message);
-                        });
-                }
-                refreshAllViews();
-                showToast('Éxito', 'Empleado eliminado', 'success');
+                _executeDelete([id]);
             }
+        }
+
+        function toggleSelectAllEmployees() {
+            var selectAll = document.getElementById('selectAllEmployees');
+            var checkboxes = document.querySelectorAll('.employee-checkbox');
+            checkboxes.forEach(function (cb) {
+                cb.checked = selectAll.checked;
+            });
+        }
+
+        function deleteSelectedEmployees() {
+            var checkboxes = document.querySelectorAll('.employee-checkbox:checked');
+            if (checkboxes.length === 0) {
+                showToast('Atención', 'Seleccione al menos un empleado para eliminar', 'warning');
+                return;
+            }
+            if (confirm('¿Está seguro de eliminar los ' + checkboxes.length + ' empleados seleccionados?')) {
+                var idsToDelete = Array.from(checkboxes).map(cb => cb.value);
+                _executeDelete(idsToDelete);
+                var selectAll = document.getElementById('selectAllEmployees');
+                if (selectAll) selectAll.checked = false;
+            }
+        }
+
+        function _executeDelete(idsArray) {
+            employees = employees.filter(function (e) { return !idsArray.includes(e.id); });
+            
+            // Borrar de localStorage si procede (actualmente deshabilitado o comentado temporalmente)
+            try {
+                var comp = companiesConfig[currentCompany];
+                // localStorage.setItem(comp.storageKey, JSON.stringify(employees));
+            } catch (e) { }
+
+            if (sbClient) {
+                // Borrado iterativo individualmente
+                var promises = idsArray.map(id => sbClient.from('empleados').delete().eq('id', id));
+                Promise.all(promises).then(function(results) {
+                    var hasErrors = results.some(r => r.error);
+                    if (hasErrors) console.warn('[Supabase] Hubo errores eliminando algunos registros masivamente.');
+                });
+            }
+            refreshAllViews();
+            showToast('Éxito', (idsArray.length > 1 ? idsArray.length + ' Empleados eliminados' : 'Empleado eliminado'), 'success');
         }
 
         // ==================== INDIVIDUAL PAYROLL ====================
@@ -3789,6 +3823,8 @@
         window.closeBulkUploadModal = closeBulkUploadModal;
         window.processBulkUpload = processBulkUpload;
         window.handleBulkFile = handleBulkFile;
+        window.toggleSelectAllEmployees = toggleSelectAllEmployees;
+        window.deleteSelectedEmployees = deleteSelectedEmployees;
 
         // ==================== INIT CON SUPABASE AUTH ====================
         async function init() {
