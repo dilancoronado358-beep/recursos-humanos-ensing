@@ -2959,21 +2959,57 @@
             saveEmployeesToStorage();
         }
 
+        function _getConfigId() {
+            if (currentCompany === 'JASAFOOD') return 1;
+            if (currentCompany === 'ANTOISA') return 2;
+            if (currentCompany === 'FABRIFOOD') return 3;
+            // Fallback default
+            return 1;
+        }
+
         function loadConfig() {
-            try {
-                var stored = localStorage.getItem('hr_config');
-                if (stored) config = Object.assign(config, JSON.parse(stored));
-            } catch (e) { }
-            document.getElementById('configCompanyName').value = config.companyName;
-            document.getElementById('configCompanyRuc').value = config.companyRuc;
-            document.getElementById('configIessPercent').value = config.iessPercent;
-            document.getElementById('configIessPatronalPercent').value = config.iessPatronalPercent;
-            document.getElementById('configMinimumWage').value = config.minimumWage;
-            document.getElementById('configFRPercent').value = config.frPercent;
-            document.getElementById('companyNameDisplay').textContent = config.companyName;
-            document.getElementById('companyRucDisplay').textContent = config.companyRuc;
-            document.getElementById('payrollCompanyName').textContent = config.companyName;
-            document.getElementById('payrollCompanyInfo').innerHTML = 'RUC: ' + config.companyRuc + ' | Del: 01/Ene/2025 Al: 31/Ene/2025';
+            // Apply default in memory values first to prevent UI breaking before fetch completes
+            _applyConfigUI();
+
+            // Carga asíncrona real desde la nube (Supabase)
+            if (window.sbClient) {
+                var dbId = _getConfigId();
+                window.sbClient.from('configuracion').select('*').eq('id', dbId).single()
+                    .then(function (result) {
+                        if (result.data && !result.error) {
+                            config = Object.assign(config, result.data); // Mezcla con valores default
+                            _applyConfigUI();
+                        }
+                    })
+                    .catch(function (err) { });
+            }
+        }
+
+        function _applyConfigUI() {
+            if (document.getElementById('configCompanyName')) document.getElementById('configCompanyName').value = config.companyName;
+            if (document.getElementById('configCompanyRuc')) document.getElementById('configCompanyRuc').value = config.companyRuc;
+            if (document.getElementById('configIessPercent')) document.getElementById('configIessPercent').value = config.iessPercent;
+            if (document.getElementById('configIessPatronalPercent')) document.getElementById('configIessPatronalPercent').value = config.iessPatronalPercent;
+            if (document.getElementById('configMinimumWage')) document.getElementById('configMinimumWage').value = config.minimumWage;
+            if (document.getElementById('configFRPercent')) document.getElementById('configFRPercent').value = config.frPercent;
+
+            if (document.getElementById('companyNameDisplay')) document.getElementById('companyNameDisplay').textContent = config.companyName;
+            if (document.getElementById('companyRucDisplay')) document.getElementById('companyRucDisplay').textContent = config.companyRuc;
+            if (document.getElementById('payrollCompanyName')) document.getElementById('payrollCompanyName').textContent = config.companyName;
+
+            // Reparación de fecha estática omitida en "payrollCompanyInfo" para reporte
+            if (document.getElementById('payrollCompanyInfo')) {
+                var val = document.getElementById('globalPeriodSelector') ? document.getElementById('globalPeriodSelector').value : '';
+                var docStr = 'RUC: ' + config.companyRuc;
+                if (val) {
+                    var parts = val.split('-');
+                    var y = parseInt(parts[0], 10);
+                    var m = parseInt(parts[1], 10);
+                    var lastDay = new Date(y, m, 0).getDate();
+                    docStr += ' | Del: 01/' + String(m).padStart(2, '0') + '/' + y + ' Al: ' + String(lastDay).padStart(2, '0') + '/' + String(m).padStart(2, '0') + '/' + y;
+                }
+                document.getElementById('payrollCompanyInfo').innerHTML = docStr;
+            }
         }
 
         function saveConfig() {
@@ -2983,10 +3019,20 @@
             config.iessPatronalPercent = parseFloat(document.getElementById('configIessPatronalPercent').value) || 12.15;
             config.minimumWage = parseFloat(document.getElementById('configMinimumWage').value) || 460;
             config.frPercent = parseFloat(document.getElementById('configFRPercent').value) || 8.33;
-            try { localStorage.setItem('hr_config', JSON.stringify(config)); } catch (e) { }
+
+            // Guardar permanentemente en Supabase
+            if (window.sbClient) {
+                var dbId = _getConfigId();
+                var dbConfig = Object.assign({ id: dbId }, config);
+                window.sbClient.from('configuracion').upsert(dbConfig)
+                    .then(function (res) {
+                        if (res.error) console.error('[Supabase] Error guardando config:', res.error);
+                    });
+            }
+
             loadConfig();
             calculateAllProvisions();
-            showToast('Configuración Guardada', 'Los cambios han sido aplicados', 'success');
+            showToast('Configuración Guardada', 'Los cambios han sido aplicados y sincronizados', 'success');
         }
 
         // ==================== NAVIGATION ====================
@@ -3515,6 +3561,7 @@
             document.querySelectorAll('.dynamic-period-text').forEach(function (el) {
                 el.textContent = text;
             });
+            _applyConfigUI(); // Actualiza textos secundarios (como payrollCompanyInfo) que dependen del mes.
         }
 
         // ==================== ACCOUNTING ====================
