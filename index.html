@@ -2275,7 +2275,7 @@
                     <div class="card">
                         <div class="card-header">
                             <h3 class="card-title">Configuración</h3>
-                            <button class="btn btn-primary btn-sm" onclick="saveConfig()"><i
+                            <button class="btn btn-primary btn-sm" id="btnSaveConfig" onclick="saveConfig()"><i
                                     class="fas fa-save"></i>Guardar</button>
                         </div>
                         <div class="card-body">
@@ -3013,26 +3013,34 @@
         }
 
         function saveConfig() {
+            var btn = document.getElementById('btnSaveConfig');
+            if(btn) {
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+            }
+
             config.companyName = document.getElementById('configCompanyName').value;
             config.companyRuc = document.getElementById('configCompanyRuc').value;
             config.iessPercent = parseFloat(document.getElementById('configIessPercent').value) || 9.45;
             config.iessPatronalPercent = parseFloat(document.getElementById('configIessPatronalPercent').value) || 12.15;
             config.minimumWage = parseFloat(document.getElementById('configMinimumWage').value) || 460;
             config.frPercent = parseFloat(document.getElementById('configFRPercent').value) || 8.33;
-
-            // Guardar permanentemente en Supabase
+            
             if (window.sbClient) {
                 var dbId = _getConfigId();
                 var dbConfig = Object.assign({ id: dbId }, config);
                 window.sbClient.from('configuracion').upsert(dbConfig)
                     .then(function (res) {
                         if (res.error) console.error('[Supabase] Error guardando config:', res.error);
+                        
+                        setTimeout(function() {
+                            showToast('Configuración Guardada', 'Los cambios han sido aplicados y sincronizados', 'success');
+                            location.reload();
+                        }, 1000);
                     });
+            } else {
+                setTimeout(function() { location.reload(); }, 1000);
             }
-
-            loadConfig();
-            calculateAllProvisions();
-            showToast('Configuración Guardada', 'Los cambios han sido aplicados y sincronizados', 'success');
         }
 
         // ==================== NAVIGATION ====================
