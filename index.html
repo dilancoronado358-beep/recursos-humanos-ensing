@@ -1506,15 +1506,15 @@
                 <div class="form-group" style="margin-bottom: 16px;">
                     <label
                         style="display: block; margin-bottom: 8px; font-size: 13px; font-weight: 600; color: var(--gray-700);">Correo
-                        Electrónico</label>
+                        ElectrÃ³nico</label>
                     <input type="email" id="loginEmail" class="form-control" placeholder="usuario@ensignpartner.com"
                         required
                         style="width: 100%; padding: 10px 14px; border: 1px solid var(--gray-300); border-radius: var(--radius-md); outline: none;">
                 </div>
                 <div class="form-group" style="margin-bottom: 24px;">
                     <label
-                        style="display: block; margin-bottom: 8px; font-size: 13px; font-weight: 600; color: var(--gray-700);">Contraseña</label>
-                    <input type="password" id="loginPassword" class="form-control" placeholder="••••••••" required
+                        style="display: block; margin-bottom: 8px; font-size: 13px; font-weight: 600; color: var(--gray-700);">ContraseÃ±a</label>
+                    <input type="password" id="loginPassword" class="form-control" placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢" required
                         style="width: 100%; padding: 10px 14px; border: 1px solid var(--gray-300); border-radius: var(--radius-md); outline: none;">
                 </div>
                 <div id="loginError"
@@ -1564,6 +1564,7 @@
                     <a class="nav-item" data-section="accounting"><i class="fas fa-book"></i>Asientos Contables</a>
                     <a class="nav-item" data-section="chartOfAccounts"><i class="fas fa-list-ul"></i>Plan de Cuentas</a>
                     <a class="nav-item" data-section="extraHours"><i class="fas fa-clock"></i>Horas Extras</a>
+                    <a class="nav-item" data-section="descuentos"><i class="fas fa-minus-circle"></i>Descuentos</a>
                 </div>
                 <div class="nav-section">
                     <div class="nav-section-title">Empleados</div>
@@ -1580,7 +1581,7 @@
         <main class="main-content">
             <header class="top-navbar">
                 <div class="navbar-left">
-                    <button class="menu-toggle" id="menuToggle" aria-label="Menú">
+                    <button class="menu-toggle" id="menuToggle" aria-label="MenÃº">
                         <i class="fas fa-bars"></i>
                     </button>
                     <h1 class="page-title" id="pageTitle">Dashboard</h1>
@@ -1603,7 +1604,7 @@
                             <span class="user-role"
                                 style="font-size: 12px; color: var(--gray-500);">Administrador</span>
                         </div>
-                        <button onclick="handleLogout()" title="Cerrar Sesión"
+                        <button onclick="handleLogout()" title="Cerrar SesiÃ³n"
                             style="background: none; border: none; color: var(--gray-500); cursor: pointer; padding: 8px; margin-left: 8px; display: flex; align-items: center; justify-content: center; border-radius: var(--radius-sm); transition: var(--transition);"
                             onmouseover="this.style.color='var(--danger)';this.style.background='rgba(239,68,68,0.1)'"
                             onmouseout="this.style.color='var(--gray-500)';this.style.background='none'">
@@ -1646,7 +1647,7 @@
                             <div class="stat-content">
                                 <div class="stat-label">Total Descuentos</div>
                                 <div class="stat-value" id="totalDeductions">$0.00</div>
-                                <div class="stat-change negative">IESS + Préstamos</div>
+                                <div class="stat-change negative">IESS + PrÃ©stamos</div>
                             </div>
                         </div>
                         <div class="stat-card">
@@ -1662,7 +1663,7 @@
                             <div class="stat-content">
                                 <div class="stat-label">Neto a Pagar</div>
                                 <div class="stat-value" id="totalNet">$0.00</div>
-                                <div class="stat-change positive">Líquido</div>
+                                <div class="stat-change positive">LÃ­quido</div>
                             </div>
                         </div>
                     </div>
@@ -1679,7 +1680,7 @@
                     <div class="dashboard-grid">
                         <div class="card">
                             <div class="card-header">
-                                <h3 class="card-title">Distribución por Departamento</h3>
+                                <h3 class="card-title">DistribuciÃ³n por Departamento</h3>
                             </div>
                             <div class="card-body">
                                 <div class="chart-container"><canvas id="salaryChart"></canvas></div>
@@ -1701,7 +1702,7 @@
                                     </div>
                                 </div>
                                 <div style="margin-bottom:16px">
-                                    <div class="stat-label">Período</div>
+                                    <div class="stat-label">PerÃ­odo</div>
                                     <div class="stat-value" style="font-size:18px">
                                         <input type="month" id="globalPeriodSelector" class="form-control"
                                             style="width: 200px; display: inline-block;"
@@ -1709,18 +1710,18 @@
                                     </div>
                                 </div>
                                 <div style="margin-bottom:16px">
-                                    <div class="stat-label">Total Débitos</div>
+                                    <div class="stat-label">Total DÃ©bitos</div>
                                     <div class="stat-value" style="font-size:18px;color:var(--success)"
                                         id="dashTotalDebit">$0.00</div>
                                 </div>
                                 <div style="margin-bottom:16px">
-                                    <div class="stat-label">Total Créditos</div>
+                                    <div class="stat-label">Total CrÃ©ditos</div>
                                     <div class="stat-value" style="font-size:18px;color:var(--danger)"
                                         id="dashTotalCredit">$0.00</div>
                                 </div>
                                 <div style="margin-bottom:16px">
                                     <div class="stat-label">Estado</div>
-                                    <div class="stat-value" style="font-size:18px;color:var(--success)">✓ CUADRADO</div>
+                                    <div class="stat-value" style="font-size:18px;color:var(--success)">âœ“ CUADRADO</div>
                                 </div>
                             </div>
                         </div>
@@ -1739,7 +1740,7 @@
                         </div>
                         <div class="card-body">
                             <div class="summary-card">
-                                <div class="summary-title">RESUMEN GENERAL DE NÓMINA</div>
+                                <div class="summary-title">RESUMEN GENERAL DE NÃ“MINA</div>
                                 <div class="summary-grid">
                                     <div class="summary-item">
                                         <div class="summary-item-label">Empleados</div>
@@ -1799,7 +1800,7 @@
                                             <th>ANTICIPOS</th>
                                             <th>OTROS DESC.</th>
                                             <th>TOTAL DESC.</th>
-                                            <th style="background:var(--success);color:#fff">LÍQUIDO A PAGAR</th>
+                                            <th style="background:var(--success);color:#fff">LÃQUIDO A PAGAR</th>
                                             <th>PAT. 11.15%</th>
                                             <th>13RO</th>
                                             <th>14TO</th>
@@ -1902,9 +1903,9 @@
                                                 <thead>
                                                     <tr>
                                                         <th>CUENTA</th>
-                                                        <th>DESCRIPCIÓN</th>
-                                                        <th>DÉBITO</th>
-                                                        <th>CRÉDITO</th>
+                                                        <th>DESCRIPCIÃ“N</th>
+                                                        <th>DÃ‰BITO</th>
+                                                        <th>CRÃ‰DITO</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody id="accountingEntryBody"></tbody>
@@ -1916,12 +1917,12 @@
                                 <div id="payroll-tab3" class="tab-content">
                                     <div class="card">
                                         <div class="card-body">
-                                            <h4 style="margin-bottom:20px">Cálculo de Provisiones</h4>
+                                            <h4 style="margin-bottom:20px">CÃ¡lculo de Provisiones</h4>
                                             <table class="provision-table">
                                                 <thead>
                                                     <tr>
                                                         <th>CONCEPTO</th>
-                                                        <th>FÓRMULA</th>
+                                                        <th>FÃ“RMULA</th>
                                                         <th>BASE</th>
                                                         <th>VALOR</th>
                                                     </tr>
@@ -1957,7 +1958,7 @@
                                 <div class="stat-card">
                                     <div class="stat-icon orange"><i class="fas fa-calendar-alt"></i></div>
                                     <div class="stat-content">
-                                        <div class="stat-label">Décimo Tercero</div>
+                                        <div class="stat-label">DÃ©cimo Tercero</div>
                                         <div class="stat-value" id="provision13">$0.00</div>
                                         <div class="stat-change">Total anual /12</div>
                                     </div>
@@ -1965,7 +1966,7 @@
                                 <div class="stat-card">
                                     <div class="stat-icon orange"><i class="fas fa-calendar-alt"></i></div>
                                     <div class="stat-content">
-                                        <div class="stat-label">Décimo Cuarto</div>
+                                        <div class="stat-label">DÃ©cimo Cuarto</div>
                                         <div class="stat-value" id="provision14">$0.00</div>
                                         <div class="stat-change">(460/360)*30</div>
                                     </div>
@@ -2044,14 +2045,47 @@
                                 <table class="payroll-table">
                                     <thead>
                                         <tr>
-                                            <th>C\u00e9dula</th>
+                                            <th>Cédula</th>
                                             <th>Empleado</th>
                                             <th>Empresa</th>
                                             <th>H. Extras Actuales</th>
                                         </tr>
                                     </thead>
                                     <tbody id="extraHoursTableBody">
-                                        <!-- Renderizado din\u00e1mico -->
+                                        <!-- Renderizado dinámico -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Descuentos (Carga Masiva Excel) -->
+                <section class="section" id="descuentos">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Carga Masiva de Descuentos</h3>
+                            <div>
+                                <input type="file" id="uploadDescuentosExcel" accept=".xlsx, .xls" style="display:none;"
+                                    onchange="handleDescuentosUpload(event)">
+                                <button class="btn btn-danger btn-sm"
+                                    onclick="document.getElementById('uploadDescuentosExcel').click()"><i
+                                        class="fas fa-file-upload"></i>Cargar Excel</button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="payroll-table">
+                                    <thead>
+                                        <tr>
+                                            <th>C&eacute;dula</th>
+                                            <th>Empleado</th>
+                                            <th>Empresa</th>
+                                            <th>Descuentos (Otros D.)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="descuentosTableBody">
+                                        <!-- Renderizado din&aacute;mico -->
                                     </tbody>
                                 </table>
                             </div>
@@ -2090,10 +2124,10 @@
                                         <tr>
                                             <th>FECHA</th>
                                             <th>COMPROBANTE</th>
-                                            <th>CÓDIGO</th>
+                                            <th>CÃ“DIGO</th>
                                             <th>CUENTA</th>
-                                            <th>DÉBITO</th>
-                                            <th>CRÉDITO</th>
+                                            <th>DÃ‰BITO</th>
+                                            <th>CRÃ‰DITO</th>
                                         </tr>
                                     </thead>
                                     <tbody id="accountingTableBody"></tbody>
@@ -2117,7 +2151,7 @@
                                 <table class="table">
                                     <thead>
                                         <tr>
-                                            <th>CÓDIGO</th>
+                                            <th>CÃ“DIGO</th>
                                             <th>CUENTA</th>
                                             <th>TIPO</th>
                                             <th>NIVEL</th>
@@ -2162,7 +2196,7 @@
                                         </tr>
                                         <tr>
                                             <td>2.1.02</td>
-                                            <td>PRÉSTAMOS POR PAGAR</td>
+                                            <td>PRÃ‰STAMOS POR PAGAR</td>
                                             <td>Balance</td>
                                             <td>3</td>
                                         </tr>
@@ -2174,13 +2208,13 @@
                                         </tr>
                                         <tr>
                                             <td>2.1.04</td>
-                                            <td>DÉCIMO TERCERO POR PAGAR</td>
+                                            <td>DÃ‰CIMO TERCERO POR PAGAR</td>
                                             <td>Balance</td>
                                             <td>3</td>
                                         </tr>
                                         <tr>
                                             <td>2.1.05</td>
-                                            <td>DÉCIMO CUARTO POR PAGAR</td>
+                                            <td>DÃ‰CIMO CUARTO POR PAGAR</td>
                                             <td>Balance</td>
                                             <td>3</td>
                                         </tr>
@@ -2234,13 +2268,13 @@
                                         </tr>
                                         <tr>
                                             <td>5.1.05</td>
-                                            <td>DÉCIMO TERCERO</td>
+                                            <td>DÃ‰CIMO TERCERO</td>
                                             <td>Resultados</td>
                                             <td>3</td>
                                         </tr>
                                         <tr>
                                             <td>5.1.06</td>
-                                            <td>DÉCIMO CUARTO</td>
+                                            <td>DÃ‰CIMO CUARTO</td>
                                             <td>Resultados</td>
                                             <td>3</td>
                                         </tr>
@@ -2298,12 +2332,12 @@
                                         <tr>
                                             <th style="width: 40px; text-align: center;"><input type="checkbox"
                                                     id="selectAllEmployees" onclick="toggleSelectAllEmployees()"></th>
-                                            <th>Cédula</th>
+                                            <th>CÃ©dula</th>
                                             <th>Nombre</th>
                                             <th>Email</th>
-                                            <th>Dirección</th>
-                                            <th>Cantón</th>
-                                            <th>Teléfono</th>
+                                            <th>DirecciÃ³n</th>
+                                            <th>CantÃ³n</th>
+                                            <th>TelÃ©fono</th>
                                             <th>Departamento</th>
                                             <th>Cargo</th>
                                             <th>Sueldo</th>
@@ -2331,21 +2365,21 @@
                             <div class="config-grid">
                                 <div>
                                     <h4 style="margin-bottom:16px">Empresa</h4>
-                                    <div class="form-group"><label class="form-label">Razón Social</label><input
+                                    <div class="form-group"><label class="form-label">RazÃ³n Social</label><input
                                             type="text" class="form-control" id="configCompanyName"
                                             value="JASAFOOD S.A."></div>
                                     <div class="form-group"><label class="form-label">RUC</label><input type="text"
                                             class="form-control" id="configCompanyRuc" value="1791234567001"></div>
                                 </div>
                                 <div>
-                                    <h4 style="margin-bottom:16px">Parámetros</h4>
+                                    <h4 style="margin-bottom:16px">ParÃ¡metros</h4>
                                     <div class="form-group"><label class="form-label">IESS Personal (%)</label><input
                                             type="number" class="form-control" id="configIessPercent" value="9.45"
                                             step="0.01"></div>
                                     <div class="form-group"><label class="form-label">IESS Patronal (%)</label><input
                                             type="number" class="form-control" id="configIessPatronalPercent"
                                             value="12.15" step="0.01"></div>
-                                    <div class="form-group"><label class="form-label">Salario Básico</label><input
+                                    <div class="form-group"><label class="form-label">Salario BÃ¡sico</label><input
                                             type="number" class="form-control" id="configMinimumWage" value="460"></div>
                                     <div class="form-group"><label class="form-label">Fondo Reserva (%)</label><input
                                             type="number" class="form-control" id="configFRPercent" value="8.33"
@@ -2364,7 +2398,7 @@
         <div class="modal">
             <div class="modal-header">
                 <h3 class="modal-title" id="employeeModalTitle">Empleado</h3>
-                <button class="modal-close" onclick="closeEmployeeModal()">×</button>
+                <button class="modal-close" onclick="closeEmployeeModal()">Ã—</button>
             </div>
             <div class="modal-body">
                 <form id="employeeForm">
@@ -2379,15 +2413,15 @@
                                     class="form-control" id="employeeLastname" required></div>
                         </div>
                         <div class="form-row">
-                            <div class="form-group"><label class="form-label">Cédula *</label><input type="text"
+                            <div class="form-group"><label class="form-label">CÃ©dula *</label><input type="text"
                                     class="form-control" id="employeeCedula" required></div>
-                            <div class="form-group"><label class="form-label">Dirección</label><input type="text"
+                            <div class="form-group"><label class="form-label">DirecciÃ³n</label><input type="text"
                                     class="form-control" id="employeeAddress"></div>
                         </div>
                         <div class="form-row">
-                            <div class="form-group"><label class="form-label">Cantón</label><input type="text"
+                            <div class="form-group"><label class="form-label">CantÃ³n</label><input type="text"
                                     class="form-control" id="employeeCanton"></div>
-                            <div class="form-group"><label class="form-label">Teléfono</label><input type="text"
+                            <div class="form-group"><label class="form-label">TelÃ©fono</label><input type="text"
                                     class="form-control" id="employeePhone"></div>
                             <div class="form-group"><label class="form-label">Email</label><input type="email"
                                     class="form-control" id="employeeEmail"></div>
@@ -2397,7 +2431,7 @@
                                     class="form-control" id="employeeBirthDate"></div>
                             <div class="form-group"><label class="form-label">Estado Civil</label><input type="text"
                                     class="form-control" id="employeeMaritalStatus"></div>
-                            <div class="form-group"><label class="form-label">Número Hijos</label><input type="number"
+                            <div class="form-group"><label class="form-label">NÃºmero Hijos</label><input type="number"
                                     class="form-control" id="employeeChildren" min="0"></div>
                         </div>
                         <div class="form-row">
@@ -2418,7 +2452,7 @@
                         <div class="form-row">
                             <div class="form-group"><label class="form-label">Fecha Ingreso</label><input type="date"
                                     class="form-control" id="employeeHireDate"></div>
-                            <div class="form-group"><label class="form-label">División</label><input type="text"
+                            <div class="form-group"><label class="form-label">DivisiÃ³n</label><input type="text"
                                     class="form-control" id="employeeDivision"></div>
                         </div>
                         <div class="form-row">
@@ -2428,13 +2462,13 @@
                                     <option value="CONDADO">CONDADO</option>
                                     <option value="BOSQUE">BOSQUE</option>
                                 </select></div>
-                            <div class="form-group"><label class="form-label">Sección</label><input type="text"
+                            <div class="form-group"><label class="form-label">SecciÃ³n</label><input type="text"
                                     class="form-control" id="employeeSection"></div>
                             <div class="form-group"><label class="form-label">Turno</label><input type="text"
                                     class="form-control" id="employeeShift"></div>
                         </div>
                         <div class="form-row">
-                            <div class="form-group"><label class="form-label">Profesión</label><input type="text"
+                            <div class="form-group"><label class="form-label">ProfesiÃ³n</label><input type="text"
                                     class="form-control" id="employeeProfession"></div>
                             <div class="form-group"><label class="form-label">Cargo</label><input type="text"
                                     class="form-control" id="employeePosition"></div>
@@ -2464,7 +2498,7 @@
                                     <option>Produbanco</option>
                                     <option>Solidario</option>
                                 </select></div>
-                            <div class="form-group"><label class="form-label">Número de Cuenta</label><input type="text"
+                            <div class="form-group"><label class="form-label">NÃºmero de Cuenta</label><input type="text"
                                     class="form-control" id="employeeAccountNumber"></div>
                         </div>
                         <div class="form-row">
@@ -2478,24 +2512,24 @@
                                     <option>NO</option>
                                     <option>SI</option>
                                 </select></div>
-                            <div class="form-group"><label class="form-label">Mensualización Fondo
+                            <div class="form-group"><label class="form-label">MensualizaciÃ³n Fondo
                                     Reserva</label><select class="form-control" id="employeeFundMonthly">
                                     <option>NO</option>
                                     <option>SI</option>
                                 </select></div>
                         </div>
                         <div class="form-row">
-                            <div class="form-group"><label class="form-label">Mensualización Décimo
+                            <div class="form-group"><label class="form-label">MensualizaciÃ³n DÃ©cimo
                                     Tercero</label><select class="form-control" id="employee13th">
                                     <option>NO</option>
                                     <option>SI</option>
                                 </select></div>
-                            <div class="form-group"><label class="form-label">Mensualización Décimo
+                            <div class="form-group"><label class="form-label">MensualizaciÃ³n DÃ©cimo
                                     Cuarto</label><select class="form-control" id="employee14th">
                                     <option>NO</option>
                                     <option>SI</option>
                                 </select></div>
-                            <div class="form-group"><label class="form-label">Extensión IESS Cónyuge</label><select
+                            <div class="form-group"><label class="form-label">ExtensiÃ³n IESS CÃ³nyuge</label><select
                                     class="form-control" id="employeeIessSpouse">
                                     <option>NO</option>
                                     <option>SI</option>
@@ -2514,7 +2548,7 @@
                                     type="number" class="form-control" id="employeeBonus" value="0" step="0.01"></div>
                         </div>
                         <div class="form-row">
-                            <div class="form-group"><label class="form-label">Préstamos ($)</label><input type="number"
+                            <div class="form-group"><label class="form-label">PrÃ©stamos ($)</label><input type="number"
                                     class="form-control" id="employeeLoan" value="0" step="0.01"></div>
                             <div class="form-group"><label class="form-label">Otros Descuentos ($)</label><input
                                     type="number" class="form-control" id="employeeOtherDeductions" value="0"
@@ -2544,8 +2578,8 @@
     </div>
 
     <script>
-        // ==================== DATOS DINÁMICOS (desde Supabase) ====================
-        // Los datos de nómina se generan dinámicamente desde employees[] cargado de Supabase
+        // ==================== DATOS DINÃMICOS (desde Supabase) ====================
+        // Los datos de Nómina se generan dinÃ¡micamente desde employees[] cargado de Supabase
         var currentPayrollData = [];
 
         // Convierte un objeto employee al formato de nomina
@@ -2591,6 +2625,7 @@
 
             var fechaFmt = (emp.fechaIngreso || '').replace(/-/g, '/');
             return {
+                id: emp.id,
                 no: idx + 1,
                 nombre: ((emp.apellidos || '') + ' ' + (emp.nombres || '')).trim(),
                 cedula: emp.cedula || '',
@@ -2640,6 +2675,7 @@
                 if (activeSection.id === 'provisiones') calculateAllProvisions();
                 if (activeSection.id === 'accounting') generateFullAccountingEntries();
                 if (activeSection.id === 'extraHours') renderExtraHoursTable();
+                if (activeSection.id === 'descuentos') renderDescuentosTable();
             }
             if (salaryChart) updateChart();
             var badge = document.getElementById('employeeCountNav');
@@ -2654,7 +2690,7 @@
             sbClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
             console.log('[Supabase] Cliente inicializado correctamente');
 
-            // Suscribirse a cambios de autenticación
+            // Suscribirse a cambios de autenticaciÃ³n
             sbClient.auth.onAuthStateChange(function (event, session) {
                 if (event === 'SIGNED_IN' || event === 'INITIAL_SESSION') {
                     if (session) {
@@ -2675,7 +2711,7 @@
             console.warn('[Supabase] Error al inicializar:', e);
         }
 
-        // Funciones de Autenticación
+        // Funciones de AutenticaciÃ³n
         async function handleLogin(e) {
             e.preventDefault();
             var email = document.getElementById('loginEmail').value;
@@ -2693,7 +2729,7 @@
             });
 
             if (result.error) {
-                errorDiv.textContent = 'Credenciales incorrectas o error de conexión.';
+                errorDiv.textContent = 'Credenciales incorrectas o error de conexiÃ³n.';
                 errorDiv.style.display = 'block';
                 btn.disabled = false;
                 btn.innerHTML = 'Ingresar';
@@ -2713,7 +2749,7 @@
             }
         }
 
-        // Convierte un objeto empleado de camelCase JS → snake_case para Supabase
+        // Convierte un objeto empleado de camelCase JS â†’ snake_case para Supabase
         function empToDb(emp) {
             return {
                 id: emp.id,
@@ -2756,7 +2792,7 @@
             };
         }
 
-        // Convierte un registro de Supabase snake_case → camelCase JS
+        // Convierte un registro de Supabase snake_case â†’ camelCase JS
         function dbToEmp(row) {
             return {
                 id: row.id,
@@ -2802,7 +2838,7 @@
         function setSyncStatus(status) {
             var badge = document.getElementById('syncStatusBadge');
             if (!badge) return;
-            var icons = { ok: '☁', syncing: '↻', error: '⚠' };
+            var icons = { ok: 'â˜', syncing: 'â†»', error: 'âš ' };
             var colors = { ok: '#10b981', syncing: '#f59e0b', error: '#ef4444' };
             badge.textContent = icons[status] + ' Supabase';
             badge.style.color = colors[status];
@@ -2910,7 +2946,7 @@
             // Update top badge
             var badge = document.getElementById('companyBadge');
             if (badge) { badge.textContent = comp.nombre; badge.style.borderColor = comp.color; badge.style.color = comp.color; }
-            // currentPayrollData se reconstruye dinámicamente desde employees[] via refreshAllViews()
+            // currentPayrollData se reconstruye dinÃ¡micamente desde employees[] via refreshAllViews()
             // Load employees for this company
             loadEmployeesForCompany(key);
             loadConfig();
@@ -2929,6 +2965,7 @@
             if (emptyDiv) emptyDiv.style.display = 'block';
             currentPayrollEmployee = null;
             renderExtraHoursTable();
+            renderDescuentosTable();
         }
 
         function loadEmployeesForCompany(key) {
@@ -2940,7 +2977,7 @@
                     .then(function (result) {
                         if (!result.error && result.data && result.data.length > 0) {
                             employees = result.data.map(dbToEmp);
-                            // Guardar en localStorage como caché (ELIMINADO para no saturar caché)
+                            // Guardar en localStorage como cachÃ© (ELIMINADO para no saturar cachÃ©)
                             try { /* localStorage.setItem(comp.storageKey, JSON.stringify(employees)); */ } catch (e) { }
                             setSyncStatus('ok');
                             refreshAllViews();
@@ -2949,7 +2986,7 @@
                             setSyncStatus('error');
                             _loadEmployeesFromLocalStorage(key, comp);
                         } else {
-                            // Supabase vacío para esta empresa: ya no cargar de estáticos, limpiar
+                            // Supabase vacÃ­o para esta empresa: ya no cargar de estÃ¡ticos, limpiar
                             setSyncStatus('ok');
                             employees = [];
                             // try { localStorage.removeItem(comp.storageKey); } catch (e) { }
@@ -2968,7 +3005,7 @@
 
         function _loadEmployeesFromLocalStorage(key, comp) {
             try {
-                // Caché local deshabilitado para evitar conflictos. Se lee solo todo desde DB real
+                // CachÃ© local deshabilitado para evitar conflictos. Se lee solo todo desde DB real
                 /*
                 var stored = localStorage.getItem(comp.storageKey);
                 if (stored) {
@@ -2984,12 +3021,12 @@
                 }
                 */
             } catch (e) { console.warn('Error reading localStorage:', e); }
-            // No hay datos locales ni en Supabase: iniciar con array vacío
+            // No hay datos locales ni en Supabase: iniciar con array vacÃ­o
             employees = [];
             refreshAllViews();
         }
 
-        // convertExternalDataToEmployees() eliminada – datos solo desde Supabase
+        // convertExternalDataToEmployees() eliminada â€“ datos solo desde Supabase
 
         // ==================== STORAGE - localStorage + Supabase ====================
         function loadEmployeesFromStorage() {
@@ -2997,7 +3034,7 @@
         }
 
         function saveEmployeesToStorage() {
-            // 1. Guardar en localStorage como caché (ELIMINADO: ahora todo depende de Supabase)
+            // 1. Guardar en localStorage como cachÃ© (ELIMINADO: ahora todo depende de Supabase)
             try {
                 var comp = companiesConfig[currentCompany];
                 // localStorage.setItem(comp.storageKey, JSON.stringify(employees));
@@ -3067,7 +3104,7 @@
             // Apply default in memory values first to prevent UI breaking before fetch completes
             _applyConfigUI();
 
-            // Carga asíncrona real desde la nube (Supabase)
+            // Carga asÃ­ncrona real desde la nube (Supabase)
             if (window.sbClient) {
                 var dbId = _getConfigId();
                 window.sbClient.from('configuracion').select('*').eq('id', dbId).single()
@@ -3099,7 +3136,7 @@
             if (document.getElementById('companyRucDisplay')) document.getElementById('companyRucDisplay').textContent = config.companyRuc;
             if (document.getElementById('payrollCompanyName')) document.getElementById('payrollCompanyName').textContent = config.companyName;
 
-            // Reparación de fecha estática omitida en "payrollCompanyInfo" para reporte
+            // ReparaciÃ³n de fecha estÃ¡tica omitida en "payrollCompanyInfo" para reporte
             if (document.getElementById('payrollCompanyInfo')) {
                 var val = document.getElementById('globalPeriodSelector') ? document.getElementById('globalPeriodSelector').value : '';
                 var docStr = 'RUC: ' + config.companyRuc;
@@ -3212,11 +3249,10 @@
             if (isNaN(valor)) valor = 0;
             try {
                 showLoader('Actualizando hora extra...');
-                var res = await supabaseClient.from('employees').update({ horasExtras: valor }).eq('id', empId);
+                var res = await sbClient.from('empleados').update({ horas_extras: valor }).eq('id', empId);
                 if (res.error) throw res.error;
-                showToast('\u00c9xito', 'Horas Extras actualizadas', 'success');
-                await loadEmployees(); // recarga desde BD
-                renderExtraHoursTable(); // recargar s\u00f3lo esta vista
+                showToast('Éxito', 'Horas Extras actualizadas', 'success');
+                loadEmployeesForCompany(currentCompany);
             } catch (err) {
                 showToast('Error', 'No se pudo actualizar: ' + err.message, 'error');
             } finally {
@@ -3237,18 +3273,18 @@
                     var worksheet = workbook.Sheets[firstSheetName];
                     var json = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
 
-                    if (json.length < 2) throw new Error('El archivo parece vac\u00edo.');
+                    if (json.length < 2) throw new Error('El archivo parece vacío.');
 
                     var headerRowIdx = 0;
                     for (var i = 0; i < Math.min(10, json.length); i++) {
                         var rowStr = json[i].join('').toLowerCase();
-                        if (rowStr.indexOf('cedula') !== -1 || rowStr.indexOf('c\u00e9dula') !== -1 || rowStr.indexOf('valor') !== -1 || rowStr.indexOf('consumo') !== -1) {
+                        if (rowStr.indexOf('cedula') !== -1 || rowStr.indexOf('Cédula') !== -1 || rowStr.indexOf('valor') !== -1 || rowStr.indexOf('consumo') !== -1) {
                             headerRowIdx = i; break;
                         }
                     }
 
                     var headers = json[headerRowIdx].map(function (h) { return (h || '').toString().toLowerCase().trim(); });
-                    var idxCedula = headers.findIndex(function (h) { return h.indexOf('cedula') !== -1 || h.indexOf('c\u00e9dula') !== -1; });
+                    var idxCedula = headers.findIndex(function (h) { return h.indexOf('cedula') !== -1 || h.indexOf('Cédula') !== -1; });
                     var idxValor = headers.findIndex(function (h) { return h.indexOf('valor') !== -1 || h.indexOf('horas') !== -1 || h.indexOf('consumo') !== -1; });
 
                     if (idxCedula === -1 || idxValor === -1) {
@@ -3256,6 +3292,8 @@
                     }
 
                     var updates = [];
+
+
                     for (var i = headerRowIdx + 1; i < json.length; i++) {
                         var row = json[i];
                         if (!row || row.length === 0) continue;
@@ -3274,7 +3312,7 @@
                         saveHorasExtrasToDb(updates);
                     } else {
                         hideLoader();
-                        showToast('Advertencia', 'No se encontraron registros de c\u00e9dulas validas.', 'warning');
+                        showToast('Advertencia', 'No se encontraron registros de Cédulas validas.', 'warning');
                     }
                 } catch (err) {
                     hideLoader();
@@ -3289,23 +3327,124 @@
             showLoader('Guardando ' + updates.length + ' registros...');
             try {
                 var promises = updates.map(function (u) {
-                    return supabaseClient.from('employees').update({ horasExtras: u.horasExtras }).eq('id', u.id);
+                    return sbClient.from('empleados').update({ horas_extras: u.horasExtras }).eq('id', u.id);
                 });
                 var results = await Promise.all(promises);
                 var hasErrors = results.some(function (r) { return r.error; });
                 if (hasErrors) throw new Error('Ocurrieron errores actualizando registros.');
 
-                showToast('\u00c9xito', 'H. Extras actualizadas.', 'success');
-                await loadEmployees();
-                renderExtraHoursTable();
+                showToast('Éxito', 'H. Extras actualizadas.', 'success');
+                loadEmployeesForCompany(currentCompany);
             } catch (err) {
                 showToast('Error', err.message, 'error');
             }
             hideLoader();
         }
 
+        // ==================== DESCUENTOS ====================
+        function renderDescuentosTable() {
+            var tbody = document.getElementById('descuentosTableBody');
+            if (!tbody) return;
+            tbody.innerHTML = currentPayrollData.map(function (item) {
+                var descBase = parseFloat(item.otrosDesc || 0).toFixed(2);
+                return '<tr>' +
+                    '<td>' + (item.cedula || '') + '</td>' +
+                    '<td>' + (item.nombre || '').trim() + '</td>' +
+                    '<td><span style="font-size:11px;padding:3px 8px;border-radius:20px;background:var(--accent);color:var(--white);font-weight:600">' + (item.empresa || config.companyName || '') + '</span></td>' +
+                    '<td><input type="number" class="form-control form-control-sm" style="width:100px;font-weight:bold" value="' + descBase + '" onchange="updateSingleDescuento(\'' + item.id + '\', this.value)"></td>' +
+                    '</tr>';
+            }).join('');
+        }
+
+        async function updateSingleDescuento(empId, newVal) {
+            var valor = parseFloat(newVal);
+            if (isNaN(valor)) valor = 0;
+            try {
+                showLoader('Actualizando descuento...');
+                var res = await sbClient.from('empleados').update({ otros_descuentos: valor }).eq('id', empId);
+                if (res.error) throw res.error;
+                showToast('Éxito', 'Descuento actualizado', 'success');
+                loadEmployeesForCompany(currentCompany);
+            } catch (err) {
+                showToast('Error', 'No se pudo actualizar: ' + err.message, 'error');
+            } finally {
+                hideLoader();
+            }
+        }
+
+        function handleDescuentosUpload(event) {
+            var file = event.target.files[0];
+            if (!file) return;
+            showLoader('Leyendo Excel de Descuentos...');
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                try {
+                    var data = new Uint8Array(e.target.result);
+                    var workbook = XLSX.read(data, { type: 'array' });
+                    var firstSheetName = workbook.SheetNames[0];
+                    var worksheet = workbook.Sheets[firstSheetName];
+                    var json = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+                    if (json.length < 2) throw new Error('El archivo parece vacío.');
+
+                    var headerRowIdx = 0;
+                    for (var i = 0; i < Math.min(10, json.length); i++) {
+                        var rowStr = json[i].join('').toLowerCase();
+                        if (rowStr.indexOf('cedula') !== -1 || rowStr.indexOf('Cédula') !== -1 || rowStr.indexOf('valor') !== -1 || rowStr.indexOf('descuento') !== -1) {
+                            headerRowIdx = i; break;
+                        }
+                    }
+                    var headers = json[headerRowIdx].map(function (h) { return (h || '').toString().toLowerCase().trim(); });
+                    var idxCedula = headers.findIndex(function (h) { return h.indexOf('cedula') !== -1 || h.indexOf('Cédula') !== -1; });
+                    var idxValor = headers.findIndex(function (h) { return h.indexOf('valor') !== -1 || h.indexOf('descuento') !== -1 || h.indexOf('monto') !== -1; });
+                    if (idxCedula === -1 || idxValor === -1) {
+                        throw new Error('No se encontraron columnas CEDULA o VALOR.');
+                    }
+
+                    var updates = [];
+                    for (var i = headerRowIdx + 1; i < json.length; i++) {
+                        var row = json[i];
+                        if (!row || row.length === 0) continue;
+                        var cedula = (row[idxCedula] || '').toString().trim();
+                        var valor = parseFloat(row[idxValor]);
+                        if (cedula && !isNaN(valor)) {
+                            var emp = employees.find(function (e) { return (e.cedula || '').trim() === cedula; });
+                            if (emp) updates.push({ id: emp.id, otrosDescuentos: valor });
+                        }
+                    }
+                    if (updates.length > 0) {
+                        saveDescuentosToDb(updates);
+                    } else {
+                        hideLoader(); showToast('Sin cambios', 'No se encontraron registros validos', 'info');
+                    }
+                } catch (err) {
+                    hideLoader(); showToast('Error', err.message, 'error');
+                }
+            };
+            reader.onerror = function () { hideLoader(); showToast('Error', 'No se pudo leer el archivo.', 'error'); };
+            reader.readAsArrayBuffer(file);
+            event.target.value = '';
+        }
+
+        async function saveDescuentosToDb(updates) {
+            showLoader('Guardando ' + updates.length + ' registros...');
+            try {
+                var promises = updates.map(function (u) {
+                    return sbClient.from('empleados').update({ otros_descuentos: u.otrosDescuentos }).eq('id', u.id);
+                });
+                var results = await Promise.all(promises);
+                var hasErrors = results.some(function (r) { return r.error; });
+                if (hasErrors) throw new Error('Ocurrieron errores actualizando registros.');
+                showToast('Éxito', 'Descuentos actualizados.', 'success');
+                loadEmployeesForCompany(currentCompany);
+            } catch (err) {
+                showToast('Error', err.message, 'error');
+            } finally {
+                hideLoader();
+            }
+        }
+
         function showSection(sectionId) {
-            var titles = { dashboard: 'Dashboard', payrollList: 'N\u00f3mina Completa', payroll: 'Rol Individual', provisiones: 'Provisiones Sociales', accounting: 'Asientos Contables', chartOfAccounts: 'Plan de Cuentas', extraHours: 'Horas Extras', employees: 'Empleados', config: 'Configuraci\u00f3n' };
+            var titles = { dashboard: 'Dashboard', payrollList: 'Nómina Completa', payroll: 'Rol Individual', provisiones: 'Provisiones Sociales', accounting: 'Asientos Contables', chartOfAccounts: 'Plan de Cuentas', extraHours: 'Horas Extras', descuentos: 'Descuentos', employees: 'Empleados', config: 'Configuración' };
             document.getElementById('pageTitle').textContent = titles[sectionId] || sectionId;
             document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
             var navItem = document.querySelector('[data-section="' + sectionId + '"]');
@@ -3316,6 +3455,7 @@
             if (sectionId === 'provisiones') calculateAllProvisions();
             if (sectionId === 'accounting') generateFullAccountingEntries();
             if (sectionId === 'extraHours') renderExtraHoursTable();
+            if (sectionId === 'descuentos') renderDescuentosTable();
             if (sectionId === 'employees') renderEmployeeTable();
         }
 
@@ -3537,7 +3677,7 @@
                 estado: g('employeeStatus') || 'Activo'
             };
             if (!emp.nombres || !emp.apellidos || !emp.cedula) {
-                showToast('Error', 'Nombres, apellidos y cédula son obligatorios', 'error');
+                showToast('Error', 'Nombres, apellidos y cÃ©dula son obligatorios', 'error');
                 return;
             }
             var idx = employees.findIndex(function (e) { return e.id === id; });
@@ -3546,13 +3686,13 @@
             saveEmployeesToStorage();
             refreshAllViews();
             closeEmployeeModal();
-            showToast('Éxito', 'Empleado guardado correctamente', 'success');
+            showToast('Ã‰xito', 'Empleado guardado correctamente', 'success');
         }
 
         function editEmployee(id) { openEmployeeModal(id); }
 
         function deleteEmployee(id) {
-            if (confirm('¿Está seguro de eliminar este empleado?')) {
+            if (confirm('Â¿EstÃ¡ seguro de eliminar este empleado?')) {
                 _executeDelete([id]);
             }
         }
@@ -3568,10 +3708,10 @@
         function deleteSelectedEmployees() {
             var checkboxes = document.querySelectorAll('.employee-checkbox:checked');
             if (checkboxes.length === 0) {
-                showToast('Atención', 'Seleccione al menos un empleado para eliminar', 'warning');
+                showToast('AtenciÃ³n', 'Seleccione al menos un empleado para eliminar', 'warning');
                 return;
             }
-            if (confirm('¿Está seguro de eliminar los ' + checkboxes.length + ' empleados seleccionados?')) {
+            if (confirm('Â¿EstÃ¡ seguro de eliminar los ' + checkboxes.length + ' empleados seleccionados?')) {
                 var idsToDelete = Array.from(checkboxes).map(cb => cb.value);
                 _executeDelete(idsToDelete);
                 var selectAll = document.getElementById('selectAllEmployees');
@@ -3597,7 +3737,7 @@
                 });
             }
             refreshAllViews();
-            showToast('Éxito', (idsArray.length > 1 ? idsArray.length + ' Empleados eliminados' : 'Empleado eliminado'), 'success');
+            showToast('Ã‰xito', (idsArray.length > 1 ? idsArray.length + ' Empleados eliminados' : 'Empleado eliminado'), 'success');
         }
 
         // ==================== INDIVIDUAL PAYROLL ====================
@@ -3623,7 +3763,7 @@
             var totalExtras = (item.hNoct || 0) + (item.hSup || 0) + (item.hExt || 0);
             document.getElementById('previewEmployee').innerHTML =
                 '<div class="payroll-field"><span class="payroll-field-label">Empleado</span><span class="payroll-field-value">' + item.nombre + '</span></div>' +
-                '<div class="payroll-field"><span class="payroll-field-label">Cédula</span><span class="payroll-field-value">' + item.cedula + '</span></div>' +
+                '<div class="payroll-field"><span class="payroll-field-label">CÃ©dula</span><span class="payroll-field-value">' + item.cedula + '</span></div>' +
                 '<div class="payroll-field"><span class="payroll-field-label">Departamento</span><span class="payroll-field-value">' + item.depto + '</span></div>' +
                 '<div class="payroll-field"><span class="payroll-field-label">Cargo</span><span class="payroll-field-value">' + item.cargo + '</span></div>';
 
@@ -3632,13 +3772,13 @@
                 '<tr><td>Horas Extras</td><td>$' + (item.hExt || 0).toFixed(2) + '</td></tr>' +
                 '<tr><td>Bonificaciones</td><td>$' + (item.bonos || 0).toFixed(2) + '</td></tr>' +
                 (item.fRes13 > 0 ? '<tr><td>Fondo de Reserva (mensualizado)</td><td>$' + (item.fRes13).toFixed(2) + '</td></tr>' : '') +
-                (item.dec13m > 0 ? '<tr><td>D\u00e9cimo Tercero (mensualizado)</td><td>$' + (item.dec13m).toFixed(2) + '</td></tr>' : '') +
-                (item.dec14m > 0 ? '<tr><td>D\u00e9cimo Cuarto (mensualizado)</td><td>$' + (item.dec14m).toFixed(2) + '</td></tr>' : '') +
+                (item.dec13m > 0 ? '<tr><td>Décimo Tercero (mensualizado)</td><td>$' + (item.dec13m).toFixed(2) + '</td></tr>' : '') +
+                (item.dec14m > 0 ? '<tr><td>Décimo Cuarto (mensualizado)</td><td>$' + (item.dec14m).toFixed(2) + '</td></tr>' : '') +
                 '<tr style="background:var(--gray-100)"><td><strong>TOTAL INGRESOS</strong></td><td><strong>$' + (item.ingresos || 0).toFixed(2) + '</strong></td></tr>';
 
             document.getElementById('previewDeductionsBody').innerHTML =
                 '<tr><td>IESS (' + config.iessPercent + '%)</td><td>-$' + (item.iess || 0).toFixed(2) + '</td></tr>' +
-                '<tr><td>Anticipos/Pr\u00e9stamos</td><td>-$' + (item.anticipos || 0).toFixed(2) + '</td></tr>' +
+                '<tr><td>Anticipos/Préstamos</td><td>-$' + (item.anticipos || 0).toFixed(2) + '</td></tr>' +
                 '<tr><td>Otros Descuentos</td><td>-$' + (item.otrosDesc || 0).toFixed(2) + '</td></tr>' +
                 '<tr style="background:var(--gray-100)"><td><strong>TOTAL DESCUENTOS</strong></td><td><strong>-$' + (item.totalDesc || 0).toFixed(2) + '</strong></td></tr>';
 
@@ -3654,15 +3794,15 @@
                 '<tr><td>5.1.03</td><td>Fondos de Reserva</td><td class="debit">$' + (item.fRes || 0).toFixed(2) + '</td><td></td></tr>' +
                 '<tr><td>5.1.04</td><td>Bonificaciones</td><td class="debit">$' + ((item.bonos || 0) + (item.otrosIng || 0)).toFixed(2) + '</td><td></td></tr>' +
                 '<tr><td>2.1.01</td><td>IESS por Pagar</td><td></td><td class="credit">$' + (item.iess || 0).toFixed(2) + '</td></tr>' +
-                '<tr><td>2.1.02</td><td>Préstamos por Pagar</td><td></td><td class="credit">$' + (item.prestamos || 0).toFixed(2) + '</td></tr>' +
+                '<tr><td>2.1.02</td><td>PrÃ©stamos por Pagar</td><td></td><td class="credit">$' + (item.prestamos || 0).toFixed(2) + '</td></tr>' +
                 '<tr><td>2.1.03</td><td>Sueldos por Pagar</td><td></td><td class="credit">$' + (item.neto || 0).toFixed(2) + '</td></tr>';
             document.getElementById('accountingEntryFooter').innerHTML =
                 '<tr style="background:var(--gray-100)"><td colspan="2"><strong>TOTALES</strong></td><td class="debit"><strong>$' + (item.ingresos || 0).toFixed(2) + '</strong></td><td class="credit"><strong>$' + ((item.iess || 0) + (item.prestamos || 0) + (item.otrosDesc || 0) + (item.neto || 0)).toFixed(2) + '</strong></td></tr>';
 
             // Provisiones
             document.getElementById('provisionBody').innerHTML =
-                '<tr><td>D\u00e9cimo Tercero</td><td>Remun.Total/12</td><td>$' + ((item.sueldo || 0) + (item.hExt || 0) + (item.bonos || 0)).toFixed(2) + '</td><td>$' + (item.prov13 || 0).toFixed(2) + '</td></tr>' +
-                '<tr><td>D\u00e9cimo Cuarto</td><td>(Sal.Min./360)*30</td><td>$' + (config.minimumWage) + '</td><td>$' + (item.prov14 || 0).toFixed(2) + '</td></tr>' +
+                '<tr><td>Décimo Tercero</td><td>Remun.Total/12</td><td>$' + ((item.sueldo || 0) + (item.hExt || 0) + (item.bonos || 0)).toFixed(2) + '</td><td>$' + (item.prov13 || 0).toFixed(2) + '</td></tr>' +
+                '<tr><td>Décimo Cuarto</td><td>(Sal.Min./360)*30</td><td>$' + (config.minimumWage) + '</td><td>$' + (item.prov14 || 0).toFixed(2) + '</td></tr>' +
                 '<tr><td>Vacaciones</td><td>Remun.Total/24</td><td>$' + ((item.sueldo || 0) + (item.hExt || 0) + (item.bonos || 0)).toFixed(2) + '</td><td>$' + (item.provVac || 0).toFixed(2) + '</td></tr>' +
                 '<tr><td>Fondo de Reserva</td><td>Remun.Total*8.33%</td><td>$' + ((item.sueldo || 0) + (item.hExt || 0) + (item.bonos || 0)).toFixed(2) + '</td><td>$' + (item.provFR || 0).toFixed(2) + '</td></tr>' +
                 '<tr><td>IESS Patronal</td><td>Remun.Total*' + config.iessPatronalPercent + '%</td><td>$' + ((item.sueldo || 0) + (item.hExt || 0) + (item.bonos || 0)).toFixed(2) + '</td><td>$' + (item.iessPatronal || 0).toFixed(2) + '</td></tr>';
@@ -3689,7 +3829,7 @@
                 doc.setFillColor(248, 249, 250); doc.rect(15, y - 5, 180, 40, 'F');
                 doc.setTextColor(0, 0, 0); doc.setFontSize(10); doc.setFont('helvetica', 'bold');
                 doc.text('EMPLEADO:', 20, y + 2); doc.setFont('helvetica', 'normal'); doc.text(item.nombre || '', 55, y + 2);
-                doc.setFont('helvetica', 'bold'); doc.text('CÉDULA:', 20, y + 10); doc.setFont('helvetica', 'normal'); doc.text(item.cedula || '', 55, y + 10);
+                doc.setFont('helvetica', 'bold'); doc.text('CÃ‰DULA:', 20, y + 10); doc.setFont('helvetica', 'normal'); doc.text(item.cedula || '', 55, y + 10);
                 doc.setFont('helvetica', 'bold'); doc.text('DEPARTAMENTO:', 20, y + 18); doc.setFont('helvetica', 'normal'); doc.text(item.depto || '', 55, y + 18);
                 doc.setFont('helvetica', 'bold'); doc.text('CARGO:', 20, y + 26); doc.setFont('helvetica', 'normal'); doc.text(item.cargo || '', 55, y + 26);
                 y += 45;
@@ -3716,7 +3856,7 @@
                 doc.setTextColor(255, 255, 255); doc.setFont('helvetica', 'bold');
                 doc.text('DESCUENTOS', 20, y); doc.text('VALOR', 170, y, { align: 'right' });
                 y += 10; doc.setTextColor(0, 0, 0); doc.setFont('helvetica', 'normal');
-                [[' IESS (' + config.iessPercent + '%)', item.iess || 0], [' Anticipos/Pr\u00e9stamos', item.anticipos || 0], [' Otros Descuentos', item.otrosDesc || 0], ['TOTAL DESCUENTOS', item.totalDesc || 0]].forEach(function (r, i) {
+                [[' IESS (' + config.iessPercent + '%)', item.iess || 0], [' Anticipos/Préstamos', item.anticipos || 0], [' Otros Descuentos', item.otrosDesc || 0], ['TOTAL DESCUENTOS', item.totalDesc || 0]].forEach(function (r, i) {
                     if (i % 2 === 0) { doc.setFillColor(248, 249, 250); doc.rect(15, y - 4, 180, 8, 'F'); }
                     doc.text(r[0], 20, y); doc.text('-$' + r[1].toFixed(2), 170, y, { align: 'right' }); y += 8;
                 });
@@ -3839,12 +3979,12 @@
                         '<tr><td>' + accDate + '</td><td>NOM-001</td><td>5.1.03</td><td>FONDOS DE RESERVA</td><td class="debit">$' + tFR.toFixed(2) + '</td><td></td></tr>' +
                         '<tr><td>' + accDate + '</td><td>NOM-001</td><td>5.1.04</td><td>BONIFICACIONES</td><td class="debit">$' + tBonos.toFixed(2) + '</td><td></td></tr>' +
                         '<tr><td>' + accDate + '</td><td>NOM-001</td><td>2.1.01</td><td>IESS POR PAGAR</td><td></td><td class="credit">$' + tIess.toFixed(2) + '</td></tr>' +
-                        '<tr><td>' + accDate + '</td><td>NOM-001</td><td>2.1.02</td><td>PRÉSTAMOS POR PAGAR</td><td></td><td class="credit">$' + tPrestamos.toFixed(2) + '</td></tr>' +
+                        '<tr><td>' + accDate + '</td><td>NOM-001</td><td>2.1.02</td><td>PRÃ‰STAMOS POR PAGAR</td><td></td><td class="credit">$' + tPrestamos.toFixed(2) + '</td></tr>' +
                         '<tr><td>' + accDate + '</td><td>NOM-001</td><td>2.1.03</td><td>SUELDOS POR PAGAR</td><td></td><td class="credit">$' + tNeto.toFixed(2) + '</td></tr>';
                 }
                 if (type === 'all' || type === 'provisions') {
-                    html += '<tr><td>' + accDate + '</td><td>PROV-001</td><td>5.1.05</td><td>DÉCIMO TERCERO</td><td class="debit">$' + t13.toFixed(2) + '</td><td></td></tr>' +
-                        '<tr><td>' + accDate + '</td><td>PROV-001</td><td>5.1.06</td><td>DÉCIMO CUARTO</td><td class="debit">$' + t14.toFixed(2) + '</td><td></td></tr>' +
+                    html += '<tr><td>' + accDate + '</td><td>PROV-001</td><td>5.1.05</td><td>DÃ‰CIMO TERCERO</td><td class="debit">$' + t13.toFixed(2) + '</td><td></td></tr>' +
+                        '<tr><td>' + accDate + '</td><td>PROV-001</td><td>5.1.06</td><td>DÃ‰CIMO CUARTO</td><td class="debit">$' + t14.toFixed(2) + '</td><td></td></tr>' +
                         '<tr><td>' + accDate + '</td><td>PROV-001</td><td>5.1.07</td><td>VACACIONES</td><td class="debit">$' + tVac.toFixed(2) + '</td><td></td></tr>' +
                         '<tr><td>' + accDate + '</td><td>PROV-001</td><td>5.1.03</td><td>FONDOS RESERVA (PROV)</td><td class="debit">$' + tFRProv.toFixed(2) + '</td><td></td></tr>' +
                         '<tr><td>' + accDate + '</td><td>PROV-001</td><td>2.1.04</td><td>XIII POR PAGAR</td><td></td><td class="credit">$' + t13.toFixed(2) + '</td></tr>' +
@@ -3870,7 +4010,7 @@
         function exportPayrollExcel() {
             showLoader('Exportando...');
             setTimeout(function () {
-                var wsData = currentPayrollData.map(function (i) { return { 'No.': i.no, 'Nombre': i.nombre, 'Cédula': i.cedula, 'F.Ingreso': i.fechaIng, 'Cargo': i.cargo, 'Depto': i.depto, 'Sueldo': i.sueldo, 'H.Noct': i.hNoct || 0, 'H.Sup': i.hSup || 0, 'H.Ext': i.hExt || 0, 'F.Reserva': i.fRes || 0, 'Bonos': i.bonos || 0, 'Otros Ing': i.otrosIng || 0, 'Ingresos': i.ingresos, 'IESS': i.iess, 'Préstamos': i.prestamos || 0, 'Otros Desc': i.otrosDesc || 0, 'Descuentos': i.descuentos, 'Neto': i.neto }; });
+                var wsData = currentPayrollData.map(function (i) { return { 'No.': i.no, 'Nombre': i.nombre, 'CÃ©dula': i.cedula, 'F.Ingreso': i.fechaIng, 'Cargo': i.cargo, 'Depto': i.depto, 'Sueldo': i.sueldo, 'H.Noct': i.hNoct || 0, 'H.Sup': i.hSup || 0, 'H.Ext': i.hExt || 0, 'F.Reserva': i.fRes || 0, 'Bonos': i.bonos || 0, 'Otros Ing': i.otrosIng || 0, 'Ingresos': i.ingresos, 'IESS': i.iess, 'PrÃ©stamos': i.prestamos || 0, 'Otros Desc': i.otrosDesc || 0, 'Descuentos': i.descuentos, 'Neto': i.neto }; });
                 var wb = XLSX.utils.book_new(); var ws = XLSX.utils.json_to_sheet(wsData);
                 var per = document.querySelector('.dynamic-period-text') ? document.querySelector('.dynamic-period-text').textContent.trim().replace(/ /g, '_') : 'Enero_2025';
                 XLSX.utils.book_append_sheet(wb, ws, 'Nomina');
@@ -3883,12 +4023,12 @@
             showLoader('Exportando...');
             setTimeout(function () {
                 var s = function (f) { return currentPayrollData.reduce(function (a, i) { return a + (i[f] || 0); }, 0); };
-                var wsData = [['COMPROBANTE', 'FECHA', 'CÓDIGO', 'CUENTA', 'DÉBITO', 'CRÉDITO'],
+                var wsData = [['COMPROBANTE', 'FECHA', 'CÃ“DIGO', 'CUENTA', 'DÃ‰BITO', 'CRÃ‰DITO'],
                 ['NOM-001', '31/01/2025', '5.1.01', 'SUELDOS Y SALARIOS', s('sueldo'), ''],
                 ['NOM-001', '31/01/2025', '5.1.02', 'HORAS EXTRAS', currentPayrollData.reduce(function (a, i) { return a + (i.hNoct || 0) + (i.hSup || 0) + (i.hExt || 0); }, 0), ''],
                 ['NOM-001', '31/01/2025', '5.1.03', 'FONDOS DE RESERVA', s('fRes'), ''],
                 ['NOM-001', '31/01/2025', '2.1.01', 'IESS POR PAGAR', '', s('iess')],
-                ['NOM-001', '31/01/2025', '2.1.02', 'PRÉSTAMOS POR PAGAR', '', s('prestamos')],
+                ['NOM-001', '31/01/2025', '2.1.02', 'PRÃ‰STAMOS POR PAGAR', '', s('prestamos')],
                 ['NOM-001', '31/01/2025', '2.1.03', 'SUELDOS POR PAGAR', '', s('neto')]];
                 var wb = XLSX.utils.book_new(); var ws = XLSX.utils.aoa_to_sheet(wsData);
                 var per = document.querySelector('.dynamic-period-text') ? document.querySelector('.dynamic-period-text').textContent.trim().replace(/ /g, '_') : 'Enero_2025';
@@ -3900,7 +4040,7 @@
         function exportChartOfAccounts() {
             showLoader('Exportando...');
             setTimeout(function () {
-                var wsData = [['CÓDIGO', 'CUENTA', 'TIPO', 'NIVEL'], ['1', 'ACTIVO', 'Balance', '1'], ['1.1', 'ACTIVO CORRIENTE', 'Balance', '2'], ['1.1.01', 'BANCOS', 'Balance', '3'], ['2', 'PASIVO', 'Balance', '1'], ['2.1', 'PASIVO CORRIENTE', 'Balance', '2'], ['2.1.01', 'IESS POR PAGAR', 'Balance', '3'], ['2.1.02', 'PRÉSTAMOS POR PAGAR', 'Balance', '3'], ['2.1.03', 'SUELDOS POR PAGAR', 'Balance', '3'], ['5', 'GASTOS', 'Resultados', '1'], ['5.1', 'GASTOS DE PERSONAL', 'Resultados', '2'], ['5.1.01', 'SUELDOS Y SALARIOS', 'Resultados', '3'], ['5.1.08', 'APORTE PATRONAL', 'Resultados', '3']];
+                var wsData = [['CÃ“DIGO', 'CUENTA', 'TIPO', 'NIVEL'], ['1', 'ACTIVO', 'Balance', '1'], ['1.1', 'ACTIVO CORRIENTE', 'Balance', '2'], ['1.1.01', 'BANCOS', 'Balance', '3'], ['2', 'PASIVO', 'Balance', '1'], ['2.1', 'PASIVO CORRIENTE', 'Balance', '2'], ['2.1.01', 'IESS POR PAGAR', 'Balance', '3'], ['2.1.02', 'PRÃ‰STAMOS POR PAGAR', 'Balance', '3'], ['2.1.03', 'SUELDOS POR PAGAR', 'Balance', '3'], ['5', 'GASTOS', 'Resultados', '1'], ['5.1', 'GASTOS DE PERSONAL', 'Resultados', '2'], ['5.1.01', 'SUELDOS Y SALARIOS', 'Resultados', '3'], ['5.1.08', 'APORTE PATRONAL', 'Resultados', '3']];
                 var wb = XLSX.utils.book_new(); var ws = XLSX.utils.aoa_to_sheet(wsData);
                 XLSX.utils.book_append_sheet(wb, ws, 'Plan_Cuentas'); XLSX.writeFile(wb, (config.companyName || 'Empresa').replace(/ /g, '_') + '_Plan_Cuentas.xlsx');
                 hideLoader(); showToast('Exportado', 'Plan de cuentas exportado', 'success');
@@ -4046,7 +4186,7 @@
             var validExts = ['xlsx', 'xls', 'csv'];
             var ext = file.name.split('.').pop().toLowerCase();
             if (validExts.indexOf(ext) === -1) {
-                showToast('Formato inválido', 'Solo se aceptan archivos .xlsx, .xls o .csv', 'error');
+                showToast('Formato invÃ¡lido', 'Solo se aceptan archivos .xlsx, .xls o .csv', 'error');
                 return;
             }
             document.getElementById('bulkFileName').textContent = file.name;
@@ -4058,7 +4198,7 @@
                     var sheet = workbook.Sheets[workbook.SheetNames[0]];
                     var rows = XLSX.utils.sheet_to_json(sheet, { defval: '' });
                     if (rows.length === 0) {
-                        showToast('Archivo vacío', 'La hoja no contiene datos', 'error');
+                        showToast('Archivo vacÃ­o', 'La hoja no contiene datos', 'error');
                         return;
                     }
                     window._bulkData = rows;
@@ -4084,7 +4224,7 @@
                 html += '<tr>' + cols.map(function (c) { return '<td>' + (row[c] || '') + '</td>'; }).join('') + '</tr>';
             });
             if (rows.length > 10) {
-                html += '<tr><td colspan="' + cols.length + '" style="text-align:center;color:var(--gray-500);font-style:italic">... y ' + (rows.length - 10) + ' más</td></tr>';
+                html += '<tr><td colspan="' + cols.length + '" style="text-align:center;color:var(--gray-500);font-style:italic">... y ' + (rows.length - 10) + ' mÃ¡s</td></tr>';
             }
             html += '</tbody></table></div>';
             preview.innerHTML = html;
@@ -4185,7 +4325,7 @@
 
             initGlobalPeriod();
 
-            // La lógica del toggle del sidebar ya se maneja en setupNavigation()
+            // La lÃ³gica del toggle del sidebar ya se maneja en setupNavigation()
 
             document.querySelectorAll('.nav-item').forEach(function (item) {
                 item.addEventListener('click', function () {
@@ -4194,7 +4334,7 @@
                 });
             });
 
-            // Si hay hash, mostrar esa sección, si no dashboard
+            // Si hay hash, mostrar esa secciÃ³n, si no dashboard
             var hash = window.location.hash.replace('#', '');
             if (hash) {
                 showSection(hash);
@@ -4213,7 +4353,7 @@
                 sel.innerHTML = html;
             }
 
-            // Verificar sesión Supabase
+            // Verificar sesiÃ³n Supabase
             if (sbClient) {
                 try {
                     var sessionResult = await sbClient.auth.getSession();
@@ -4260,13 +4400,16 @@
         window.exportAccountingExcel = exportAccountingExcel;
         window.exportChartOfAccounts = exportChartOfAccounts;
         window.handleExtraHoursUpload = handleExtraHoursUpload;
+        window.handleDescuentosUpload = handleDescuentosUpload;
+        window.updateSingleDescuento = updateSingleDescuento;
+        window.renderDescuentosTable = renderDescuentosTable;
         window.updateSingleHoraExtra = updateSingleHoraExtra;
         window.renderExtraHoursTable = renderExtraHoursTable;
 
         // ==================== ROL GENERAL PDF Y EXCEL ====================
         function downloadRolGeneralExcel() {
             if (!currentPayrollData || currentPayrollData.length === 0) {
-                showToast('Sin datos', 'No hay empleados en la n\u00f3mina para descargar.', 'warning');
+                showToast('Sin datos', 'No hay empleados en la Nómina para descargar.', 'warning');
                 return;
             }
             showLoader('Generando Rol General Excel...');
@@ -4286,7 +4429,7 @@
                     // Columnas
                     var head = [
                         'No.', 'EMPLEADO', 'SUELDO', 'H.EXTRAS', 'BONOS', 'FR MENS.', '13 MENS.', '14 MENS.', 'T.INGRESOS',
-                        'IESS 9.45%', 'ANTICIPOS', 'OTROS D.', 'T.DESC.', 'L\u00cdQUIDO',
+                        'IESS 9.45%', 'ANTICIPOS', 'OTROS D.', 'T.DESC.', 'LÍQUIDO',
                         'PAT.11.15%', '13RO', '14TO', 'VACAC.', 'F.RESERVA', 'T.PROV.'
                     ];
                     excelData.push(head);
@@ -4327,7 +4470,7 @@
 
         function downloadRolGeneralPDF() {
             if (!currentPayrollData || currentPayrollData.length === 0) {
-                showToast('Sin datos', 'No hay empleados en la n\u00f3mina para descargar.', 'warning');
+                showToast('Sin datos', 'No hay empleados en la Nómina para descargar.', 'warning');
                 return;
             }
             showLoader('Generando Rol General PDF...');
@@ -4350,7 +4493,7 @@
                     // Tabla usando autoTable
                     var head = [
                         ['No.', 'EMPLEADO', 'SUELDO', 'H.EXTRAS', 'BONOS', 'FR MENS.', '13 MENS.', '14 MENS.', 'T.INGRESOS',
-                            'IESS 9.45%', 'ANTICIPOS', 'OTROS D.', 'T.DESC.', 'L\u00cdQUIDO',
+                            'IESS 9.45%', 'ANTICIPOS', 'OTROS D.', 'T.DESC.', 'LÍQUIDO',
                             'PAT.11.15%', '13RO', '14TO', 'VACAC.', 'F.RESERVA', 'T.PROV.']
                     ];
                     var body = currentPayrollData.map(function (item) {
@@ -4383,7 +4526,7 @@
                             1: { halign: 'left', cellWidth: 35 },
                             // Ingreso total (col 8) en verde
                             8: { fillColor: [16, 185, 129], textColor: 255, fontStyle: 'bold' },
-                            // Líquido (col 13) en verde
+                            // LÃ­quido (col 13) en verde
                             13: { fillColor: [16, 185, 129], textColor: 255, fontStyle: 'bold' },
                             // Provisiones columns 14-19 en morado claro
                             14: { textColor: [109, 40, 217] },
@@ -4394,7 +4537,7 @@
                             19: { fillColor: [237, 233, 254], textColor: [109, 40, 217], fontStyle: 'bold' }
                         },
                         didParseCell: function (data) {
-                            // Color el row totales (último)
+                            // Color el row totales (Ãºltimo)
                             if (data.row.index === body.length - 1) {
                                 data.cell.styles.fontStyle = 'bold';
                                 data.cell.styles.fillColor = [241, 245, 249];
@@ -4402,12 +4545,12 @@
                         }
                     });
 
-                    // Pie de página
+                    // Pie de pÃ¡gina
                     var totalPages = doc.getNumberOfPages();
                     for (var p = 1; p <= totalPages; p++) {
                         doc.setPage(p);
                         doc.setFontSize(8); doc.setFont(undefined, 'normal');
-                        doc.text('P\u00e1gina ' + p + ' de ' + totalPages, pageW - 10, doc.internal.pageSize.getHeight() - 5, { align: 'right' });
+                        doc.text('Página ' + p + ' de ' + totalPages, pageW - 10, doc.internal.pageSize.getHeight() - 5, { align: 'right' });
                         doc.text('Generado: ' + new Date().toLocaleDateString('es-EC'), 10, doc.internal.pageSize.getHeight() - 5);
                     }
 
@@ -4443,7 +4586,7 @@
             <div class="modal-header">
                 <h3 class="modal-title"><i class="fas fa-upload" style="color:var(--success);margin-right:8px"></i>Carga
                     Masiva de Empleados</h3>
-                <button class="modal-close" onclick="closeBulkUploadModal()">×</button>
+                <button class="modal-close" onclick="closeBulkUploadModal()">Ã—</button>
             </div>
             <div class="modal-body">
                 <!-- Instrucciones -->
@@ -4452,10 +4595,10 @@
                     <div style="font-size:13px;font-weight:600;color:var(--accent);margin-bottom:8px;"><i
                             class="fas fa-info-circle"></i> Instrucciones</div>
                     <ol style="font-size:13px;color:var(--gray-700);padding-left:18px;margin:0;line-height:1.8">
-                        <li>Descarga la <strong>Plantilla</strong> usando el botón correspondiente en la sección de
+                        <li>Descarga la <strong>Plantilla</strong> usando el botÃ³n correspondiente en la secciÃ³n de
                             empleados.</li>
                         <li>Completa el archivo Excel con los datos de los empleados.</li>
-                        <li>Sube el archivo aquí usando el área de abajo o arrastrando el archivo.</li>
+                        <li>Sube el archivo aquÃ­ usando el Ã¡rea de abajo o arrastrando el archivo.</li>
                         <li>Revisa la vista previa y presiona <strong>Importar Empleados</strong>.</li>
                     </ol>
                 </div>
@@ -4469,7 +4612,7 @@
                     <i class="fas fa-file-excel"
                         style="font-size:48px;color:var(--success);margin-bottom:12px;display:block"></i>
                     <div style="font-size:15px;font-weight:600;color:var(--gray-700);margin-bottom:4px">Arrastra tu
-                        archivo aquí o haz click para seleccionar</div>
+                        archivo aquÃ­ o haz click para seleccionar</div>
                     <div style="font-size:12px;color:var(--gray-400)">Formatos aceptados: .xlsx, .xls, .csv</div>
                     <div id="bulkFileName" style="margin-top:10px;font-size:13px;color:var(--accent);font-weight:600">
                     </div>
@@ -4490,3 +4633,4 @@
 </body>
 
 </html>
+
