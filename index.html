@@ -1700,7 +1700,11 @@
                                 </div>
                                 <div style="margin-bottom:16px">
                                     <div class="stat-label">Período</div>
-                                    <div class="stat-value" style="font-size:18px">Enero 2025</div>
+                                    <div class="stat-value" style="font-size:18px">
+                                        <input type="month" id="globalPeriodSelector" class="form-control"
+                                            style="width: 200px; display: inline-block;"
+                                            onchange="updateGlobalPeriod()">
+                                    </div>
                                 </div>
                                 <div style="margin-bottom:16px">
                                     <div class="stat-label">Total Débitos</div>
@@ -1725,7 +1729,8 @@
                 <section class="section" id="payrollList">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title">Nómina de Enero 2025 - <span id="payrollCount">90</span> Empleados
+                            <h3 class="card-title">Nómina de <span class="dynamic-period-text">Enero 2025</span> - <span
+                                    id="payrollCount">0</span> Empleados
                             </h3>
                             <button class="btn btn-primary btn-sm" onclick="exportPayrollExcel()"><i
                                     class="fas fa-file-excel"></i>Exportar Excel</button>
@@ -1926,7 +1931,8 @@
                 <section class="section" id="provisiones">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title">Provisiones Sociales - Enero 2025</h3>
+                            <h3 class="card-title">Provisiones Sociales - <span class="dynamic-period-text">Enero
+                                    2025</span></h3>
                             <button class="btn btn-provision btn-sm" onclick="calculateAllProvisions()"><i
                                     class="fas fa-sync-alt"></i>Recalcular</button>
                         </div>
@@ -2008,7 +2014,8 @@
                 <section class="section" id="accounting">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title">Asientos Contables - Enero 2025</h3>
+                            <h3 class="card-title">Asientos Contables - <span class="dynamic-period-text">Enero
+                                    2025</span></h3>
                             <div style="display:flex;gap:8px;flex-wrap:wrap">
                                 <button class="btn btn-accounting btn-sm" onclick="generateFullAccountingEntries()"><i
                                         class="fas fa-sync-alt"></i>Generar</button>
@@ -2217,7 +2224,7 @@
                                         class="fas fa-file-excel"></i>Plantilla</button>
                                 <button class="btn btn-success btn-sm" onclick="openBulkUploadModal()"><i
                                         class="fas fa-upload"></i>Carga Masiva</button>
-                                <button class="btn btn-danger btn-sm" onclick="deleteSelectedEmployees()"><i 
+                                <button class="btn btn-danger btn-sm" onclick="deleteSelectedEmployees()"><i
                                         class="fas fa-trash"></i>Eliminar Seleccionados</button>
                                 <button class="btn btn-primary btn-sm" onclick="openEmployeeModal()"><i
                                         class="fas fa-plus"></i>Nuevo Empleado</button>
@@ -2240,7 +2247,8 @@
                                 <table class="table" style="min-width:1250px">
                                     <thead>
                                         <tr>
-                                            <th style="width: 40px; text-align: center;"><input type="checkbox" id="selectAllEmployees" onclick="toggleSelectAllEmployees()"></th>
+                                            <th style="width: 40px; text-align: center;"><input type="checkbox"
+                                                    id="selectAllEmployees" onclick="toggleSelectAllEmployees()"></th>
                                             <th>Cédula</th>
                                             <th>Nombre</th>
                                             <th>Email</th>
@@ -3295,7 +3303,7 @@
 
         function _executeDelete(idsArray) {
             employees = employees.filter(function (e) { return !idsArray.includes(e.id); });
-            
+
             // Borrar de localStorage si procede (actualmente deshabilitado o comentado temporalmente)
             try {
                 var comp = companiesConfig[currentCompany];
@@ -3305,7 +3313,7 @@
             if (sbClient) {
                 // Borrado iterativo individualmente
                 var promises = idsArray.map(id => sbClient.from('empleados').delete().eq('id', id));
-                Promise.all(promises).then(function(results) {
+                Promise.all(promises).then(function (results) {
                     var hasErrors = results.some(r => r.error);
                     if (hasErrors) console.warn('[Supabase] Hubo errores eliminando algunos registros masivamente.');
                 });
@@ -3481,6 +3489,34 @@
                 '<td><strong>$' + (t13 + t14 + tVac + tFR + tIessP).toFixed(2) + '</strong></td></tr>';
         }
 
+        // ==================== GLOBAL PERIOD ====================
+        function initGlobalPeriod() {
+            var selector = document.getElementById('globalPeriodSelector');
+            if (selector) {
+                var today = new Date();
+                var yyyy = today.getFullYear();
+                var mm = String(today.getMonth() + 1).padStart(2, '0');
+                selector.value = yyyy + '-' + mm;
+                updateGlobalPeriod();
+            }
+        }
+
+        function updateGlobalPeriod() {
+            var selector = document.getElementById('globalPeriodSelector');
+            if (!selector) return;
+            var val = selector.value; // YYYY-MM
+            if (!val) return;
+            var parts = val.split('-');
+            var year = parts[0];
+            var monthNum = parseInt(parts[1], 10);
+            var monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+            var text = monthNames[monthNum - 1] + ' ' + year;
+
+            document.querySelectorAll('.dynamic-period-text').forEach(function (el) {
+                el.textContent = text;
+            });
+        }
+
         // ==================== ACCOUNTING ====================
         function generateFullAccountingEntries() {
             showLoader('Generando asientos...');
@@ -3492,30 +3528,40 @@
                 var baseP = currentPayrollData.reduce(function (a, i) { return a + (i.sueldo || 0) + (i.hNoct || 0) + (i.hSup || 0) + (i.hExt || 0) + (i.bonos || 0); }, 0);
                 var t13 = baseP / 12, t14 = currentPayrollData.length * (config.minimumWage / 360) * 30;
                 var tVac = baseP / 24, tFRProv = baseP * (config.frPercent / 100), iessP = tIngresos * (config.iessPatronalPercent / 100);
+                var val = document.getElementById('globalPeriodSelector') ? document.getElementById('globalPeriodSelector').value : '';
+                var accDate = '31/01/2025';
+                if (val) {
+                    var parts = val.split('-');
+                    var y = parseInt(parts[0], 10);
+                    var m = parseInt(parts[1], 10);
+                    var lastDay = new Date(y, m, 0).getDate();
+                    accDate = String(lastDay).padStart(2, '0') + '/' + String(m).padStart(2, '0') + '/' + y;
+                }
+
                 var type = document.getElementById('accountingType').value;
                 var html = '';
                 if (type === 'all' || type === 'payroll') {
-                    html += '<tr><td>31/01/2025</td><td>NOM-001</td><td>5.1.01</td><td>SUELDOS Y SALARIOS</td><td class="debit">$' + tSueldos.toFixed(2) + '</td><td></td></tr>' +
-                        '<tr><td>31/01/2025</td><td>NOM-001</td><td>5.1.02</td><td>HORAS EXTRAS</td><td class="debit">$' + tExtras.toFixed(2) + '</td><td></td></tr>' +
-                        '<tr><td>31/01/2025</td><td>NOM-001</td><td>5.1.03</td><td>FONDOS DE RESERVA</td><td class="debit">$' + tFR.toFixed(2) + '</td><td></td></tr>' +
-                        '<tr><td>31/01/2025</td><td>NOM-001</td><td>5.1.04</td><td>BONIFICACIONES</td><td class="debit">$' + tBonos.toFixed(2) + '</td><td></td></tr>' +
-                        '<tr><td>31/01/2025</td><td>NOM-001</td><td>2.1.01</td><td>IESS POR PAGAR</td><td></td><td class="credit">$' + tIess.toFixed(2) + '</td></tr>' +
-                        '<tr><td>31/01/2025</td><td>NOM-001</td><td>2.1.02</td><td>PRÉSTAMOS POR PAGAR</td><td></td><td class="credit">$' + tPrestamos.toFixed(2) + '</td></tr>' +
-                        '<tr><td>31/01/2025</td><td>NOM-001</td><td>2.1.03</td><td>SUELDOS POR PAGAR</td><td></td><td class="credit">$' + tNeto.toFixed(2) + '</td></tr>';
+                    html += '<tr><td>' + accDate + '</td><td>NOM-001</td><td>5.1.01</td><td>SUELDOS Y SALARIOS</td><td class="debit">$' + tSueldos.toFixed(2) + '</td><td></td></tr>' +
+                        '<tr><td>' + accDate + '</td><td>NOM-001</td><td>5.1.02</td><td>HORAS EXTRAS</td><td class="debit">$' + tExtras.toFixed(2) + '</td><td></td></tr>' +
+                        '<tr><td>' + accDate + '</td><td>NOM-001</td><td>5.1.03</td><td>FONDOS DE RESERVA</td><td class="debit">$' + tFR.toFixed(2) + '</td><td></td></tr>' +
+                        '<tr><td>' + accDate + '</td><td>NOM-001</td><td>5.1.04</td><td>BONIFICACIONES</td><td class="debit">$' + tBonos.toFixed(2) + '</td><td></td></tr>' +
+                        '<tr><td>' + accDate + '</td><td>NOM-001</td><td>2.1.01</td><td>IESS POR PAGAR</td><td></td><td class="credit">$' + tIess.toFixed(2) + '</td></tr>' +
+                        '<tr><td>' + accDate + '</td><td>NOM-001</td><td>2.1.02</td><td>PRÉSTAMOS POR PAGAR</td><td></td><td class="credit">$' + tPrestamos.toFixed(2) + '</td></tr>' +
+                        '<tr><td>' + accDate + '</td><td>NOM-001</td><td>2.1.03</td><td>SUELDOS POR PAGAR</td><td></td><td class="credit">$' + tNeto.toFixed(2) + '</td></tr>';
                 }
                 if (type === 'all' || type === 'provisions') {
-                    html += '<tr><td>31/01/2025</td><td>PROV-001</td><td>5.1.05</td><td>DÉCIMO TERCERO</td><td class="debit">$' + t13.toFixed(2) + '</td><td></td></tr>' +
-                        '<tr><td>31/01/2025</td><td>PROV-001</td><td>5.1.06</td><td>DÉCIMO CUARTO</td><td class="debit">$' + t14.toFixed(2) + '</td><td></td></tr>' +
-                        '<tr><td>31/01/2025</td><td>PROV-001</td><td>5.1.07</td><td>VACACIONES</td><td class="debit">$' + tVac.toFixed(2) + '</td><td></td></tr>' +
-                        '<tr><td>31/01/2025</td><td>PROV-001</td><td>5.1.03</td><td>FONDOS RESERVA (PROV)</td><td class="debit">$' + tFRProv.toFixed(2) + '</td><td></td></tr>' +
-                        '<tr><td>31/01/2025</td><td>PROV-001</td><td>2.1.04</td><td>XIII POR PAGAR</td><td></td><td class="credit">$' + t13.toFixed(2) + '</td></tr>' +
-                        '<tr><td>31/01/2025</td><td>PROV-001</td><td>2.1.05</td><td>XIV POR PAGAR</td><td></td><td class="credit">$' + t14.toFixed(2) + '</td></tr>' +
-                        '<tr><td>31/01/2025</td><td>PROV-001</td><td>2.1.07</td><td>VACACIONES POR PAGAR</td><td></td><td class="credit">$' + tVac.toFixed(2) + '</td></tr>' +
-                        '<tr><td>31/01/2025</td><td>PROV-001</td><td>2.1.06</td><td>F.RESERVA POR PAGAR</td><td></td><td class="credit">$' + tFRProv.toFixed(2) + '</td></tr>';
+                    html += '<tr><td>' + accDate + '</td><td>PROV-001</td><td>5.1.05</td><td>DÉCIMO TERCERO</td><td class="debit">$' + t13.toFixed(2) + '</td><td></td></tr>' +
+                        '<tr><td>' + accDate + '</td><td>PROV-001</td><td>5.1.06</td><td>DÉCIMO CUARTO</td><td class="debit">$' + t14.toFixed(2) + '</td><td></td></tr>' +
+                        '<tr><td>' + accDate + '</td><td>PROV-001</td><td>5.1.07</td><td>VACACIONES</td><td class="debit">$' + tVac.toFixed(2) + '</td><td></td></tr>' +
+                        '<tr><td>' + accDate + '</td><td>PROV-001</td><td>5.1.03</td><td>FONDOS RESERVA (PROV)</td><td class="debit">$' + tFRProv.toFixed(2) + '</td><td></td></tr>' +
+                        '<tr><td>' + accDate + '</td><td>PROV-001</td><td>2.1.04</td><td>XIII POR PAGAR</td><td></td><td class="credit">$' + t13.toFixed(2) + '</td></tr>' +
+                        '<tr><td>' + accDate + '</td><td>PROV-001</td><td>2.1.05</td><td>XIV POR PAGAR</td><td></td><td class="credit">$' + t14.toFixed(2) + '</td></tr>' +
+                        '<tr><td>' + accDate + '</td><td>PROV-001</td><td>2.1.07</td><td>VACACIONES POR PAGAR</td><td></td><td class="credit">$' + tVac.toFixed(2) + '</td></tr>' +
+                        '<tr><td>' + accDate + '</td><td>PROV-001</td><td>2.1.06</td><td>F.RESERVA POR PAGAR</td><td></td><td class="credit">$' + tFRProv.toFixed(2) + '</td></tr>';
                 }
                 if (type === 'all' || type === 'iess') {
-                    html += '<tr><td>31/01/2025</td><td>IESS-001</td><td>5.1.08</td><td>APORTE PATRONAL</td><td class="debit">$' + iessP.toFixed(2) + '</td><td></td></tr>' +
-                        '<tr><td>31/01/2025</td><td>IESS-001</td><td>2.1.01</td><td>IESS POR PAGAR (PATRONAL)</td><td></td><td class="credit">$' + iessP.toFixed(2) + '</td></tr>';
+                    html += '<tr><td>' + accDate + '</td><td>IESS-001</td><td>5.1.08</td><td>APORTE PATRONAL</td><td class="debit">$' + iessP.toFixed(2) + '</td><td></td></tr>' +
+                        '<tr><td>' + accDate + '</td><td>IESS-001</td><td>2.1.01</td><td>IESS POR PAGAR (PATRONAL)</td><td></td><td class="credit">$' + iessP.toFixed(2) + '</td></tr>';
                 }
                 document.getElementById('accountingTableBody').innerHTML = html;
                 var totalDebit = tIngresos + ((type === 'all' || type === 'provisions') ? (t13 + t14 + tVac + tFRProv) : 0) + ((type === 'all' || type === 'iess') ? iessP : 0);
@@ -3825,34 +3871,15 @@
         window.handleBulkFile = handleBulkFile;
         window.toggleSelectAllEmployees = toggleSelectAllEmployees;
         window.deleteSelectedEmployees = deleteSelectedEmployees;
+        window.updateGlobalPeriod = updateGlobalPeriod;
 
         // ==================== INIT CON SUPABASE AUTH ====================
         async function init() {
             loadConfig();
 
-            // Configurar sidebar y navegación
-            var toggleBtn = document.getElementById('sidebarToggle') || document.getElementById('menuToggle');
-            var sidebar = document.getElementById('sidebar');
-            var overlay = document.getElementById('sidebarOverlay');
-            var mainContent = document.querySelector('.main-content');
+            initGlobalPeriod();
 
-            if (toggleBtn && sidebar) {
-                toggleBtn.addEventListener('click', function () {
-                    if (window.innerWidth <= 1024) {
-                        sidebar.classList.toggle('open');
-                        if (overlay) overlay.classList.toggle('active');
-                    } else {
-                        sidebar.classList.toggle('collapsed');
-                        if (mainContent) mainContent.classList.toggle('expanded');
-                    }
-                });
-            }
-            if (overlay) {
-                overlay.addEventListener('click', function () {
-                    sidebar.classList.remove('open');
-                    overlay.classList.remove('active');
-                });
-            }
+            // La lógica del toggle del sidebar ya se maneja en setupNavigation()
 
             document.querySelectorAll('.nav-item').forEach(function (item) {
                 item.addEventListener('click', function () {
