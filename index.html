@@ -1820,8 +1820,12 @@
                     <div class="card">
                         <div class="card-header">
                             <h3 class="card-title">Rol de Pagos Individual</h3>
-                            <button class="btn btn-danger btn-sm" onclick="downloadRolGeneral()"><i
-                                    class="fas fa-file-pdf"></i>Descargar Rol General</button>
+                            <div style="display:flex;gap:8px">
+                                <button class="btn btn-success btn-sm" onclick="downloadRolGeneralExcel()"><i
+                                        class="fas fa-file-excel"></i>Rol en Excel</button>
+                                <button class="btn btn-danger btn-sm" onclick="downloadRolGeneralPDF()"><i
+                                        class="fas fa-file-pdf"></i>Rol en PDF</button>
+                            </div>
                         </div>
                         <div class="card-body">
                             <div class="form-row">
@@ -2524,13 +2528,13 @@
             // Base aporte IESS: sueldo + horas extras + bonos (Ecuador)
             var baseIess = parseFloat((sueldo + hExt + bonos).toFixed(2));
 
-            // Fondos de Reserva solo si el empleado los mensualiza
-            var fRes13 = (emp.mensualizaFondo === 'SI') ? parseFloat((sueldo * frP).toFixed(2)) : 0;
+            // Fondos de Reserva solo si el empleado los mensualiza (Sobre lo percibido: sueldo + extras + bonos)
+            var fRes13 = (emp.mensualizaFondo === 'SI') ? parseFloat((baseIess * frP).toFixed(2)) : 0;
 
-            // Decimo Tercero mensualizado (si aplica)
-            var dec13m = (emp.mensualiza13 === 'SI') ? parseFloat((sueldo / 12).toFixed(2)) : 0;
+            // Decimo Tercero mensualizado (si aplica) (La doceava parte de TODO lo percibido)
+            var dec13m = (emp.mensualiza13 === 'SI') ? parseFloat((baseIess / 12).toFixed(2)) : 0;
 
-            // Decimo Cuarto mensualizado (si aplica) = (SalBasico/360)*30
+            // Decimo Cuarto mensualizado (si aplica) = (SalBasico/360)*30 (Fijo, independiente de comisiones)
             var dec14m = (emp.mensualiza14 === 'SI') ? parseFloat(((minWage / 360) * 30).toFixed(2)) : 0;
 
             // Total Ingresos
@@ -2545,10 +2549,10 @@
 
             // Provisiones (Gasto Empresa - NO se descuenta al empleado)
             var iessPatronal = parseFloat((baseIess * patronalP).toFixed(2));
-            var prov13 = parseFloat((sueldo / 12).toFixed(2));           // Decimo Tercero
-            var prov14 = parseFloat(((minWage / 360) * 30).toFixed(2));  // Decimo Cuarto
-            var provVac = parseFloat((sueldo / 24).toFixed(2));           // Vacaciones
-            var provFR = parseFloat((sueldo * frP).toFixed(2));          // Fondo Reserva
+            var prov13 = parseFloat((baseIess / 12).toFixed(2));           // Decimo Tercero (doceava de todo)
+            var prov14 = parseFloat(((minWage / 360) * 30).toFixed(2));  // Decimo Cuarto (fijo)
+            var provVac = parseFloat((baseIess / 24).toFixed(2));           // Vacaciones (24ava de todo)
+            var provFR = parseFloat((baseIess * frP).toFixed(2));          // Fondo Reserva (8.33% de todo)
             var totalProvisiones = parseFloat((iessPatronal + prov13 + prov14 + provVac + provFR).toFixed(2));
 
             var fechaFmt = (emp.fechaIngreso || '').replace(/-/g, '/');
@@ -3492,11 +3496,11 @@
 
             // Provisiones
             document.getElementById('provisionBody').innerHTML =
-                '<tr><td>D\u00e9cimo Tercero</td><td>Sueldo/12</td><td>$' + (item.sueldo || 0).toFixed(2) + '</td><td>$' + (item.prov13 || 0).toFixed(2) + '</td></tr>' +
+                '<tr><td>D\u00e9cimo Tercero</td><td>Remun.Total/12</td><td>$' + ((item.sueldo || 0) + (item.hExt || 0) + (item.bonos || 0)).toFixed(2) + '</td><td>$' + (item.prov13 || 0).toFixed(2) + '</td></tr>' +
                 '<tr><td>D\u00e9cimo Cuarto</td><td>(Sal.Min./360)*30</td><td>$' + (config.minimumWage) + '</td><td>$' + (item.prov14 || 0).toFixed(2) + '</td></tr>' +
-                '<tr><td>Vacaciones</td><td>Sueldo/24</td><td>$' + (item.sueldo || 0).toFixed(2) + '</td><td>$' + (item.provVac || 0).toFixed(2) + '</td></tr>' +
-                '<tr><td>Fondo de Reserva</td><td>Sueldo*8.33%</td><td>$' + (item.sueldo || 0).toFixed(2) + '</td><td>$' + (item.provFR || 0).toFixed(2) + '</td></tr>' +
-                '<tr><td>IESS Patronal</td><td>Base*' + config.iessPatronalPercent + '%</td><td>$' + ((item.sueldo || 0) + (item.hExt || 0) + (item.bonos || 0)).toFixed(2) + '</td><td>$' + (item.iessPatronal || 0).toFixed(2) + '</td></tr>';
+                '<tr><td>Vacaciones</td><td>Remun.Total/24</td><td>$' + ((item.sueldo || 0) + (item.hExt || 0) + (item.bonos || 0)).toFixed(2) + '</td><td>$' + (item.provVac || 0).toFixed(2) + '</td></tr>' +
+                '<tr><td>Fondo de Reserva</td><td>Remun.Total*8.33%</td><td>$' + ((item.sueldo || 0) + (item.hExt || 0) + (item.bonos || 0)).toFixed(2) + '</td><td>$' + (item.provFR || 0).toFixed(2) + '</td></tr>' +
+                '<tr><td>IESS Patronal</td><td>Remun.Total*' + config.iessPatronalPercent + '%</td><td>$' + ((item.sueldo || 0) + (item.hExt || 0) + (item.bonos || 0)).toFixed(2) + '</td><td>$' + (item.iessPatronal || 0).toFixed(2) + '</td></tr>';
         }
 
         // ==================== PDF ====================
@@ -3528,7 +3532,17 @@
                 doc.setTextColor(255, 255, 255); doc.setFont('helvetica', 'bold'); doc.setFontSize(10);
                 doc.text('INGRESOS', 20, y); doc.text('VALOR', 170, y, { align: 'right' });
                 y += 10; doc.setTextColor(0, 0, 0); doc.setFont('helvetica', 'normal');
-                [[' Sueldo Base', item.sueldo || 0], [' Horas Extras', totalExtras], [' Fondo de Reserva', item.fRes || 0], [' Bonificaciones', (item.bonos || 0) + (item.otrosIng || 0)], ['TOTAL INGRESOS', item.ingresos || 0]].forEach(function (r, i) {
+                var ingresosArray = [
+                    [' Sueldo Base', item.sueldo || 0], 
+                    [' Horas Extras', item.hExt || 0], 
+                    [' Bonificaciones', item.bonos || 0]
+                ];
+                if ((item.fRes13 || 0) > 0) ingresosArray.push([' Fondo Reserva Mensual', item.fRes13]);
+                if ((item.dec13m || 0) > 0) ingresosArray.push([' 13er Sueldo Mensual', item.dec13m]);
+                if ((item.dec14m || 0) > 0) ingresosArray.push([' 14to Sueldo Mensual', item.dec14m]);
+                ingresosArray.push(['TOTAL INGRESOS', item.ingresos || 0]);
+
+                ingresosArray.forEach(function (r, i) {
                     if (i % 2 === 0) { doc.setFillColor(248, 249, 250); doc.rect(15, y - 4, 180, 8, 'F'); }
                     doc.text(r[0], 20, y); doc.text('$' + r[1].toFixed(2), 170, y, { align: 'right' }); y += 8;
                 });
@@ -3537,7 +3551,7 @@
                 doc.setTextColor(255, 255, 255); doc.setFont('helvetica', 'bold');
                 doc.text('DESCUENTOS', 20, y); doc.text('VALOR', 170, y, { align: 'right' });
                 y += 10; doc.setTextColor(0, 0, 0); doc.setFont('helvetica', 'normal');
-                [[' IESS (' + config.iessPercent + '%)', item.iess || 0], [' Préstamos', item.prestamos || 0], [' Otros', item.otrosDesc || 0], ['TOTAL DESCUENTOS', item.descuentos || 0]].forEach(function (r, i) {
+                [[' IESS (' + config.iessPercent + '%)', item.iess || 0], [' Anticipos/Pr\u00e9stamos', item.anticipos || 0], [' Otros Descuentos', item.otrosDesc || 0], ['TOTAL DESCUENTOS', item.totalDesc || 0]].forEach(function (r, i) {
                     if (i % 2 === 0) { doc.setFillColor(248, 249, 250); doc.rect(15, y - 4, 180, 8, 'F'); }
                     doc.text(r[0], 20, y); doc.text('-$' + r[1].toFixed(2), 170, y, { align: 'right' }); y += 8;
                 });
@@ -3550,7 +3564,8 @@
                 doc.setDrawColor(0, 0, 0); doc.line(20, y, 90, y); doc.line(120, y, 190, y);
                 doc.setFontSize(9); doc.setTextColor(100, 100, 100);
                 doc.text('Firma del Empleado', 55, y + 5, { align: 'center' }); doc.text('Firma RRHH', 155, y + 5, { align: 'center' });
-                doc.save('Rol_Pago_' + item.cedula + '_Enero_2025.pdf');
+                var per = document.querySelector('.dynamic-period-text') ? document.querySelector('.dynamic-period-text').textContent.trim().replace(/ /g, '_') : 'Enero_2025';
+                doc.save((config.companyName || 'Empresa').replace(/ /g, '_') + '_Rol_Pago_' + item.cedula + '_' + per + '.pdf');
                 hideLoader(); showToast('PDF Generado', 'Archivo descargado correctamente', 'success');
             } catch (err) { hideLoader(); showToast('Error', 'Error al generar PDF: ' + err.message, 'error'); }
         }
@@ -3566,13 +3581,14 @@
         // ==================== PROVISIONES ====================
         function calculateAllProvisions() {
             var t13 = 0, t14 = 0, tVac = 0, tFR = 0, tIessP = 0;
-            var totalIngresos = currentPayrollData.reduce(function (s, i) { return s + (i.ingresos || 0); }, 0);
+            var totalBaseIess = 0;
             currentPayrollData.forEach(function (item) {
                 var ext = (item.hNoct || 0) + (item.hSup || 0) + (item.hExt || 0);
                 var base = (item.sueldo || 0) + ext + (item.bonos || 0);
+                totalBaseIess += base;
                 t13 += base / 12; t14 += (config.minimumWage / 360) * 30; tVac += base / 24; tFR += base * (config.frPercent / 100);
             });
-            tIessP = totalIngresos * (config.iessPatronalPercent / 100);
+            tIessP = totalBaseIess * (config.iessPatronalPercent / 100);
             var set = function (id, v) { var el = document.getElementById(id); if (el) el.textContent = '$' + v.toFixed(2); };
             set('provision13', t13); set('provision14', t14); set('provisionVacations', tVac);
             set('provisionFR', tFR); set('provisionIessPatronal', tIessP);
@@ -3584,7 +3600,7 @@
             tbody.innerHTML = currentPayrollData.map(function (item) {
                 var ext = (item.hNoct || 0) + (item.hSup || 0) + (item.hExt || 0);
                 var base = (item.sueldo || 0) + ext + (item.bonos || 0);
-                var p13 = base / 12, p14 = (config.minimumWage / 360) * 30, vac = base / 24, fr = base * (config.frPercent / 100), iessp = (item.ingresos || 0) * (config.iessPatronalPercent / 100);
+                var p13 = base / 12, p14 = (config.minimumWage / 360) * 30, vac = base / 24, fr = base * (config.frPercent / 100), iessp = base * (config.iessPatronalPercent / 100);
                 return '<tr><td>' + item.no + '</td><td>' + item.nombre + '</td><td>$' + base.toFixed(2) + '</td><td>$' + p13.toFixed(2) + '</td><td>$' + p14.toFixed(2) + '</td><td>$' + vac.toFixed(2) + '</td><td>$' + fr.toFixed(2) + '</td><td>$' + iessp.toFixed(2) + '</td><td>$' + (p13 + p14 + vac + fr + iessp).toFixed(2) + '</td></tr>';
             }).join('');
 
@@ -3691,7 +3707,9 @@
             setTimeout(function () {
                 var wsData = currentPayrollData.map(function (i) { return { 'No.': i.no, 'Nombre': i.nombre, 'Cédula': i.cedula, 'F.Ingreso': i.fechaIng, 'Cargo': i.cargo, 'Depto': i.depto, 'Sueldo': i.sueldo, 'H.Noct': i.hNoct || 0, 'H.Sup': i.hSup || 0, 'H.Ext': i.hExt || 0, 'F.Reserva': i.fRes || 0, 'Bonos': i.bonos || 0, 'Otros Ing': i.otrosIng || 0, 'Ingresos': i.ingresos, 'IESS': i.iess, 'Préstamos': i.prestamos || 0, 'Otros Desc': i.otrosDesc || 0, 'Descuentos': i.descuentos, 'Neto': i.neto }; });
                 var wb = XLSX.utils.book_new(); var ws = XLSX.utils.json_to_sheet(wsData);
-                XLSX.utils.book_append_sheet(wb, ws, 'Nomina_Enero_2025'); XLSX.writeFile(wb, 'Nomina_Enero_2025.xlsx');
+                var per = document.querySelector('.dynamic-period-text') ? document.querySelector('.dynamic-period-text').textContent.trim().replace(/ /g, '_') : 'Enero_2025';
+                XLSX.utils.book_append_sheet(wb, ws, 'Nomina'); 
+                XLSX.writeFile(wb, (config.companyName || 'Empresa').replace(/ /g, '_') + '_Nomina_' + per + '.xlsx');
                 hideLoader(); showToast('Exportado', 'Archivo Excel generado', 'success');
             }, 500);
         }
@@ -3708,7 +3726,8 @@
                 ['NOM-001', '31/01/2025', '2.1.02', 'PRÉSTAMOS POR PAGAR', '', s('prestamos')],
                 ['NOM-001', '31/01/2025', '2.1.03', 'SUELDOS POR PAGAR', '', s('neto')]];
                 var wb = XLSX.utils.book_new(); var ws = XLSX.utils.aoa_to_sheet(wsData);
-                XLSX.utils.book_append_sheet(wb, ws, 'Asientos_Contables'); XLSX.writeFile(wb, 'Asientos_Contables_Enero_2025.xlsx');
+                var per = document.querySelector('.dynamic-period-text') ? document.querySelector('.dynamic-period-text').textContent.trim().replace(/ /g, '_') : 'Enero_2025';
+                XLSX.utils.book_append_sheet(wb, ws, 'Asientos_Contables'); XLSX.writeFile(wb, (config.companyName || 'Empresa').replace(/ /g, '_') + '_Asientos_Contables_' + per + '.xlsx');
                 hideLoader(); showToast('Exportado', 'Asientos exportados', 'success');
             }, 500);
         }
@@ -3718,7 +3737,7 @@
             setTimeout(function () {
                 var wsData = [['CÓDIGO', 'CUENTA', 'TIPO', 'NIVEL'], ['1', 'ACTIVO', 'Balance', '1'], ['1.1', 'ACTIVO CORRIENTE', 'Balance', '2'], ['1.1.01', 'BANCOS', 'Balance', '3'], ['2', 'PASIVO', 'Balance', '1'], ['2.1', 'PASIVO CORRIENTE', 'Balance', '2'], ['2.1.01', 'IESS POR PAGAR', 'Balance', '3'], ['2.1.02', 'PRÉSTAMOS POR PAGAR', 'Balance', '3'], ['2.1.03', 'SUELDOS POR PAGAR', 'Balance', '3'], ['5', 'GASTOS', 'Resultados', '1'], ['5.1', 'GASTOS DE PERSONAL', 'Resultados', '2'], ['5.1.01', 'SUELDOS Y SALARIOS', 'Resultados', '3'], ['5.1.08', 'APORTE PATRONAL', 'Resultados', '3']];
                 var wb = XLSX.utils.book_new(); var ws = XLSX.utils.aoa_to_sheet(wsData);
-                XLSX.utils.book_append_sheet(wb, ws, 'Plan_Cuentas'); XLSX.writeFile(wb, 'Plan_Cuentas.xlsx');
+                XLSX.utils.book_append_sheet(wb, ws, 'Plan_Cuentas'); XLSX.writeFile(wb, (config.companyName || 'Empresa').replace(/ /g, '_') + '_Plan_Cuentas.xlsx');
                 hideLoader(); showToast('Exportado', 'Plan de cuentas exportado', 'success');
             }, 500);
         }
@@ -4076,10 +4095,71 @@
         window.exportAccountingExcel = exportAccountingExcel;
         window.exportChartOfAccounts = exportChartOfAccounts;
 
-        // ==================== ROL GENERAL PDF ====================
-        function downloadRolGeneral() {
+        // ==================== ROL GENERAL PDF Y EXCEL ====================
+        function downloadRolGeneralExcel() {
             if (!currentPayrollData || currentPayrollData.length === 0) {
-                showToast('Sin datos', 'No hay empleados en la nómina para descargar.', 'warning');
+                showToast('Sin datos', 'No hay empleados en la n\u00f3mina para descargar.', 'warning');
+                return;
+            }
+            showLoader('Generando Rol General Excel...');
+            setTimeout(function () {
+                try {
+                    var periodoEl = document.querySelector('.dynamic-period-text');
+                    var periodo = periodoEl ? periodoEl.textContent.trim() : '';
+                    
+                    var excelData = [];
+                    
+                    // Encabezados
+                    excelData.push([config.companyName || 'EMPRESA']);
+                    excelData.push(['ROL DE PAGOS GENERAL - Per\u00edodo: ' + periodo]);
+                    excelData.push(['RUC: ' + (config.companyRuc || '')]);
+                    excelData.push([]);
+                    
+                    // Columnas
+                    var head = [
+                        'No.', 'EMPLEADO', 'SUELDO', 'H.EXTRAS', 'BONOS', 'FR MENS.', '13 MENS.', '14 MENS.', 'T.INGRESOS',
+                        'IESS 9.45%', 'ANTICIPOS', 'OTROS D.', 'T.DESC.', 'L\u00cdQUIDO',
+                        'PAT.11.15%', '13RO', '14TO', 'VACAC.', 'F.RESERVA', 'T.PROV.'
+                    ];
+                    excelData.push(head);
+                    
+                    // Filas de datos
+                    currentPayrollData.forEach(function (item) {
+                        excelData.push([
+                            item.no, item.nombre,
+                            item.sueldo || 0, item.hExt || 0, item.bonos || 0, item.fRes13 || 0, item.dec13m || 0, item.dec14m || 0, item.ingresos || 0,
+                            item.iess || 0, item.anticipos || 0, item.otrosDesc || 0, item.totalDesc || 0, item.neto || 0,
+                            item.iessPatronal || 0, item.prov13 || 0, item.prov14 || 0, item.provVac || 0, item.provFR || 0, item.totalProvisiones || 0
+                        ]);
+                    });
+
+                    // Totales
+                    function sum(field) { return parseFloat(currentPayrollData.reduce(function(a, i) { return a + (i[field]||0); }, 0).toFixed(2)); }
+                    excelData.push([
+                        '', 'TOTALES',
+                        sum('sueldo'), sum('hExt'), sum('bonos'), sum('fRes13'), sum('dec13m'), sum('dec14m'), sum('ingresos'),
+                        sum('iess'), sum('anticipos'), sum('otrosDesc'), sum('totalDesc'), sum('neto'),
+                        sum('iessPatronal'), sum('prov13'), sum('prov14'), sum('provVac'), sum('provFR'), sum('totalProvisiones')
+                    ]);
+                    
+                    // Generar libro
+                    var ws = XLSX.utils.aoa_to_sheet(excelData);
+                    var wb = XLSX.utils.book_new();
+                    XLSX.utils.book_append_sheet(wb, ws, "Rol General");
+                    
+                    XLSX.writeFile(wb, (config.companyName || 'Empresa').replace(/ /g, '_') + '_Rol_General_' + periodo.replace(/ /g, '_') + '.xlsx');
+                    
+                } catch (e) {
+                    console.error(e);
+                    showToast('Error', 'No se pudo generar el Excel: ' + e.message, 'error');
+                }
+                hideLoader();
+            }, 200);
+        }
+
+        function downloadRolGeneralPDF() {
+            if (!currentPayrollData || currentPayrollData.length === 0) {
+                showToast('Sin datos', 'No hay empleados en la n\u00f3mina para descargar.', 'warning');
                 return;
             }
             showLoader('Generando Rol General PDF...');
@@ -4096,14 +4176,14 @@
                     doc.setFontSize(14); doc.setFont(undefined, 'bold');
                     doc.text(config.companyName || 'EMPRESA', pageW / 2, y, { align: 'center' }); y += 7;
                     doc.setFontSize(11); doc.setFont(undefined, 'normal');
-                    doc.text('ROL DE PAGOS GENERAL  -  Período: ' + periodo, pageW / 2, y, { align: 'center' }); y += 7;
+                    doc.text('ROL DE PAGOS GENERAL  -  Per\u00edodo: ' + periodo, pageW / 2, y, { align: 'center' }); y += 7;
                     doc.text('RUC: ' + (config.companyRuc || ''), pageW / 2, y, { align: 'center' }); y += 8;
 
                     // Tabla usando autoTable
                     var head = [
                         ['No.', 'EMPLEADO', 'SUELDO', 'H.EXTRAS', 'BONOS', 'FR MENS.', '13 MENS.', '14 MENS.', 'T.INGRESOS',
-                            'IESS 9.45%', 'ANTICIPOS', 'OTROS D.', 'T.DESC.', 'LÍQUIDO',
-                            'PAT.11.15%', '13RO', '14TO', 'VACAC.', 'F.RESERVA', 'T.PROV.']
+                         'IESS 9.45%', 'ANTICIPOS', 'OTROS D.', 'T.DESC.', 'L\u00cdQUIDO',
+                         'PAT.11.15%', '13RO', '14TO', 'VACAC.', 'F.RESERVA', 'T.PROV.']
                     ];
                     var body = currentPayrollData.map(function (item) {
                         function f(v) { return '$' + (v || 0).toFixed(2); }
@@ -4116,7 +4196,7 @@
                     });
 
                     // Totals row
-                    function sumf(field) { return '$' + currentPayrollData.reduce(function (a, i) { return a + (i[field] || 0); }, 0).toFixed(2); }
+                    function sumf(field) { return '$' + currentPayrollData.reduce(function(a, i){ return a + (i[field]||0); }, 0).toFixed(2); }
                     body.push([
                         '', 'TOTALES',
                         sumf('sueldo'), sumf('hExt'), sumf('bonos'), sumf('fRes13'), sumf('dec13m'), sumf('dec14m'), sumf('ingresos'),
@@ -4145,7 +4225,7 @@
                             18: { textColor: [109, 40, 217] },
                             19: { fillColor: [237, 233, 254], textColor: [109, 40, 217], fontStyle: 'bold' }
                         },
-                        didParseCell: function (data) {
+                        didParseCell: function(data) {
                             // Color el row totales (último)
                             if (data.row.index === body.length - 1) {
                                 data.cell.styles.fontStyle = 'bold';
@@ -4159,12 +4239,12 @@
                     for (var p = 1; p <= totalPages; p++) {
                         doc.setPage(p);
                         doc.setFontSize(8); doc.setFont(undefined, 'normal');
-                        doc.text('Página ' + p + ' de ' + totalPages, pageW - 10, doc.internal.pageSize.getHeight() - 5, { align: 'right' });
+                        doc.text('P\u00e1gina ' + p + ' de ' + totalPages, pageW - 10, doc.internal.pageSize.getHeight() - 5, { align: 'right' });
                         doc.text('Generado: ' + new Date().toLocaleDateString('es-EC'), 10, doc.internal.pageSize.getHeight() - 5);
                     }
 
-                    doc.save('Rol_General_' + periodo.replace(/ /g, '_') + '.pdf');
-                } catch (e) {
+                    doc.save((config.companyName || 'Empresa').replace(/ /g, '_') + '_Rol_General_' + periodo.replace(/ /g, '_') + '.pdf');
+                } catch(e) {
                     console.error(e);
                     showToast('Error', 'No se pudo generar el PDF: ' + e.message, 'error');
                 }
@@ -4172,7 +4252,8 @@
             }, 200);
         }
 
-        window.downloadRolGeneral = downloadRolGeneral;
+        window.downloadRolGeneralExcel = downloadRolGeneralExcel;
+        window.downloadRolGeneralPDF = downloadRolGeneralPDF;
 
         window.saveConfig = saveConfig;
         window.toggleUserMenu = function () { var m = document.getElementById('userDropdown'); if (m) m.classList.toggle('active'); };
