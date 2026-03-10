@@ -3773,11 +3773,130 @@
             }
         }
 
+        window.editEmployee = editEmployee;
+        window.deleteEmployee = deleteEmployee;
+        window.saveEmployee = saveEmployee;
+        window.openEmployeeModal = openEmployeeModal;
+        window.closeEmployeeModal = closeEmployeeModal;
+        window.filterEmployees = filterEmployees;
         window.downloadEmployeeTemplate = downloadEmployeeTemplate;
         window.openBulkUploadModal = openBulkUploadModal;
         window.closeBulkUploadModal = closeBulkUploadModal;
         window.processBulkUpload = processBulkUpload;
         window.handleBulkFile = handleBulkFile;
+
+        // ==================== INIT CON SUPABASE AUTH ====================
+        async function init() {
+            loadConfig();
+
+            // Configurar sidebar y navegación
+            var toggleBtn = document.getElementById('sidebarToggle') || document.getElementById('menuToggle');
+            var sidebar = document.getElementById('sidebar');
+            var overlay = document.getElementById('sidebarOverlay');
+            var mainContent = document.querySelector('.main-content');
+
+            if (toggleBtn && sidebar) {
+                toggleBtn.addEventListener('click', function () {
+                    if (window.innerWidth <= 1024) {
+                        sidebar.classList.toggle('open');
+                        if (overlay) overlay.classList.toggle('active');
+                    } else {
+                        sidebar.classList.toggle('collapsed');
+                        if (mainContent) mainContent.classList.toggle('expanded');
+                    }
+                });
+            }
+            if (overlay) {
+                overlay.addEventListener('click', function () {
+                    sidebar.classList.remove('open');
+                    overlay.classList.remove('active');
+                });
+            }
+
+            document.querySelectorAll('.nav-item').forEach(function (item) {
+                item.addEventListener('click', function () {
+                    var section = this.getAttribute('data-section');
+                    if (section) showSection(section);
+                });
+            });
+
+            // Si hay hash, mostrar esa sección, si no dashboard
+            var hash = window.location.hash.replace('#', '');
+            if (hash) {
+                showSection(hash);
+            } else {
+                showSection('dashboard');
+            }
+
+            // Renderizar selector de empresa
+            var sel = document.getElementById('companySelectorContainer');
+            if (sel) {
+                var html = '';
+                Object.values(companiesConfig).forEach(function (c) {
+                    html += '<button class="company-btn" id="btn_' + c.key + '" onclick="switchCompany(\'' + c.key + '\')" style="border-left:4px solid ' + c.color + '">' +
+                        '<i class="fas ' + c.icon + '" style="color:' + c.color + '"></i><span>' + c.nombre + '</span></button>';
+                });
+                sel.innerHTML = html;
+            }
+
+            // Verificar sesión Supabase
+            if (sbClient) {
+                try {
+                    var sessionResult = await sbClient.auth.getSession();
+                    var session = sessionResult && sessionResult.data && sessionResult.data.session;
+                    if (session) {
+                        document.getElementById('loginOverlay').style.display = 'none';
+                        var userNameEl = document.querySelector('.user-name');
+                        if (userNameEl) userNameEl.textContent = session.user.email;
+                        switchCompany('JASAFOOD');
+                    } else {
+                        document.getElementById('loginOverlay').style.display = 'flex';
+                    }
+                } catch (authErr) {
+                    console.warn('[Supabase] Auth check error:', authErr);
+                    document.getElementById('loginOverlay').style.display = 'flex';
+                }
+            } else {
+                // Sin Supabase, cargar directamente
+                document.getElementById('loginOverlay').style.display = 'none';
+                switchCompany('JASAFOOD');
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', init);
+
+        // ==================== EXPORTS GLOBALES ADICIONALES ====================
+        window.switchCompany = switchCompany;
+        window.showSection = showSection;
+        window.openEmployeeModal = openEmployeeModal;
+        window.closeEmployeeModal = closeEmployeeModal;
+        window.editEmployee = editEmployee;
+        window.saveEmployee = saveEmployee;
+        window.deleteEmployee = deleteEmployee;
+        window.deleteAllEmployees = deleteAllEmployees;
+        window.filterEmployees = filterEmployees;
+        window.generateIndividualPDF = generateIndividualPDF;
+        window.sendPayrollEmail = sendPayrollEmail;
+        window.loadEmployeePayroll = loadEmployeePayroll;
+        window.renderPayrollTable = renderPayrollTable;
+        window.calculateAllProvisions = calculateAllProvisions;
+        window.generateFullAccountingEntries = generateFullAccountingEntries;
+        window.loadAccountingEntries = loadAccountingEntries;
+        window.exportPayrollExcel = exportPayrollExcel;
+        window.exportAccountingExcel = exportAccountingExcel;
+        window.exportChartOfAccounts = exportChartOfAccounts;
+        window.saveConfig = saveConfig;
+        window.toggleUserMenu = function () { var m = document.getElementById('userDropdown'); if (m) m.classList.toggle('active'); };
+        window.switchTab = function (tabId, tabEl) {
+            var container = tabEl.closest('.tab-container') ? tabEl.closest('.tab-container').parentElement : document.body;
+            container.querySelectorAll('.tab').forEach(function (t) { t.classList.remove('active'); });
+            container.querySelectorAll('.tab-content').forEach(function (t) { t.classList.remove('active'); });
+            tabEl.classList.add('active');
+            var tc = document.getElementById(tabId);
+            if (tc) tc.classList.add('active');
+        };
+        window.handleLogin = handleLogin;
+        window.handleLogout = handleLogout;
     </script>
 
     <!-- Bulk Upload Modal -->
