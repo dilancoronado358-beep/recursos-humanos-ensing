@@ -1777,25 +1777,30 @@
                                 <table class="table" id="payrollTable">
                                     <thead>
                                         <tr>
-                                            <th>No.</th>
-                                            <th>NOMBRE</th>
-                                            <th>CÉDULA</th>
-                                            <th>F.ING</th>
-                                            <th>CARGO</th>
-                                            <th>DEP</th>
-                                            <th>SUELDO</th>
-                                            <th>H.NOCT</th>
-                                            <th>H.SUP</th>
-                                            <th>H.EXT</th>
-                                            <th>F.RES</th>
-                                            <th>BONOS</th>
-                                            <th>OTROS</th>
-                                            <th>INGRESOS</th>
-                                            <th>IESS</th>
-                                            <th>PRÉST</th>
-                                            <th>OTROS D</th>
-                                            <th>DESC</th>
-                                            <th>NETO</th>
+                                            <th rowspan="2">No.</th>
+                                            <th rowspan="2">EMPLEADO</th>
+                                            <th rowspan="2">SUELDO</th>
+                                            <th rowspan="2">H.EXTRAS</th>
+                                            <th rowspan="2">BONOS</th>
+                                            <th rowspan="2">FR MENSUAL.</th>
+                                            <th rowspan="2">13 MENSUAL.</th>
+                                            <th rowspan="2">14 MENSUAL.</th>
+                                            <th style="background:var(--success);color:#fff" rowspan="2">TOTAL INGRESOS</th>
+                                            <th colspan="5" style="background:#3b82f6;color:#fff;text-align:center">EGRESOS</th>
+                                            <th colspan="6" style="background:#8b5cf6;color:#fff;text-align:center">PROVISIONES EMPRESA</th>
+                                        </tr>
+                                        <tr>
+                                            <th>IESS 9.45%</th>
+                                            <th>ANTICIPOS</th>
+                                            <th>OTROS DESC.</th>
+                                            <th>TOTAL DESC.</th>
+                                            <th style="background:var(--success);color:#fff">LÍQUIDO A PAGAR</th>
+                                            <th>PAT. 11.15%</th>
+                                            <th>13RO</th>
+                                            <th>14TO</th>
+                                            <th>VACACIONES</th>
+                                            <th>FDO.RESERVA</th>
+                                            <th>TOTAL PROV.</th>
                                         </tr>
                                     </thead>
                                     <tbody id="payrollTableBody"></tbody>
@@ -2499,19 +2504,47 @@
         // Los datos de nómina se generan dinámicamente desde employees[] cargado de Supabase
         var currentPayrollData = [];
 
-        // Convierte un objeto employee (Supabase) al formato de nomina usado por los modulos
+        // Convierte un objeto employee al formato de nomina
         function employeeToPayrollItem(emp, idx) {
-            var iessP = config.iessPercent / 100;
-            var sueldo = emp.sueldoBase || 0;
-            var hExt = emp.horasExtras || 0;
-            var bonos = emp.bonificaciones || 0;
-            var fRes = (emp.mensualizaFondo === 'SI' || emp.recibeFondoDesde === 'SI') ? parseFloat((sueldo * (config.frPercent / 100)).toFixed(2)) : 0;
-            var ingresos = parseFloat((sueldo + hExt + bonos + fRes).toFixed(2));
-            var iess = parseFloat((ingresos * iessP).toFixed(2));
-            var prestamos = emp.prestamos || 0;
-            var otrosDesc = emp.otrosDescuentos || 0;
-            var descuentos = parseFloat((iess + prestamos + otrosDesc).toFixed(2));
-            var neto = parseFloat((ingresos - descuentos).toFixed(2));
+            var iessP      = config.iessPercent / 100;          // 9.45%
+            var patronalP  = config.iessPatronalPercent / 100;  // 11.15%
+            var frP        = config.frPercent / 100;            // 8.33%
+            var minWage    = config.minimumWage || 460;
+
+            var sueldo  = parseFloat(emp.sueldoBase) || 0;
+            var hExt    = parseFloat(emp.horasExtras) || 0;
+            var bonos   = parseFloat(emp.bonificaciones) || 0;
+
+            // Base aporte IESS: sueldo + horas extras + bonos (Ecuador)
+            var baseIess = parseFloat((sueldo + hExt + bonos).toFixed(2));
+
+            // Fondos de Reserva solo si el empleado los mensualiza
+            var fRes13    = (emp.mensualizaFondo === 'SI') ? parseFloat((sueldo * frP).toFixed(2)) : 0;
+
+            // Decimo Tercero mensualizado (si aplica)
+            var dec13m    = (emp.mensualiza13 === 'SI') ? parseFloat((sueldo / 12).toFixed(2)) : 0;
+
+            // Decimo Cuarto mensualizado (si aplica) = (SalBasico/360)*30
+            var dec14m    = (emp.mensualiza14 === 'SI') ? parseFloat(((minWage / 360) * 30).toFixed(2)) : 0;
+
+            // Total Ingresos
+            var ingresos  = parseFloat((baseIess + fRes13 + dec13m + dec14m).toFixed(2));
+
+            // Egresos
+            var iess       = parseFloat((baseIess * iessP).toFixed(2));  // Solo sobre base gravada
+            var anticipos  = parseFloat(emp.prestamos || 0);              // Anticipo/Prestamo
+            var otrosDesc  = parseFloat(emp.otrosDescuentos || 0);        // Otros descuentos
+            var totalDesc  = parseFloat((iess + anticipos + otrosDesc).toFixed(2));
+            var neto       = parseFloat((ingresos - totalDesc).toFixed(2));
+
+            // Provisiones (Gasto Empresa - NO se descuenta al empleado)
+            var iessPatronal  = parseFloat((baseIess * patronalP).toFixed(2));
+            var prov13        = parseFloat((sueldo / 12).toFixed(2));           // Decimo Tercero
+            var prov14        = parseFloat(((minWage / 360) * 30).toFixed(2));  // Decimo Cuarto
+            var provVac       = parseFloat((sueldo / 24).toFixed(2));           // Vacaciones
+            var provFR        = parseFloat((sueldo * frP).toFixed(2));          // Fondo Reserva
+            var totalProvisiones = parseFloat((iessPatronal + prov13 + prov14 + provVac + provFR).toFixed(2));
+
             var fechaFmt = (emp.fechaIngreso || '').replace(/-/g, '/');
             return {
                 no: idx + 1,
@@ -2520,18 +2553,27 @@
                 fechaIng: fechaFmt,
                 cargo: emp.cargo || '',
                 depto: emp.departamento || emp.division || 'GENERAL',
+                // Ingresos
                 sueldo: sueldo,
-                hNoct: 0, hSup: 0,
                 hExt: hExt,
-                fRes: fRes,
                 bonos: bonos,
-                otrosIng: 0,
+                fRes13: fRes13,   // Fondos reserva mensualizados
+                dec13m: dec13m,   // 13ro mensualizado
+                dec14m: dec14m,   // 14to mensualizado
                 ingresos: ingresos,
+                // Egresos
                 iess: iess,
-                prestamos: prestamos,
+                anticipos: anticipos,
                 otrosDesc: otrosDesc,
-                descuentos: descuentos,
+                totalDesc: totalDesc,
                 neto: neto,
+                // Provisiones empresa
+                iessPatronal: iessPatronal,
+                prov13: prov13,
+                prov14: prov14,
+                provVac: provVac,
+                provFR: provFR,
+                totalProvisiones: totalProvisiones,
                 empresa: emp.empresa || currentCompany
             };
         }
@@ -3108,44 +3150,50 @@
             tbody.innerHTML = currentPayrollData.map(function (item) {
                 return '<tr>' +
                     '<td>' + item.no + '</td>' +
-                    '<td>' + item.nombre + '</td>' +
-                    '<td>' + item.cedula + '</td>' +
-                    '<td>' + item.fechaIng + '</td>' +
-                    '<td>' + item.cargo + '</td>' +
-                    '<td>' + item.depto + '</td>' +
+                    '<td><strong>' + item.nombre + '</strong></td>' +
                     '<td>$' + (item.sueldo || 0).toFixed(2) + '</td>' +
-                    '<td>$' + (item.hNoct || 0).toFixed(2) + '</td>' +
-                    '<td>$' + (item.hSup || 0).toFixed(2) + '</td>' +
                     '<td>$' + (item.hExt || 0).toFixed(2) + '</td>' +
-                    '<td>$' + (item.fRes || 0).toFixed(2) + '</td>' +
                     '<td>$' + (item.bonos || 0).toFixed(2) + '</td>' +
-                    '<td>$' + (item.otrosIng || 0).toFixed(2) + '</td>' +
-                    '<td>$' + (item.ingresos || 0).toFixed(2) + '</td>' +
+                    '<td>$' + (item.fRes13 || 0).toFixed(2) + '</td>' +
+                    '<td>$' + (item.dec13m || 0).toFixed(2) + '</td>' +
+                    '<td>$' + (item.dec14m || 0).toFixed(2) + '</td>' +
+                    '<td style="font-weight:bold;color:var(--success)">$' + (item.ingresos || 0).toFixed(2) + '</td>' +
                     '<td>$' + (item.iess || 0).toFixed(2) + '</td>' +
-                    '<td>$' + (item.prestamos || 0).toFixed(2) + '</td>' +
+                    '<td>$' + (item.anticipos || 0).toFixed(2) + '</td>' +
                     '<td>$' + (item.otrosDesc || 0).toFixed(2) + '</td>' +
-                    '<td>$' + (item.descuentos || 0).toFixed(2) + '</td>' +
-                    '<td><strong>$' + (item.neto || 0).toFixed(2) + '</strong></td>' +
+                    '<td>$' + (item.totalDesc || 0).toFixed(2) + '</td>' +
+                    '<td style="font-weight:bold;color:var(--success)">$' + (item.neto || 0).toFixed(2) + '</td>' +
+                    '<td style="color:#8b5cf6">$' + (item.iessPatronal || 0).toFixed(2) + '</td>' +
+                    '<td style="color:#8b5cf6">$' + (item.prov13 || 0).toFixed(2) + '</td>' +
+                    '<td style="color:#8b5cf6">$' + (item.prov14 || 0).toFixed(2) + '</td>' +
+                    '<td style="color:#8b5cf6">$' + (item.provVac || 0).toFixed(2) + '</td>' +
+                    '<td style="color:#8b5cf6">$' + (item.provFR || 0).toFixed(2) + '</td>' +
+                    '<td style="font-weight:bold;color:#8b5cf6">$' + (item.totalProvisiones || 0).toFixed(2) + '</td>' +
                     '</tr>';
             }).join('');
 
             var tfoot = document.getElementById('payrollTableFooter');
             var s = function (f) { return currentPayrollData.reduce(function (a, i) { return a + (i[f] || 0); }, 0); };
-            tfoot.innerHTML = '<tr>' +
-                '<td colspan="6"><strong>TOTALES</strong></td>' +
+            tfoot.innerHTML = '<tr class="total-row">' +
+                '<td colspan="2"><strong>TOTALES</strong></td>' +
                 '<td><strong>$' + s('sueldo').toFixed(2) + '</strong></td>' +
-                '<td><strong>$' + s('hNoct').toFixed(2) + '</strong></td>' +
-                '<td><strong>$' + s('hSup').toFixed(2) + '</strong></td>' +
                 '<td><strong>$' + s('hExt').toFixed(2) + '</strong></td>' +
-                '<td><strong>$' + s('fRes').toFixed(2) + '</strong></td>' +
                 '<td><strong>$' + s('bonos').toFixed(2) + '</strong></td>' +
-                '<td><strong>$' + s('otrosIng').toFixed(2) + '</strong></td>' +
-                '<td><strong>$' + s('ingresos').toFixed(2) + '</strong></td>' +
+                '<td><strong>$' + s('fRes13').toFixed(2) + '</strong></td>' +
+                '<td><strong>$' + s('dec13m').toFixed(2) + '</strong></td>' +
+                '<td><strong>$' + s('dec14m').toFixed(2) + '</strong></td>' +
+                '<td style="color:var(--success)"><strong>$' + s('ingresos').toFixed(2) + '</strong></td>' +
                 '<td><strong>$' + s('iess').toFixed(2) + '</strong></td>' +
-                '<td><strong>$' + s('prestamos').toFixed(2) + '</strong></td>' +
+                '<td><strong>$' + s('anticipos').toFixed(2) + '</strong></td>' +
                 '<td><strong>$' + s('otrosDesc').toFixed(2) + '</strong></td>' +
-                '<td><strong>$' + s('descuentos').toFixed(2) + '</strong></td>' +
-                '<td><strong>$' + s('neto').toFixed(2) + '</strong></td>' +
+                '<td><strong>$' + s('totalDesc').toFixed(2) + '</strong></td>' +
+                '<td style="color:var(--success)"><strong>$' + s('neto').toFixed(2) + '</strong></td>' +
+                '<td style="color:#8b5cf6"><strong>$' + s('iessPatronal').toFixed(2) + '</strong></td>' +
+                '<td style="color:#8b5cf6"><strong>$' + s('prov13').toFixed(2) + '</strong></td>' +
+                '<td style="color:#8b5cf6"><strong>$' + s('prov14').toFixed(2) + '</strong></td>' +
+                '<td style="color:#8b5cf6"><strong>$' + s('provVac').toFixed(2) + '</strong></td>' +
+                '<td style="color:#8b5cf6"><strong>$' + s('provFR').toFixed(2) + '</strong></td>' +
+                '<td style="color:#8b5cf6"><strong>$' + s('totalProvisiones').toFixed(2) + '</strong></td>' +
                 '</tr>';
             if (document.getElementById('payrollCount')) document.getElementById('payrollCount').textContent = currentPayrollData.length;
         }
@@ -3406,20 +3454,22 @@
 
             document.getElementById('previewIncomeBody').innerHTML =
                 '<tr><td>Sueldo Base</td><td>$' + (item.sueldo || 0).toFixed(2) + '</td></tr>' +
-                '<tr><td>Horas Extras</td><td>$' + totalExtras.toFixed(2) + '</td></tr>' +
-                '<tr><td>Fondo de Reserva</td><td>$' + (item.fRes || 0).toFixed(2) + '</td></tr>' +
-                '<tr><td>Bonificaciones/Otros</td><td>$' + ((item.bonos || 0) + (item.otrosIng || 0)).toFixed(2) + '</td></tr>' +
+                '<tr><td>Horas Extras</td><td>$' + (item.hExt || 0).toFixed(2) + '</td></tr>' +
+                '<tr><td>Bonificaciones</td><td>$' + (item.bonos || 0).toFixed(2) + '</td></tr>' +
+                (item.fRes13 > 0 ? '<tr><td>Fondo de Reserva (mensualizado)</td><td>$' + (item.fRes13).toFixed(2) + '</td></tr>' : '') +
+                (item.dec13m > 0 ? '<tr><td>D\u00e9cimo Tercero (mensualizado)</td><td>$' + (item.dec13m).toFixed(2) + '</td></tr>' : '') +
+                (item.dec14m > 0 ? '<tr><td>D\u00e9cimo Cuarto (mensualizado)</td><td>$' + (item.dec14m).toFixed(2) + '</td></tr>' : '') +
                 '<tr style="background:var(--gray-100)"><td><strong>TOTAL INGRESOS</strong></td><td><strong>$' + (item.ingresos || 0).toFixed(2) + '</strong></td></tr>';
 
             document.getElementById('previewDeductionsBody').innerHTML =
                 '<tr><td>IESS (' + config.iessPercent + '%)</td><td>-$' + (item.iess || 0).toFixed(2) + '</td></tr>' +
-                '<tr><td>Préstamos</td><td>-$' + (item.prestamos || 0).toFixed(2) + '</td></tr>' +
+                '<tr><td>Anticipos/Pr\u00e9stamos</td><td>-$' + (item.anticipos || 0).toFixed(2) + '</td></tr>' +
                 '<tr><td>Otros Descuentos</td><td>-$' + (item.otrosDesc || 0).toFixed(2) + '</td></tr>' +
-                '<tr style="background:var(--gray-100)"><td><strong>TOTAL DESCUENTOS</strong></td><td><strong>-$' + (item.descuentos || 0).toFixed(2) + '</strong></td></tr>';
+                '<tr style="background:var(--gray-100)"><td><strong>TOTAL DESCUENTOS</strong></td><td><strong>-$' + (item.totalDesc || 0).toFixed(2) + '</strong></td></tr>';
 
             document.getElementById('previewTotals').innerHTML =
                 '<div class="payroll-total"><div class="payroll-total-label">Total Ingresos</div><div class="payroll-total-value" style="color:var(--success)">$' + (item.ingresos || 0).toFixed(2) + '</div></div>' +
-                '<div class="payroll-total"><div class="payroll-total-label">Total Descuentos</div><div class="payroll-total-value" style="color:var(--danger)">$' + (item.descuentos || 0).toFixed(2) + '</div></div>' +
+                '<div class="payroll-total"><div class="payroll-total-label">Total Descuentos</div><div class="payroll-total-value" style="color:var(--danger)">$' + (item.totalDesc || 0).toFixed(2) + '</div></div>' +
                 '<div class="payroll-total"><div class="payroll-total-label">NETO A PAGAR</div><div class="payroll-total-value net">$' + (item.neto || 0).toFixed(2) + '</div></div>';
 
             // Asiento contable
@@ -3435,12 +3485,12 @@
                 '<tr style="background:var(--gray-100)"><td colspan="2"><strong>TOTALES</strong></td><td class="debit"><strong>$' + (item.ingresos || 0).toFixed(2) + '</strong></td><td class="credit"><strong>$' + ((item.iess || 0) + (item.prestamos || 0) + (item.otrosDesc || 0) + (item.neto || 0)).toFixed(2) + '</strong></td></tr>';
 
             // Provisiones
-            var base = (item.sueldo || 0) + totalExtras + (item.bonos || 0);
             document.getElementById('provisionBody').innerHTML =
-                '<tr><td>Décimo Tercero</td><td>Base/12</td><td>$' + base.toFixed(2) + '</td><td>$' + (base / 12).toFixed(2) + '</td></tr>' +
-                '<tr><td>Décimo Cuarto</td><td>(' + config.minimumWage + '/360)*30</td><td>$' + config.minimumWage + '</td><td>$' + ((config.minimumWage / 360) * 30).toFixed(2) + '</td></tr>' +
-                '<tr><td>Vacaciones</td><td>Base/24</td><td>$' + base.toFixed(2) + '</td><td>$' + (base / 24).toFixed(2) + '</td></tr>' +
-                '<tr><td>Fondo de Reserva</td><td>Base*' + config.frPercent + '%</td><td>$' + base.toFixed(2) + '</td><td>$' + (base * (config.frPercent / 100)).toFixed(2) + '</td></tr>';
+                '<tr><td>D\u00e9cimo Tercero</td><td>Sueldo/12</td><td>$' + (item.sueldo || 0).toFixed(2) + '</td><td>$' + (item.prov13 || 0).toFixed(2) + '</td></tr>' +
+                '<tr><td>D\u00e9cimo Cuarto</td><td>(Sal.Min./360)*30</td><td>$' + (config.minimumWage) + '</td><td>$' + (item.prov14 || 0).toFixed(2) + '</td></tr>' +
+                '<tr><td>Vacaciones</td><td>Sueldo/24</td><td>$' + (item.sueldo || 0).toFixed(2) + '</td><td>$' + (item.provVac || 0).toFixed(2) + '</td></tr>' +
+                '<tr><td>Fondo de Reserva</td><td>Sueldo*8.33%</td><td>$' + (item.sueldo || 0).toFixed(2) + '</td><td>$' + (item.provFR || 0).toFixed(2) + '</td></tr>' +
+                '<tr><td>IESS Patronal</td><td>Base*' + config.iessPatronalPercent + '%</td><td>$' + ((item.sueldo || 0) + (item.hExt || 0) + (item.bonos || 0)).toFixed(2) + '</td><td>$' + (item.iessPatronal || 0).toFixed(2) + '</td></tr>';
         }
 
         // ==================== PDF ====================
@@ -3672,7 +3722,14 @@
 
         function updateStats() {
             var s = function (f) { return currentPayrollData.reduce(function (a, i) { return a + (i[f] || 0); }, 0); };
-            var tSueldos = s('sueldo'), tIngresos = s('ingresos'), tDescuentos = s('descuentos'), tNeto = s('neto');
+            var tSueldos = s('sueldo');
+            var tIngresos = s('ingresos');
+            // totalDesc is the new field name (was 'descuentos')
+            var tDescuentos = s('totalDesc');
+            var tNeto = s('neto');
+            var tPatronal = s('iessPatronal');
+            var t13 = s('prov13');
+            var t14 = s('prov14');
             var set = function (id, v) { var el = document.getElementById(id); if (el) el.textContent = v; };
             set('totalPayroll', '$' + tSueldos.toFixed(2));
             set('totalIncome', '$' + tIngresos.toFixed(2));
@@ -3684,6 +3741,9 @@
             set('totalDeductionsSummary', '$' + tDescuentos.toFixed(2));
             set('totalNetSummary', '$' + tNeto.toFixed(2));
             set('totalEmployeesSummary', currentPayrollData.length);
+            set('totalIessPatronal', '$' + tPatronal.toFixed(2));
+            set('total13Summary', '$' + t13.toFixed(2));
+            set('total14Summary', '$' + t14.toFixed(2));
             set('dashTotalDebit', '$' + tIngresos.toFixed(2));
             set('dashTotalCredit', '$' + tIngresos.toFixed(2));
         }
