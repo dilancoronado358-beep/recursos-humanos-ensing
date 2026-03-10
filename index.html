@@ -3035,11 +3035,12 @@
                         
                         setTimeout(function() {
                             showToast('Configuración Guardada', 'Los cambios han sido aplicados y sincronizados', 'success');
+                            window.location.hash = 'config';
                             location.reload();
                         }, 1000);
                     });
             } else {
-                setTimeout(function() { location.reload(); }, 1000);
+                setTimeout(function() { window.location.hash = 'config'; location.reload(); }, 1000);
             }
         }
 
