@@ -1563,6 +1563,7 @@
                     <div class="nav-section-title">Contabilidad</div>
                     <a class="nav-item" data-section="accounting"><i class="fas fa-book"></i>Asientos Contables</a>
                     <a class="nav-item" data-section="chartOfAccounts"><i class="fas fa-list-ul"></i>Plan de Cuentas</a>
+                    <a class="nav-item" data-section="extraHours"><i class="fas fa-clock"></i>Horas Extras</a>
                 </div>
                 <div class="nav-section">
                     <div class="nav-section-title">Empleados</div>
@@ -1822,9 +1823,9 @@
                             <h3 class="card-title">Rol de Pagos Individual</h3>
                             <div style="display:flex;gap:8px">
                                 <button class="btn btn-success btn-sm" onclick="downloadRolGeneralExcel()"><i
-                                        class="fas fa-file-excel"></i>Rol en Excel</button>
+                                        class="fas fa-file-excel"></i>Rol General en Excel</button>
                                 <button class="btn btn-danger btn-sm" onclick="downloadRolGeneralPDF()"><i
-                                        class="fas fa-file-pdf"></i>Rol en PDF</button>
+                                        class="fas fa-file-pdf"></i>Rol General en PDF</button>
                             </div>
                         </div>
                         <div class="card-body">
@@ -2019,6 +2020,39 @@
                                     </thead>
                                     <tbody id="provisionsTableBody"></tbody>
                                     <tfoot id="provisionsTableFooter" class="total-row"></tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Horas Extras (Carga Masiva Excel) -->
+                <section class="section" id="extraHours">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Carga Masiva de Horas Extras</h3>
+                            <div>
+                                <input type="file" id="uploadExtraHoursExcel" accept=".xlsx, .xls" style="display:none;"
+                                    onchange="handleExtraHoursUpload(event)">
+                                <button class="btn btn-primary btn-sm"
+                                    onclick="document.getElementById('uploadExtraHoursExcel').click()"><i
+                                        class="fas fa-file-upload"></i>Cargar Excel</button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="payroll-table">
+                                    <thead>
+                                        <tr>
+                                            <th>C\u00e9dula</th>
+                                            <th>Empleado</th>
+                                            <th>Empresa</th>
+                                            <th>H. Extras Actuales</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="extraHoursTableBody">
+                                        <!-- Renderizado din\u00e1mico -->
+                                    </tbody>
                                 </table>
                             </div>
                         </div>
@@ -2605,6 +2639,7 @@
                 if (activeSection.id === 'payrollList') renderPayrollTable();
                 if (activeSection.id === 'provisiones') calculateAllProvisions();
                 if (activeSection.id === 'accounting') generateFullAccountingEntries();
+                if (activeSection.id === 'extraHours') renderExtraHoursTable();
             }
             if (salaryChart) updateChart();
             var badge = document.getElementById('employeeCountNav');
@@ -2885,6 +2920,15 @@
             if (!salaryChart) initializeChart(); else updateChart();
             calculateAllProvisions();
             populatePayrollSelect();
+            // Limpiar el Rol Individual al cambiar de empresa
+            var selEmp = document.getElementById('payrollEmployee');
+            if (selEmp) selEmp.value = '';
+            var calcDiv = document.getElementById('payrollCalculation');
+            var emptyDiv = document.getElementById('emptyPayroll');
+            if (calcDiv) calcDiv.style.display = 'none';
+            if (emptyDiv) emptyDiv.style.display = 'block';
+            currentPayrollEmployee = null;
+            renderExtraHoursTable();
         }
 
         function loadEmployeesForCompany(key) {
@@ -3029,7 +3073,13 @@
                 window.sbClient.from('configuracion').select('*').eq('id', dbId).single()
                     .then(function (result) {
                         if (result.data && !result.error) {
+                            // Guardar nombre/RUC de la empresa activa antes del merge
+                            var savedName = config.companyName;
+                            var savedRuc = config.companyRuc;
                             config = Object.assign(config, result.data); // Mezcla con valores default
+                            // Restaurar el nombre de la empresa activa (no dejar que BD lo sobreescriba)
+                            config.companyName = savedName;
+                            config.companyRuc = savedRuc;
                             _applyConfigUI();
                         }
                     })
@@ -3141,8 +3191,121 @@
             // (we don't force re-open on desktop, that's user-controlled)
         }
 
+        // ==================== HORAS EXTRAS ====================
+        function renderExtraHoursTable() {
+            var tbody = document.getElementById('extraHoursTableBody');
+            if (!tbody) return;
+            // Usar data actual (ya filtrada por empresa activa) en lugar de todos los empleados en general
+            tbody.innerHTML = currentPayrollData.map(function (item) {
+                var heBase = parseFloat(item.hExt || 0).toFixed(2);
+                return '<tr>' +
+                    '<td>' + (item.cedula || '') + '</td>' +
+                    '<td>' + (item.nombre || '').trim() + '</td>' +
+                    '<td><span style="font-size:11px;padding:3px 8px;border-radius:20px;background:var(--accent);color:var(--white);font-weight:600">' + (item.empresa || config.companyName || '') + '</span></td>' +
+                    '<td><input type="number" class="form-control form-control-sm" style="width:100px;font-weight:bold" value="' + heBase + '" onchange="updateSingleHoraExtra(\'' + item.id + '\', this.value)"></td>' +
+                    '</tr>';
+            }).join('');
+        }
+
+        async function updateSingleHoraExtra(empId, newVal) {
+            var valor = parseFloat(newVal);
+            if (isNaN(valor)) valor = 0;
+            try {
+                showLoader('Actualizando hora extra...');
+                var res = await supabaseClient.from('employees').update({ horasExtras: valor }).eq('id', empId);
+                if (res.error) throw res.error;
+                showToast('\u00c9xito', 'Horas Extras actualizadas', 'success');
+                await loadEmployees(); // recarga desde BD
+                renderExtraHoursTable(); // recargar s\u00f3lo esta vista
+            } catch (err) {
+                showToast('Error', 'No se pudo actualizar: ' + err.message, 'error');
+            } finally {
+                hideLoader();
+            }
+        }
+
+        function handleExtraHoursUpload(event) {
+            var file = event.target.files[0];
+            if (!file) return;
+            showLoader('Leyendo Excel de Horas Extras...');
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                try {
+                    var data = new Uint8Array(e.target.result);
+                    var workbook = XLSX.read(data, { type: 'array' });
+                    var firstSheetName = workbook.SheetNames[0];
+                    var worksheet = workbook.Sheets[firstSheetName];
+                    var json = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+
+                    if (json.length < 2) throw new Error('El archivo parece vac\u00edo.');
+
+                    var headerRowIdx = 0;
+                    for (var i = 0; i < Math.min(10, json.length); i++) {
+                        var rowStr = json[i].join('').toLowerCase();
+                        if (rowStr.indexOf('cedula') !== -1 || rowStr.indexOf('c\u00e9dula') !== -1 || rowStr.indexOf('valor') !== -1 || rowStr.indexOf('consumo') !== -1) {
+                            headerRowIdx = i; break;
+                        }
+                    }
+
+                    var headers = json[headerRowIdx].map(function (h) { return (h || '').toString().toLowerCase().trim(); });
+                    var idxCedula = headers.findIndex(function (h) { return h.indexOf('cedula') !== -1 || h.indexOf('c\u00e9dula') !== -1; });
+                    var idxValor = headers.findIndex(function (h) { return h.indexOf('valor') !== -1 || h.indexOf('horas') !== -1 || h.indexOf('consumo') !== -1; });
+
+                    if (idxCedula === -1 || idxValor === -1) {
+                        throw new Error('No se encontraron las columnas necesarias en la cabecera.');
+                    }
+
+                    var updates = [];
+                    for (var i = headerRowIdx + 1; i < json.length; i++) {
+                        var row = json[i];
+                        if (!row || row.length === 0) continue;
+                        var cedula = (row[idxCedula] || '').toString().trim();
+                        var valor = parseFloat(row[idxValor]);
+
+                        if (cedula && !isNaN(valor)) {
+                            var emp = employees.find(function (e) { return (e.cedula || '').trim() === cedula; });
+                            if (emp) {
+                                updates.push({ id: emp.id, horasExtras: valor });
+                            }
+                        }
+                    }
+
+                    if (updates.length > 0) {
+                        saveHorasExtrasToDb(updates);
+                    } else {
+                        hideLoader();
+                        showToast('Advertencia', 'No se encontraron registros de c\u00e9dulas validas.', 'warning');
+                    }
+                } catch (err) {
+                    hideLoader();
+                    showToast('Error', 'Error: ' + err.message, 'error');
+                }
+                event.target.value = '';
+            };
+            reader.readAsArrayBuffer(file);
+        }
+
+        async function saveHorasExtrasToDb(updates) {
+            showLoader('Guardando ' + updates.length + ' registros...');
+            try {
+                var promises = updates.map(function (u) {
+                    return supabaseClient.from('employees').update({ horasExtras: u.horasExtras }).eq('id', u.id);
+                });
+                var results = await Promise.all(promises);
+                var hasErrors = results.some(function (r) { return r.error; });
+                if (hasErrors) throw new Error('Ocurrieron errores actualizando registros.');
+
+                showToast('\u00c9xito', 'H. Extras actualizadas.', 'success');
+                await loadEmployees();
+                renderExtraHoursTable();
+            } catch (err) {
+                showToast('Error', err.message, 'error');
+            }
+            hideLoader();
+        }
+
         function showSection(sectionId) {
-            var titles = { dashboard: 'Dashboard', payrollList: 'Nómina Completa', payroll: 'Rol Individual', provisiones: 'Provisiones Sociales', accounting: 'Asientos Contables', chartOfAccounts: 'Plan de Cuentas', employees: 'Empleados', config: 'Configuración' };
+            var titles = { dashboard: 'Dashboard', payrollList: 'N\u00f3mina Completa', payroll: 'Rol Individual', provisiones: 'Provisiones Sociales', accounting: 'Asientos Contables', chartOfAccounts: 'Plan de Cuentas', extraHours: 'Horas Extras', employees: 'Empleados', config: 'Configuraci\u00f3n' };
             document.getElementById('pageTitle').textContent = titles[sectionId] || sectionId;
             document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
             var navItem = document.querySelector('[data-section="' + sectionId + '"]');
@@ -3152,6 +3315,8 @@
             if (sectionId === 'payrollList') renderPayrollTable();
             if (sectionId === 'provisiones') calculateAllProvisions();
             if (sectionId === 'accounting') generateFullAccountingEntries();
+            if (sectionId === 'extraHours') renderExtraHoursTable();
+            if (sectionId === 'employees') renderEmployeeTable();
         }
 
         // ==================== PAYROLL TABLE ====================
@@ -3533,8 +3698,8 @@
                 doc.text('INGRESOS', 20, y); doc.text('VALOR', 170, y, { align: 'right' });
                 y += 10; doc.setTextColor(0, 0, 0); doc.setFont('helvetica', 'normal');
                 var ingresosArray = [
-                    [' Sueldo Base', item.sueldo || 0], 
-                    [' Horas Extras', item.hExt || 0], 
+                    [' Sueldo Base', item.sueldo || 0],
+                    [' Horas Extras', item.hExt || 0],
                     [' Bonificaciones', item.bonos || 0]
                 ];
                 if ((item.fRes13 || 0) > 0) ingresosArray.push([' Fondo Reserva Mensual', item.fRes13]);
@@ -3708,7 +3873,7 @@
                 var wsData = currentPayrollData.map(function (i) { return { 'No.': i.no, 'Nombre': i.nombre, 'Cédula': i.cedula, 'F.Ingreso': i.fechaIng, 'Cargo': i.cargo, 'Depto': i.depto, 'Sueldo': i.sueldo, 'H.Noct': i.hNoct || 0, 'H.Sup': i.hSup || 0, 'H.Ext': i.hExt || 0, 'F.Reserva': i.fRes || 0, 'Bonos': i.bonos || 0, 'Otros Ing': i.otrosIng || 0, 'Ingresos': i.ingresos, 'IESS': i.iess, 'Préstamos': i.prestamos || 0, 'Otros Desc': i.otrosDesc || 0, 'Descuentos': i.descuentos, 'Neto': i.neto }; });
                 var wb = XLSX.utils.book_new(); var ws = XLSX.utils.json_to_sheet(wsData);
                 var per = document.querySelector('.dynamic-period-text') ? document.querySelector('.dynamic-period-text').textContent.trim().replace(/ /g, '_') : 'Enero_2025';
-                XLSX.utils.book_append_sheet(wb, ws, 'Nomina'); 
+                XLSX.utils.book_append_sheet(wb, ws, 'Nomina');
                 XLSX.writeFile(wb, (config.companyName || 'Empresa').replace(/ /g, '_') + '_Nomina_' + per + '.xlsx');
                 hideLoader(); showToast('Exportado', 'Archivo Excel generado', 'success');
             }, 500);
@@ -4094,6 +4259,9 @@
         window.exportPayrollExcel = exportPayrollExcel;
         window.exportAccountingExcel = exportAccountingExcel;
         window.exportChartOfAccounts = exportChartOfAccounts;
+        window.handleExtraHoursUpload = handleExtraHoursUpload;
+        window.updateSingleHoraExtra = updateSingleHoraExtra;
+        window.renderExtraHoursTable = renderExtraHoursTable;
 
         // ==================== ROL GENERAL PDF Y EXCEL ====================
         function downloadRolGeneralExcel() {
@@ -4106,15 +4274,15 @@
                 try {
                     var periodoEl = document.querySelector('.dynamic-period-text');
                     var periodo = periodoEl ? periodoEl.textContent.trim() : '';
-                    
+
                     var excelData = [];
-                    
+
                     // Encabezados
                     excelData.push([config.companyName || 'EMPRESA']);
                     excelData.push(['ROL DE PAGOS GENERAL - Per\u00edodo: ' + periodo]);
                     excelData.push(['RUC: ' + (config.companyRuc || '')]);
                     excelData.push([]);
-                    
+
                     // Columnas
                     var head = [
                         'No.', 'EMPLEADO', 'SUELDO', 'H.EXTRAS', 'BONOS', 'FR MENS.', '13 MENS.', '14 MENS.', 'T.INGRESOS',
@@ -4122,7 +4290,7 @@
                         'PAT.11.15%', '13RO', '14TO', 'VACAC.', 'F.RESERVA', 'T.PROV.'
                     ];
                     excelData.push(head);
-                    
+
                     // Filas de datos
                     currentPayrollData.forEach(function (item) {
                         excelData.push([
@@ -4134,21 +4302,21 @@
                     });
 
                     // Totales
-                    function sum(field) { return parseFloat(currentPayrollData.reduce(function(a, i) { return a + (i[field]||0); }, 0).toFixed(2)); }
+                    function sum(field) { return parseFloat(currentPayrollData.reduce(function (a, i) { return a + (i[field] || 0); }, 0).toFixed(2)); }
                     excelData.push([
                         '', 'TOTALES',
                         sum('sueldo'), sum('hExt'), sum('bonos'), sum('fRes13'), sum('dec13m'), sum('dec14m'), sum('ingresos'),
                         sum('iess'), sum('anticipos'), sum('otrosDesc'), sum('totalDesc'), sum('neto'),
                         sum('iessPatronal'), sum('prov13'), sum('prov14'), sum('provVac'), sum('provFR'), sum('totalProvisiones')
                     ]);
-                    
+
                     // Generar libro
                     var ws = XLSX.utils.aoa_to_sheet(excelData);
                     var wb = XLSX.utils.book_new();
                     XLSX.utils.book_append_sheet(wb, ws, "Rol General");
-                    
+
                     XLSX.writeFile(wb, (config.companyName || 'Empresa').replace(/ /g, '_') + '_Rol_General_' + periodo.replace(/ /g, '_') + '.xlsx');
-                    
+
                 } catch (e) {
                     console.error(e);
                     showToast('Error', 'No se pudo generar el Excel: ' + e.message, 'error');
@@ -4182,8 +4350,8 @@
                     // Tabla usando autoTable
                     var head = [
                         ['No.', 'EMPLEADO', 'SUELDO', 'H.EXTRAS', 'BONOS', 'FR MENS.', '13 MENS.', '14 MENS.', 'T.INGRESOS',
-                         'IESS 9.45%', 'ANTICIPOS', 'OTROS D.', 'T.DESC.', 'L\u00cdQUIDO',
-                         'PAT.11.15%', '13RO', '14TO', 'VACAC.', 'F.RESERVA', 'T.PROV.']
+                            'IESS 9.45%', 'ANTICIPOS', 'OTROS D.', 'T.DESC.', 'L\u00cdQUIDO',
+                            'PAT.11.15%', '13RO', '14TO', 'VACAC.', 'F.RESERVA', 'T.PROV.']
                     ];
                     var body = currentPayrollData.map(function (item) {
                         function f(v) { return '$' + (v || 0).toFixed(2); }
@@ -4196,7 +4364,7 @@
                     });
 
                     // Totals row
-                    function sumf(field) { return '$' + currentPayrollData.reduce(function(a, i){ return a + (i[field]||0); }, 0).toFixed(2); }
+                    function sumf(field) { return '$' + currentPayrollData.reduce(function (a, i) { return a + (i[field] || 0); }, 0).toFixed(2); }
                     body.push([
                         '', 'TOTALES',
                         sumf('sueldo'), sumf('hExt'), sumf('bonos'), sumf('fRes13'), sumf('dec13m'), sumf('dec14m'), sumf('ingresos'),
@@ -4225,7 +4393,7 @@
                             18: { textColor: [109, 40, 217] },
                             19: { fillColor: [237, 233, 254], textColor: [109, 40, 217], fontStyle: 'bold' }
                         },
-                        didParseCell: function(data) {
+                        didParseCell: function (data) {
                             // Color el row totales (último)
                             if (data.row.index === body.length - 1) {
                                 data.cell.styles.fontStyle = 'bold';
@@ -4244,7 +4412,7 @@
                     }
 
                     doc.save((config.companyName || 'Empresa').replace(/ /g, '_') + '_Rol_General_' + periodo.replace(/ /g, '_') + '.pdf');
-                } catch(e) {
+                } catch (e) {
                     console.error(e);
                     showToast('Error', 'No se pudo generar el PDF: ' + e.message, 'error');
                 }
